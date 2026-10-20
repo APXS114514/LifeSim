@@ -1,0 +1,12 @@
+pnpm-lock.yaml
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# 冻结的设计基线，保持交付原文
+docs/GDD.md
+docs/AGENT_PROMPTS.md
+
+# 由 scripts/check-licenses.mjs 生成
+THIRD_PARTY_NOTICES.md

@@ -1,0 +1,45 @@
+{
+  "app": {
+    "title": "人生模拟器",
+    "tagline": "在真实的历史时间线里，过完一个人的一生",
+    "language": "界面语言",
+    "stageNotice": "开发阶段 M0：这是角色创建页的界面草图。模拟内核尚未实现，暂时还不能开始人生。"
+  },
+  "creation": {
+    "heading": "出生设置",
+    "region": {
+      "legend": "出生地区",
+      "random": "随机",
+      "randomHint": "只在五个首发地区之间抽取，按所选年份各地的出生人数加权",
+      "CN": "中国大陆",
+      "JP": "日本",
+      "KP": "朝鲜",
+      "KR": "韩国",
+      "RU": "俄罗斯（含苏联时期）"
+    },
+    "year": {
+      "legend": "出生年份",
+      "random": "随机",
+      "randomHint": "{{min}}—{{max}} 年中每一年概率相同",
+      "specific": "指定年份",
+      "inputLabel": "年份",
+      "rangeError": "请输入 {{min}}—{{max}} 之间的年份"
+    },
+    "summary": {
+      "label": "当前选择",
+      "randomRegion": "随机地区",
+      "randomYear": "随机年份",
+      "year": "{{year}} 年"
+    },
+    "randomRule": "随机年份等概率；国家按该年五地出生人数加权。",
+    "start": "开始人生",
+    "startUnavailable": "需要 M1 模拟内核，目前不可用。"
+  },
+  "about": {
+    "heading": "关于这个模拟",
+    "notPrediction": "这是受历史统计启发的交互式模拟，不是对个人命运的科学预测。",
+    "historyFixed": "真实的宏观历史固定不变；个人与家庭的经历是模拟产生的虚构结果。",
+    "notGlobal": "随机出生只在五个首发地区之间抽样，不代表全球出生分布。",
+    "offline": "默认不连接任何服务器，也不调用 AI 模型。"
+  }
+}

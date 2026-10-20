@@ -1,0 +1,32 @@
+name: 功能提案 / Feature proposal
+description: 提议新功能或改变范围
+labels: [proposal]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GDD v1.0 的 23 项产品决定已经冻结。改变它们需要公开提案并发布新的 GDD 版本，而不是直接提交代码。
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 与冻结范围的关系
+      options:
+        - 在 v0.1 范围内，不改变 23 项决定
+        - 属于 GDD 标注的「后续版本」内容
+        - 需要修改 GDD（请说明改哪一项、为什么）
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 动机
+      description: 想解决什么问题？对应 GDD 哪一章？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 方案
+      description: 规则、数据来源与证据等级、界面、测试方式
+    validations:
+      required: true

@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+  - packages/*
+
+# 依赖写入精确版本（ADR-0001），锁文件之外再加一层可复现性。
+savePrefix: ''
+
+# 供应链保护：只安装发布满 7 天的版本。
+minimumReleaseAge: 10080

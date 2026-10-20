@@ -1,0 +1,30 @@
+{
+  "name": "@lifesim/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "LifeSim 网页应用（M0：角色创建页草图）",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "@lifesim/narrative": "workspace:*",
+    "i18next": "26.4.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-i18next": "17.0.16"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "vite": "8.3.4"
+  }
+}

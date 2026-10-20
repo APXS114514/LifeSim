@@ -1,0 +1,45 @@
+{
+  "app": {
+    "title": "LifeSim",
+    "tagline": "Live one whole life inside the real historical timeline",
+    "language": "Interface language",
+    "stageNotice": "Development stage M0: this is a sketch of the character creation screen. The simulation core is not built yet, so a life cannot be started."
+  },
+  "creation": {
+    "heading": "Birth settings",
+    "region": {
+      "legend": "Birth region",
+      "random": "Random",
+      "randomHint": "Drawn only from the five launch regions, weighted by each region's births in the chosen year",
+      "CN": "Mainland China",
+      "JP": "Japan",
+      "KP": "North Korea (DPRK)",
+      "KR": "South Korea",
+      "RU": "Russia (incl. Soviet era)"
+    },
+    "year": {
+      "legend": "Birth year",
+      "random": "Random",
+      "randomHint": "Every year from {{min}} to {{max}} is equally likely",
+      "specific": "Choose a year",
+      "inputLabel": "Year",
+      "rangeError": "Enter a year from {{min}} to {{max}}"
+    },
+    "summary": {
+      "label": "Current choice",
+      "randomRegion": "Random region",
+      "randomYear": "Random year",
+      "year": "{{year}}"
+    },
+    "randomRule": "Random years are equally likely; the region is weighted by births in the five regions that year.",
+    "start": "Start a life",
+    "startUnavailable": "Needs the M1 simulation core; not available yet."
+  },
+  "about": {
+    "heading": "About this simulation",
+    "notPrediction": "This is an interactive simulation informed by historical statistics, not a scientific prediction of anyone's fate.",
+    "historyFixed": "Real macro history stays fixed; personal and family outcomes are simulated fiction.",
+    "notGlobal": "Random births are drawn from the five launch regions only, not from the global birth distribution.",
+    "offline": "By default it connects to no server and calls no AI model."
+  }
+}

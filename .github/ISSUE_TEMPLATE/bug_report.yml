@@ -1,0 +1,43 @@
+name: 缺陷报告 / Bug report
+description: 报告一个可以重现的问题
+labels: [bug]
+body:
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 严重程度（见 docs/QA_GATE.md）
+      options:
+        - P0 阻断（无法完成人生、存档丢失、结果不可复现、历史事件时间地点错误…）
+        - P1 关键路径（家庭/账目严重矛盾、核心教育职业无法运行…）
+        - P2 一般
+        - P3 轻微
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本或 commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 浏览器与设备
+      placeholder: Chrome 140 / macOS；Safari / iPhone 15
+  - type: input
+    id: seed
+    attributes:
+      label: 种子与出生设置（如有）
+      placeholder: seed=…，日本，1978
+  - type: textarea
+    id: steps
+    attributes:
+      label: 重现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望结果与实际结果
+    validations:
+      required: true

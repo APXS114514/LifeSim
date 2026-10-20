@@ -1,0 +1,18 @@
+{
+  "name": "@lifesim/content-schema",
+  "version": "0.0.0",
+  "private": true,
+  "description": "共享类型契约与运行时 schema 校验（证据、国家包、事件事实、角色、快照）",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

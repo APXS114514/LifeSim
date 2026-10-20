@@ -1,0 +1,19 @@
+{
+  "name": "@lifesim/simulation-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "规范时间推进器与模拟引擎契约（M0 仅接口，实现见 M1）",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "zod": "4.6.7"
+  }
+}
