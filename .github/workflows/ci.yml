@@ -13,6 +13,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  commit-messages:
+    name: Commit messages (no AI attribution)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # 只检查这次推送或 PR 新增的提交；已有历史保持原样，不重写。
+      - name: Check new commits
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          if [ "$EVENT" = pull_request ]; then
+            range="$PR_BASE..$PR_HEAD"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != 0000000000000000000000000000000000000000 ]; then
+            range="$BEFORE..$AFTER"
+          else
+            range="$AFTER^!"
+          fi
+          sh scripts/check-commit-message.sh --range "$range"
+
   checks:
     name: Format · lint · boundaries · licenses · typecheck · unit · build
     runs-on: ubuntu-latest

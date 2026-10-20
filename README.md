@@ -75,6 +75,8 @@ data/                      外部数据来源登记（目前没有外部数据�
 
 本项目参考同类人生模拟游戏的通用品类思路，不复制任何其他作品的代码、素材、叙事或品牌。
 
+本项目的开发使用了 AI 编程助手（例如 Claude Code、Codex）；提交不附加 AI 工具的自动署名，详见 [CONTRIBUTING.md](CONTRIBUTING.md#ai-辅助开发)。
+
 ---
 
 ## English

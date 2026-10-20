@@ -17,6 +17,7 @@
     }
   },
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "dev": "pnpm --filter @lifesim/web dev",
     "build": "pnpm --filter @lifesim/web build",
     "typecheck": "tsc -p tsconfig.json && pnpm -r run typecheck",
@@ -29,7 +30,8 @@
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:licenses": "node scripts/check-licenses.mjs",
     "notices": "node scripts/check-licenses.mjs --write",
-    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm typecheck && pnpm test && pnpm build"
+    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm typecheck && pnpm test && pnpm build",
+    "check:commits": "sh scripts/check-commit-message.sh --range"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

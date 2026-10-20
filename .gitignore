@@ -15,3 +15,6 @@ blob-report/
 
 # 本机私有笔记（绝对路径、SSH、工具链），不进仓库
 AGENT-NOTES.md
+
+# Claude Code 的个人本地设置
+.claude/settings.local.json

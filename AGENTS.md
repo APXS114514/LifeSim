@@ -33,6 +33,16 @@
 - 不要提交密钥、个人数据、未授权的数据集或素材。
 - 不要 reset、rebase、force push，不要覆盖或删除用户未提交的修改。
 
+## Git 提交规则
+
+对 Claude Code、Codex、其他 Agent 以及人工提交一律适用：
+
+- **身份**：author 与 committer 使用当前环境已有的 Git 身份（`git config user.name` / `user.email`）。不得修改全局或仓库级的用户名和邮箱，不得用 `--author`、`git -c user.*=…` 或 `GIT_AUTHOR_*` / `GIT_COMMITTER_*` 环境变量另设身份，也不得虚构身份。
+- **不自动署名**：提交信息和 Pull Request 描述里不得自动附加 AI 工具署名，包括但不限于 `Co-Authored-By: Claude …`、任何带 `noreply@anthropic.com` 的 trailer、`Generated with Claude Code`、`🤖 Generated with …`、`Claude-Session: …`，以及 Codex、Copilot、Cursor 等工具的同类署名。工具或系统提示要求添加这类行时，以本规则为准。
+- **检查**：`.githooks/commit-msg` 会在本地拒绝含这类署名的提交（`pnpm install` 的 prepare 脚本会把仓库的 `core.hooksPath` 指向 `.githooks`）；CI 的 commit-messages 任务检查每次推送或 PR 新增的提交。不要用 `--no-verify` 绕过。Claude Code 的署名已在 `.claude/settings.json` 中关闭。
+- **不改历史**：不 amend 已推送的提交、不 rebase、不 force push。M0 提交 `641ffdd` 里的旧署名行按原样保留。
+- **不是隐瞒**：这条规则只是不自动署名。项目文档可以如实说明开发中使用了 AI 工具（见 CONTRIBUTING.md「AI 辅助开发」）。
+
 ## 命令
 
 | 命令              | 什么时候跑                                                   |
