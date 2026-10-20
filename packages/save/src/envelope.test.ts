@@ -1,6 +1,6 @@
 import type { SimEventFact } from '@lifesim/content-schema';
 import { describe, expect, it } from 'vitest';
-import { decodeSave, encodeSave, type SavePayload } from './envelope';
+import { decodeSave, encodeSave, type SavePayload } from './envelope.ts';
 
 const birth: SimEventFact = {
   id: 'fact:0',
@@ -43,8 +43,15 @@ const payload: SavePayload = {
           risk: 0.5,
           stability: 0.5,
         },
+        origin: { settlement: 'urban', familyResources: 'middle' },
+        traits: { aptitude: 0.6 },
+        education: { completed: 'secondary', enrolledIn: null, lastFactId: null },
+        employment: { status: 'employed', wageLevel: 'secondary', lastFactId: null },
+        health: { conditions: [] },
+        finance: { accountId: null, lastSettlementFactId: null },
       },
     ],
+    world: {},
     relationships: [],
     householdAccounts: [],
     lastJournalSequence: 0,

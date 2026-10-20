@@ -1,0 +1,20 @@
+{
+  "name": "@lifesim/systems",
+  "version": "0.0.0",
+  "private": true,
+  "description": "人生系统规则：出生、教育、就业、家庭财务、健康与死亡、历史锚点（M1 最小因果链）",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "@lifesim/simulation-core": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

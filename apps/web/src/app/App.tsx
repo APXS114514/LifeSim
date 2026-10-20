@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitch } from '../components/LanguageSwitch';
-import { CharacterCreationPage } from '../pages/CharacterCreationPage';
+import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
+import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 
 export function App() {
   const { t } = useTranslation();

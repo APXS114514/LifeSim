@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { SimEventFactSchema, checkJournalInvariants, type SimEventFact } from './event-fact';
+import { SimEventFactSchema, checkJournalInvariants, type SimEventFact } from './event-fact.ts';
 
 function fact(sequence: number, at: string, causeEventIds: string[] = []): SimEventFact {
   return {

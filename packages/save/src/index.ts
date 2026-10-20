@@ -1,2 +1,2 @@
-export * from './repository';
-export * from './envelope';
+export * from './repository.ts';
+export * from './envelope.ts';

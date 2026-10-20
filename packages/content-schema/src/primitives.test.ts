@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { RelativePathSchema, compareISODate, isISODate } from './primitives';
+import { RelativePathSchema, compareISODate, isISODate } from './primitives.ts';
 
 describe('isISODate', () => {
   it.each(['1950-01-01', '2026-12-31', '2000-02-29', '1991-12-26'])('accepts %s', (value) => {

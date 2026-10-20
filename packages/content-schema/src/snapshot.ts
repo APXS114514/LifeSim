@@ -1,13 +1,17 @@
 import { z } from 'zod';
-import { CharacterStateSchema } from './character-state';
-import { EntityIdSchema, ISODateSchema } from './primitives';
+import { CharacterStateSchema } from './character-state.ts';
+import { HouseholdAccountSchema } from './money.ts';
+import { EntityIdSchema, ISODateSchema } from './primitives.ts';
 
 /**
  * 可恢复的模拟快照（GDD §11.4 `SimulationSnapshot`）。
  *
- * `rngState` 与 `schedulerState` 必须是 JSON 值且不可缺省：只存 `rootSeed`
- * 会丢掉已消费的随机流，恢复后结果会漂移。两者的内部结构由 M1 的实现决定。
- * `relationships` 与 `householdAccounts` 同理，M3 再收紧为具体 schema。
+ * `rngState` 与 `schedulerState` 必须是 JSON 值且不可缺省：恢复时需要知道随机数算法版本
+ * 与事件队列的完整状态，否则结果会漂移。两者的内部结构由模拟内核定义并在恢复时校验。
+ * `relationships` 同理，M3 再收紧为具体 schema。
+ *
+ * `world` 是宏观状态（当前币制版本、经济周期等），由历史锚点改变；
+ * 它的结构由系统层定义并在读取时校验。
  */
 export const SimulationSnapshotSchema = z
   .strictObject({
@@ -20,12 +24,28 @@ export const SimulationSnapshotSchema = z
     schedulerState: z.json(),
     activeCharacterId: EntityIdSchema,
     actors: z.array(CharacterStateSchema).min(1),
+    world: z.json(),
     relationships: z.json(),
-    householdAccounts: z.json(),
+    householdAccounts: z.array(HouseholdAccountSchema),
     lastJournalSequence: z.number().int().nonnegative(),
   })
-  .refine((snapshot) => snapshot.actors.some((actor) => actor.id === snapshot.activeCharacterId), {
-    message: 'activeCharacterId must name one of the actors',
-    path: ['activeCharacterId'],
+  .superRefine((snapshot, ctx) => {
+    const actorIds = new Set(snapshot.actors.map((actor) => actor.id));
+    if (!actorIds.has(snapshot.activeCharacterId)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'activeCharacterId must name one of the actors',
+        path: ['activeCharacterId'],
+      });
+    }
+    snapshot.householdAccounts.forEach((account, index) => {
+      if (!account.ownerIds.every((owner) => actorIds.has(owner))) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `Account ${account.id} has an owner who is not an actor`,
+          path: ['householdAccounts', index, 'ownerIds'],
+        });
+      }
+    });
   });
 export type SimulationSnapshot = z.infer<typeof SimulationSnapshotSchema>;

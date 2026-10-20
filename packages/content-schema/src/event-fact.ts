@@ -1,10 +1,19 @@
 import { z } from 'zod';
-import { EntityIdSchema, ISODateSchema, compareISODate } from './primitives';
+import { EntityIdSchema, ISODateSchema, compareISODate } from './primitives.ts';
+
+/** 渲染叙事所需的结构化参数：标量值，键名为驼峰，与语言无关。 */
+export const FactDetailsSchema = z.record(
+  z.string().regex(/^[a-z][A-Za-z0-9]*$/, { message: 'Detail keys are camelCase' }),
+  z.union([z.string(), z.number(), z.boolean(), z.null()]),
+);
+export type FactDetails = z.infer<typeof FactDetailsSchema>;
 
 /**
  * 不可变的人生事实（GDD §7 与 §11.4 `SimEventFact`）。
  * 只存语言无关的结构化结果；中英叙事由 `templateId` 渲染，换语言不重抽结果。
- * 比 GDD 草案多一个 `sequence`：事件日志的单调序号，与快照的 `lastJournalSequence` 对应。
+ * 比 GDD 草案多两个字段：
+ * - `sequence`：事件日志的单调序号，与快照的 `lastJournalSequence` 对应；
+ * - `details`：见 `FactDetailsSchema`。
  */
 export const SimEventFactSchema = z
   .strictObject({
@@ -18,6 +27,7 @@ export const SimEventFactSchema = z
     templateId: z.string().min(1),
     evidenceIds: z.array(z.string().min(1)),
     eventVersion: z.number().int().positive(),
+    details: FactDetailsSchema.optional(),
   })
   .refine((fact) => !fact.causeEventIds.includes(fact.id), {
     message: 'An event fact cannot cite itself as a cause',

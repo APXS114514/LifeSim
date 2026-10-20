@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EntityIdSchema, ISODateSchema } from './primitives';
+import { EntityIdSchema, ISODateSchema } from './primitives.ts';
 
 /**
  * 证据等级（GDD §9.1）：A 原始/官方统计，B 权威机构模型估计或预测，

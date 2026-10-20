@@ -29,6 +29,11 @@
 - 金额用整数最小货币单位或定点数，不用 JS 浮点累加（GDD §8.1）。
 - 缺失数据写 `null` 并给出原因，不写 0（GDD §9.2）。
 - 所有界面和叙事文本同时提供 zh-Hans 与 en，键和占位符必须一致（有测试保证）。
+- 相对导入必须写明扩展名（`./foo.ts`）：Node 直接运行 TypeScript 源码，headless CLI 不经过构建。
+- 规则里不写地区数值，一律通过 `RegionModel` 取数；风险换算用 `expDet` / `lnDet` / `scaleAnnualProbability`，不用 `Math.exp` / `Math.log`。
+- 新的事实类型要在 `packages/systems/src/narrative.ts` 同时补中英模板；CLI 测试会渲染每局的每条事实。
+- 规则或数据有意改变时，`synthetic-world/src/life.test.ts` 的黄金指纹会失败：确认差异合理后更新，并在提交说明里写明原因。
+- fast-check 的性质回调写成带花括号的函数体（`(x) => { expect(...); }`）：Vitest 5 的断言不能作为表达式返回值交给 fast-check。
 - 遇到 GDD 没定义的细节：采用可测试的保守默认值，写进 `docs/adr/`，不要向用户抛出大范围的需求问卷。
 - 不要提交密钥、个人数据、未授权的数据集或素材。
 - 不要 reset、rebase、force push，不要覆盖或删除用户未提交的修改。
@@ -45,12 +50,14 @@
 
 ## 命令
 
-| 命令              | 什么时候跑                                                   |
-| ----------------- | ------------------------------------------------------------ |
-| `pnpm verify`     | 每次提交前；与 CI 的 checks 任务一致                         |
-| `pnpm test:e2e`   | 改了界面之后；本机可加 `PW_CHANNEL=chrome` 复用已装的 Chrome |
-| `pnpm test:watch` | 开发时                                                       |
-| `pnpm dev`        | 本地看界面                                                   |
+| 命令                                       | 什么时候跑                                                        |
+| ------------------------------------------ | ----------------------------------------------------------------- |
+| `pnpm verify`                              | 每次提交前；与 CI 的 checks 任务一致                              |
+| `pnpm test:e2e`                            | 改了界面之后；本机可加 `PW_CHANNEL=chrome` 复用已装的 Chrome      |
+| `pnpm test:watch`                          | 开发时                                                            |
+| `pnpm dev`                                 | 本地看界面                                                        |
+| `pnpm life --seed demo --birth 1978-05-04` | 用合成地区跑一个完整人生（headless），看规则改动的效果            |
+| `pnpm bench --lives 1000`                  | 性能基准；改动内核或系统后对比 `timing` 与 `workload.fingerprint` |
 
 ## 交付报告
 

@@ -16,6 +16,21 @@ const ALLOWED_INTERNAL = {
   '@lifesim/simulation-core': ['@lifesim/content-schema'],
   '@lifesim/save': ['@lifesim/content-schema'],
   '@lifesim/narrative': ['@lifesim/content-schema'],
+  '@lifesim/systems': ['@lifesim/content-schema', '@lifesim/simulation-core'],
+  // 合成数据只供测试与 headless 运行：网页应用不在允许名单里，因此不会进入公开构建。
+  '@lifesim/synthetic-world': [
+    '@lifesim/content-schema',
+    '@lifesim/simulation-core',
+    '@lifesim/systems',
+  ],
+  '@lifesim/cli': [
+    '@lifesim/content-schema',
+    '@lifesim/narrative',
+    '@lifesim/save',
+    '@lifesim/simulation-core',
+    '@lifesim/synthetic-world',
+    '@lifesim/systems',
+  ],
   '@lifesim/web': [
     '@lifesim/content-schema',
     '@lifesim/narrative',
@@ -30,6 +45,7 @@ const UI_ONLY = new Set(['react', 'react-dom', 'react-i18next']);
 const NODE_BUILTINS = new Set(builtinModules.flatMap((name) => [name, `node:${name}`]));
 const SOURCE_FILE = /\.(?:ts|tsx|mts|js|mjs)$/;
 const TEST_FILE = /\.test\.(?:ts|tsx)$/;
+const EXPLICIT_EXTENSION = /\.(?:ts|tsx|mts|js|mjs|json|css)$/;
 
 /** @param {string} path */
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
@@ -109,6 +125,11 @@ for (const { dir, group, manifest } of workspaces) {
 
     for (const { fileName: specifier } of importedFiles) {
       if (specifier.startsWith('.')) {
+        if (!EXPLICIT_EXTENSION.test(specifier)) {
+          report(
+            `${fileWhere}: 相对导入 "${specifier}" 必须写明扩展名（Node 直接运行 TS 源码需要）`,
+          );
+        }
         const target = resolve(dirname(file), specifier);
         if (relative(dir, target).startsWith('..')) {
           report(`${fileWhere}: 相对路径 "${specifier}" 越出了包目录；跨包请通过包名导入`);

@@ -106,3 +106,63 @@ export function checkLocaleParity(
   }
   return issues;
 }
+
+/** 深合并文本资源（后者覆盖前者）；同一路径一处是文本、一处是子树时报错。 */
+export function mergeMessageTrees(...trees: readonly MessageTree[]): MessageTree {
+  const merged: Record<string, string | MessageTree> = {};
+  for (const tree of trees) {
+    for (const [key, value] of Object.entries(tree)) {
+      const existing = merged[key];
+      if (existing === undefined || (typeof existing === 'string' && typeof value === 'string')) {
+        merged[key] = value;
+      } else if (typeof existing !== 'string' && typeof value !== 'string') {
+        merged[key] = mergeMessageTrees(existing, value);
+      } else {
+        throw new Error(`Cannot merge text and subtree at "${key}"`);
+      }
+    }
+  }
+  return merged;
+}
+
+type DetailValue = string | number | boolean | null;
+
+export interface TemplateNarratorOptions {
+  /** 每种语言一棵资源树：`templates.<templateId>` 是模板，`enums.<参数名>.<值>` 是枚举值的显示文字。 */
+  resources: Readonly<Record<Locale, MessageTree>>;
+  /** 自定义参数格式（例如金额）；返回 undefined 时按枚举文字或原值显示。 */
+  formatParam?: (name: string, value: DetailValue, locale: Locale) => string | undefined;
+}
+
+export interface TemplateNarrator extends NarrativeProvider {
+  /** 枚举值的显示文字；没有登记时返回原值。 */
+  label(name: string, value: DetailValue, locale: Locale): string;
+}
+
+/**
+ * 基于模板的叙事渲染：事实的 `templateId` 选模板，`details` 填占位符。
+ * 渲染只读事实，不改变事实；缺模板或缺参数直接报错，不把占位符原样显示给玩家。
+ */
+export function createTemplateNarrator(options: TemplateNarratorOptions): TemplateNarrator {
+  const flat = Object.fromEntries(
+    SUPPORTED_LOCALES.map((locale) => [locale, flattenMessages(options.resources[locale])]),
+  ) as Record<Locale, Map<string, string>>;
+
+  const label = (name: string, value: DetailValue, locale: Locale): string =>
+    flat[locale].get(`enums.${name}.${String(value)}`) ?? String(value);
+
+  return {
+    label,
+    render(fact, locale) {
+      const template = flat[locale].get(`templates.${fact.templateId}`);
+      if (template === undefined) {
+        throw new Error(`No ${locale} template for "${fact.templateId}" (${fact.id})`);
+      }
+      const params: Record<string, string> = {};
+      for (const [name, value] of Object.entries(fact.details ?? {})) {
+        params[name] = options.formatParam?.(name, value, locale) ?? label(name, value, locale);
+      }
+      return renderTemplate(template, params);
+    },
+  };
+}

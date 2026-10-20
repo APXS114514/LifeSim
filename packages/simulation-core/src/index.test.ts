@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AdvanceRequestSchema } from './index';
+import { AdvanceRequestSchema } from './index.ts';
 
 describe('AdvanceRequestSchema', () => {
   it('accepts a bounded request', () => {

@@ -1,6 +1,6 @@
 import type { Locale } from '@lifesim/content-schema';
 import { useTranslation } from 'react-i18next';
-import { currentLocale, rememberLocale } from '../i18n';
+import { currentLocale, rememberLocale } from '../i18n/index.ts';
 
 /** 语言名用各自的自称显示，不随界面语言翻译。 */
 const LOCALE_NAMES: Record<Locale, string> = { 'zh-Hans': '中文', en: 'English' };

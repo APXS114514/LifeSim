@@ -48,6 +48,27 @@ importers:
         specifier: 5.0.4
         version: 5.0.4(@types/node@24.19.2)(vite@8.3.4(@types/node@24.19.2))
 
+  apps/cli:
+    dependencies:
+      '@lifesim/content-schema':
+        specifier: workspace:*
+        version: link:../../packages/content-schema
+      '@lifesim/narrative':
+        specifier: workspace:*
+        version: link:../../packages/narrative
+      '@lifesim/save':
+        specifier: workspace:*
+        version: link:../../packages/save
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../../packages/simulation-core
+      '@lifesim/synthetic-world':
+        specifier: workspace:*
+        version: link:../../packages/synthetic-world
+      '@lifesim/systems':
+        specifier: workspace:*
+        version: link:../../packages/systems
+
   apps/web:
     dependencies:
       '@lifesim/content-schema':
@@ -111,6 +132,30 @@ importers:
       '@lifesim/content-schema':
         specifier: workspace:*
         version: link:../content-schema
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+
+  packages/synthetic-world:
+    dependencies:
+      '@lifesim/content-schema':
+        specifier: workspace:*
+        version: link:../content-schema
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../simulation-core
+      '@lifesim/systems':
+        specifier: workspace:*
+        version: link:../systems
+
+  packages/systems:
+    dependencies:
+      '@lifesim/content-schema':
+        specifier: workspace:*
+        version: link:../content-schema
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../simulation-core
       zod:
         specifier: 4.6.7
         version: 4.6.7

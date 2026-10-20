@@ -29,9 +29,15 @@ export default defineConfig(
     },
   },
 
-  // Node 环境：仓库根的配置文件与脚本、e2e 与 Vite/Playwright 配置。
+  // Node 环境：仓库根的配置文件与脚本、e2e 与 Vite/Playwright 配置、headless CLI。
   {
-    files: ['*.{js,ts}', 'scripts/**/*.mjs', 'apps/web/*.config.ts', 'apps/web/e2e/**/*.ts'],
+    files: [
+      '*.{js,ts}',
+      'scripts/**/*.mjs',
+      'apps/web/*.config.ts',
+      'apps/web/e2e/**/*.ts',
+      'apps/cli/**/*.ts',
+    ],
     languageOptions: { globals: globals.node },
   },
 

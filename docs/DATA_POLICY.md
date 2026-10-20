@@ -20,6 +20,10 @@
 - 不确定区间下界不得大于上界，年份区间必须是 `[起, 止]`。
 - 来源只有在核验过许可条款（填写了 `verifiedAt`）之后，才能标记为可再分发（`redistribution: "allowed"`）。
 
+## 合成数据
+
+M1 使用虚构地区 `ZZ-SYN`（`packages/synthetic-world`）验证内核。它的每张表与每个锚点都标为 D 类，来源指向 [ADR-0003](adr/0003-synthetic-world.md)；它不是外部数据，因此不在 `data/SOURCES.md` 登记，也不得进入公开构建。
+
 ## 流程
 
 1. **登记来源**：在 [data/SOURCES.md](../data/SOURCES.md) 加一行，字段与 `SourceRecord` 一致：ID、标题、发布者、URL、版本、SPDX 许可证、再分发状态、核验日期、备注。

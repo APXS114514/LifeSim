@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ISODateSchema, RelativePathSchema, SemverSchema } from './primitives';
+import { ISODateSchema, RelativePathSchema, SemverSchema } from './primitives.ts';
 
 /** 国家包除 manifest 外的模块（GDD §5）。 */
 export const COUNTRY_PACK_MODULES = [

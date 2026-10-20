@@ -59,6 +59,14 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      # M1 验收：headless 完整人生，以及可复现的性能基准（报告作为产物上传）。
+      - run: pnpm life --seed ci --birth 1978-05-04 --choose start-work
+      - run: pnpm bench --lives 500 --out "$GITHUB_WORKSPACE/bench-report.json"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: bench-report
+          path: bench-report.json
+          retention-days: 30
 
   e2e:
     name: Playwright smoke (desktop + mobile)

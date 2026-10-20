@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { CharacterStateSchema } from './character-state';
-import { CountryPackManifestSchema } from './country-pack';
-import { DataPointSchema, EvidenceMetaSchema, SourceRecordSchema } from './evidence';
-import { SimulationSnapshotSchema } from './snapshot';
+import { CharacterStateSchema } from './character-state.ts';
+import { CountryPackManifestSchema } from './country-pack.ts';
+import { DataPointSchema, EvidenceMetaSchema, SourceRecordSchema } from './evidence.ts';
+import { SimulationSnapshotSchema } from './snapshot.ts';
 
 const evidence = {
   grade: 'D',
@@ -29,6 +29,12 @@ const character = {
     risk: 0.2,
     stability: 0.9,
   },
+  origin: { settlement: 'urban', familyResources: 'middle' },
+  traits: { aptitude: 0.6 },
+  education: { completed: 'secondary', enrolledIn: null, lastFactId: null },
+  employment: { status: 'employed', wageLevel: 'secondary', lastFactId: null },
+  health: { conditions: [] },
+  finance: { accountId: null, lastSettlementFactId: null },
 } as const;
 
 describe('EvidenceMetaSchema', () => {
@@ -153,8 +159,16 @@ describe('SimulationSnapshotSchema', () => {
     schedulerState: { queue: [] },
     activeCharacterId: character.id,
     actors: [character],
+    world: { economyPhase: 'normal' },
     relationships: [],
-    householdAccounts: [],
+    householdAccounts: [
+      {
+        id: 'acct:protagonist',
+        ownerIds: [character.id],
+        currency: { code: 'SYN', version: 1 },
+        balanceMinor: 0,
+      },
+    ],
     lastJournalSequence: 0,
   };
 
@@ -171,5 +185,32 @@ describe('SimulationSnapshotSchema', () => {
     expect(
       SimulationSnapshotSchema.safeParse({ ...snapshot, activeCharacterId: 'char:ghost' }).success,
     ).toBe(false);
+  });
+});
+
+describe('CharacterStateSchema cross-field rules', () => {
+  it('rejects enrolment that skips a stage', () => {
+    const skipping = {
+      ...character,
+      education: { completed: 'primary', enrolledIn: 'tertiary', lastFactId: null },
+      employment: { status: 'student', wageLevel: null, lastFactId: null },
+    };
+    expect(CharacterStateSchema.safeParse(skipping).success).toBe(false);
+  });
+
+  it('requires "student" status exactly while enrolled', () => {
+    const studentNotEnrolled = {
+      ...character,
+      employment: { status: 'student', wageLevel: null, lastFactId: null },
+    };
+    expect(CharacterStateSchema.safeParse(studentNotEnrolled).success).toBe(false);
+  });
+
+  it('requires a wage level exactly when employed or retired', () => {
+    const unpaid = {
+      ...character,
+      employment: { status: 'employed', wageLevel: null, lastFactId: null },
+    };
+    expect(CharacterStateSchema.safeParse(unpaid).success).toBe(false);
   });
 });

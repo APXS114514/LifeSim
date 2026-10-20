@@ -1,0 +1,20 @@
+{
+  "name": "@lifesim/synthetic-world",
+  "version": "0.0.0",
+  "private": true,
+  "description": "明确标注为 D 类的合成地区数据包，只供 M1 内核测试与 headless 运行，不进入公开构建",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "@lifesim/simulation-core": "workspace:*",
+    "@lifesim/systems": "workspace:*"
+  }
+}

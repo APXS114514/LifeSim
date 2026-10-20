@@ -1,0 +1,21 @@
+{
+  "name": "@lifesim/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "headless 入口：在 Node 里跑完整人生、性能基准（M1），直接运行 TypeScript 源码",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "life": "node src/run-life.ts",
+    "bench": "node src/bench.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "@lifesim/narrative": "workspace:*",
+    "@lifesim/save": "workspace:*",
+    "@lifesim/simulation-core": "workspace:*",
+    "@lifesim/synthetic-world": "workspace:*",
+    "@lifesim/systems": "workspace:*"
+  }
+}
