@@ -4,6 +4,7 @@
 // 非朝鲜官方来源；2009 年改革的兑换上限、价格调整等细节在 M2 不建模。
 import { StatSeriesSchema } from '@lifesim/content-schema';
 import births from '../../data/KP/wpp2024-births.json' with { type: 'json' };
+import educationEnrollment from '../../data/KP/wdi-education-enrollment.json' with { type: 'json' };
 import qx from '../../data/KP/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/KP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -164,5 +165,6 @@ export const KP_PACK: CountryPack = {
     StatSeriesSchema.parse(births),
     StatSeriesSchema.parse(qx),
     StatSeriesSchema.parse(urbanShare),
+    StatSeriesSchema.parse(educationEnrollment),
   ],
 };

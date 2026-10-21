@@ -1,0 +1,53 @@
+{
+  "id": "wdi/JP/education-completion-upper-secondary",
+  "indicator": "education-completion-upper-secondary",
+  "geographyId": "country:JP",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SE.SEC.CUAT.UP.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:JP",
+    "yearRange": [
+      1970,
+      2020
+    ],
+    "methodId": "wdi-upper-secondary-completion-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 1970,
+      "age": null,
+      "projected": false,
+      "value": 0.38579769134521497
+    },
+    {
+      "year": 1980,
+      "age": null,
+      "projected": false,
+      "value": 0.540120010375977
+    },
+    {
+      "year": 1990,
+      "age": null,
+      "projected": false,
+      "value": 0.6563710021972661
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.803393630981445
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.851767120361328
+    }
+  ]
+}

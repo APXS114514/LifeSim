@@ -1,0 +1,89 @@
+{
+  "id": "wdi/JP/education-enrollment-secondary",
+  "indicator": "education-enrollment-secondary",
+  "geographyId": "country:JP",
+  "unit": "percent-gross",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SE.SEC.ENRR"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:JP",
+    "yearRange": [
+      2013,
+      2023
+    ],
+    "methodId": "wdi-gross-secondary-enrollment-percent"
+  },
+  "points": [
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 101.049438476562
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 101.036422729492
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 101.724517822266
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 101.296928405762
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 100.260749816895
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 100.482200622559
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 100.660270690918
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 101.34056854248
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 101.744400024414
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 101.38200378418
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 101.537071228027
+    }
+  ]
+}

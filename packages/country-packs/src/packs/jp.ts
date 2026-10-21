@@ -5,6 +5,8 @@
 // - 冲绳在 1972-05-15 之前由美国管理；M2 不单列冲绳，人口池地点按日本处理。
 import { StatSeriesSchema } from '@lifesim/content-schema';
 import births from '../../data/JP/wpp2024-births.json' with { type: 'json' };
+import educationCompletion from '../../data/JP/wdi-education-completion.json' with { type: 'json' };
+import educationEnrollment from '../../data/JP/wdi-education-enrollment.json' with { type: 'json' };
 import qx from '../../data/JP/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/JP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -157,5 +159,7 @@ export const JP_PACK: CountryPack = {
     StatSeriesSchema.parse(births),
     StatSeriesSchema.parse(qx),
     StatSeriesSchema.parse(urbanShare),
+    StatSeriesSchema.parse(educationEnrollment),
+    StatSeriesSchema.parse(educationCompletion),
   ],
 };

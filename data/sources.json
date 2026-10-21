@@ -231,6 +231,28 @@
     "notes": "只引用史实，不再分发文本；非朝鲜官方来源。页面标注 KOGL 第4类（署名、禁止商用、禁止变更）。原文：2차 화폐개혁은 내각결정 11호에 의해 1959년 2월 13일부터 17일까지 실시 ... 100:1；5차 화폐개혁은 ... 2009년 11월 30일부터 12월 6일까지 ... 교환비율은 현금의 경우 100:1。访问日期 2026-10-20。"
   },
   {
+    "id": "worldbank-wdi:SE.SEC.CUAT.UP.ZS",
+    "title": "Educational attainment, at least completed upper secondary, population 25+, total (%) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SE.SEC.CUAT.UP.ZS",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SE.SEC.CUAT.UP.ZS, CC BY 4.0; changes: percent values divided by 100 into a 0–1 share, only non-null observations emitted (missing years omitted, not filled with zero)."
+  },
+  {
+    "id": "worldbank-wdi:SE.SEC.ENRR",
+    "title": "School enrollment, secondary (% gross) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SE.SEC.ENRR",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SE.SEC.ENRR, CC BY 4.0; changes: only non-null annual observations emitted; values kept as gross percent (may exceed 100)."
+  },
+  {
     "id": "worldbank-wdi:SP.URB.TOTL.IN.ZS",
     "title": "Urban population (% of total population) — World Development Indicators",
     "publisher": "World Bank",

@@ -1,0 +1,29 @@
+{
+  "id": "wdi/KP/education-enrollment-secondary",
+  "indicator": "education-enrollment-secondary",
+  "geographyId": "country:KP",
+  "unit": "percent-gross",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SE.SEC.ENRR"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:KP",
+    "yearRange": [
+      2015,
+      2015
+    ],
+    "methodId": "wdi-gross-secondary-enrollment-percent"
+  },
+  "points": [
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 94.2515411376953
+    }
+  ]
+}

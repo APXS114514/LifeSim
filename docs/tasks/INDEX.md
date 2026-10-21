@@ -70,7 +70,7 @@
 | [M3-001](M3-001.md) | 政体更替作用于在世角色                    | 000                    | systems、real-world                       | 中（含 `shared.ts` 版本号） | 否       | 已实现，待验收（本地提交） |
 | [M3-002](M3-002.md) | 家庭与关系契约                            | —                      | content-schema、simulation-core（仅类型） | 高                          | 否       | 已实现，待验收（本地提交） |
 | [M3-003](M3-003.md) | 统计指标契约扩展（教育/劳动力/价格/卫生） | —                      | content-schema                            | 高                          | 否       | 已实现，待验收（本地提交） |
-| [M3-004](M3-004.md) | WDI 教育指标转换                          | 003                    | data、country-packs                       | 高                          | 是       | 未开始                     |
+| [M3-004](M3-004.md) | WDI 教育指标转换                          | 003                    | data、country-packs                       | 高                          | 是       | 已实现，待验收（本地提交） |
 | [M3-005](M3-005.md) | WDI 劳动力指标转换                        | 003                    | data、country-packs                       | 高                          | 是       | 未开始                     |
 | [M3-006](M3-006.md) | WDI 价格与卫生支出转换                    | 003                    | data、country-packs                       | 高                          | 是       | 未开始                     |
 | [M3-007](M3-007.md) | 经济周期历史锚点（按国家）                | —                      | country-packs、data                       | 高                          | 是       | 未开始                     |

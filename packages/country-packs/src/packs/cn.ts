@@ -5,6 +5,8 @@
 // 新行政单位的生效日；批准日记录在此，供维护者复核（M2-017 的待核实项）。
 import { StatSeriesSchema } from '@lifesim/content-schema';
 import births from '../../data/CN/wpp2024-births.json' with { type: 'json' };
+import educationCompletion from '../../data/CN/wdi-education-completion.json' with { type: 'json' };
+import educationEnrollment from '../../data/CN/wdi-education-enrollment.json' with { type: 'json' };
 import qx from '../../data/CN/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/CN/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -201,5 +203,7 @@ export const CN_PACK: CountryPack = {
     StatSeriesSchema.parse(births),
     StatSeriesSchema.parse(qx),
     StatSeriesSchema.parse(urbanShare),
+    StatSeriesSchema.parse(educationEnrollment),
+    StatSeriesSchema.parse(educationCompletion),
   ],
 };

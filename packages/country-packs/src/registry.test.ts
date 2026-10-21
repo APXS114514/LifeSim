@@ -9,27 +9,24 @@ import { validateCountryPack } from './validate.ts';
 const registry = createPackRegistry();
 
 describe('country pack series', () => {
-  it('validates every pack and attaches exactly the three M2 indicators', () => {
+  it('validates every pack and attaches the M2 and M3 education indicators', () => {
     for (const packId of BIRTH_REGION_IDS) {
       const pack = PACKS[packId];
       expect(validateCountryPack(pack)).toEqual([]);
-      expect(pack.series).toHaveLength(3);
-      expect(pack.series.map((series) => series.indicator)).toEqual([
-        'births',
-        'life-table-qx',
-        'urban-share',
-      ]);
+      const expected = ['births', 'life-table-qx', 'urban-share', 'education-enrollment-secondary'];
+      if (packId !== 'KP') expected.push('education-completion-upper-secondary');
+      expect(pack.series.map((series) => series.indicator)).toEqual(expected);
     }
   });
 
-  it('locks every series with the 15 data fingerprints', () => {
+  it('locks every series with the 24 data fingerprints', () => {
     const actual: Record<string, string> = {};
     for (const pack of Object.values(PACKS)) {
       for (const series of pack.series) {
         actual[series.id] = fingerprint(canonicalJson(series));
       }
     }
-    expect(Object.keys(DATA_FINGERPRINTS)).toHaveLength(15);
+    expect(Object.keys(DATA_FINGERPRINTS)).toHaveLength(24);
     expect(actual).toEqual(DATA_FINGERPRINTS);
   });
 });

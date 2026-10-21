@@ -3,6 +3,8 @@
 // 已知简化：朝鲜战争期间首尔曾两度被占领，M2 不作为政体变化处理（留给 M3 的历史事件）。
 import { StatSeriesSchema } from '@lifesim/content-schema';
 import births from '../../data/KR/wpp2024-births.json' with { type: 'json' };
+import educationCompletion from '../../data/KR/wdi-education-completion.json' with { type: 'json' };
+import educationEnrollment from '../../data/KR/wdi-education-enrollment.json' with { type: 'json' };
 import qx from '../../data/KR/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/KR/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -200,5 +202,7 @@ export const KR_PACK: CountryPack = {
     StatSeriesSchema.parse(births),
     StatSeriesSchema.parse(qx),
     StatSeriesSchema.parse(urbanShare),
+    StatSeriesSchema.parse(educationEnrollment),
+    StatSeriesSchema.parse(educationCompletion),
   ],
 };

@@ -1,5 +1,19 @@
 [
   {
+    "id": "education-completion",
+    "file": "education-completion.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.CUAT.UP.ZS?format=json&per_page=20000",
+    "sha256": "e1f09938951c4167cf08e51189a0634178e1c71758dcd6c6f5b443eae3932c45",
+    "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "education-enrollment",
+    "file": "education-enrollment.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.ENRR?format=json&per_page=20000",
+    "sha256": "7e43abf6253cc0e56db18b149ee651d56e14a10f68c241ce99b1b363cfbe96bf",
+    "retrievedAt": "2026-10-20"
+  },
+  {
     "id": "urban-share",
     "file": "urban-share.json",
     "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=20000",

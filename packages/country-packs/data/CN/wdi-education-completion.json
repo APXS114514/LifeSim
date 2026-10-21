@@ -1,0 +1,47 @@
+{
+  "id": "wdi/CN/education-completion-upper-secondary",
+  "indicator": "education-completion-upper-secondary",
+  "geographyId": "country:CN",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SE.SEC.CUAT.UP.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:CN",
+    "yearRange": [
+      1982,
+      2020
+    ],
+    "methodId": "wdi-upper-secondary-completion-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 1982,
+      "age": null,
+      "projected": false,
+      "value": 0.0664788007736206
+    },
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 0.138146864870906
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.223159999847412
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.31769790649414104
+    }
+  ]
+}

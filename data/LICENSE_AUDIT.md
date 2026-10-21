@@ -89,3 +89,59 @@ WDI 数据集页面的 "Data Access and Licensing" 部分：
 - 指标页面：<https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS>
 - API（五个国家、全部年份、单页）：<https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=20000>
 - 版本记录：API 响应元信息 `lastupdated: 2026-10-08`；WDI 数据集页面显示数据文件 Last Updated 2026-10-09、元信息 2026-10-12。
+
+## `worldbank-wdi:SE.SEC.ENRR` — 世界银行 WDI 中学毛入学率
+
+### 条款页面
+
+- 数据目录许可说明：<https://datacatalog.worldbank.org/public-licenses>，访问日期 2026-10-20。
+- Summary Terms of Use：<https://data.worldbank.org/summary-terms-of-use>，访问日期 2026-10-20。
+- WDI 数据集页面：<https://datacatalog.worldbank.org/search/dataset/0037712>，访问日期 2026-10-20。
+- 指标元信息：<https://api.worldbank.org/v2/indicator/SE.SEC.ENRR?format=json>，访问日期 2026-10-20。
+
+### 结论
+
+条款与 `SP.URB.TOTL.IN.ZS` 相同（CC BY 4.0，允许复制、修改、再分发，须署名并注明改动）。本项目只输出非空年度观测，保留毛入学率的百分比口径（可以超过 100），不写入预测值、不补零。
+
+| 问题             | 结论 | 依据                                           |
+| ---------------- | ---- | ---------------------------------------------- |
+| 允许再分发？     | 是   | CC BY 4.0 copy / distribute。                  |
+| 允许修改？       | 是   | 只保留观测年份、按指标口径输出，属格式转换。   |
+| 署名与改动说明？ | 有   | `data/SOURCES.md` 与 `sources.json` 的 notes。 |
+| 商业使用限制？   | 无   | 条款明确 including commercial use。            |
+
+**建议结论：`allowed`（待维护者确认）。**
+
+### 官方下载入口
+
+- 指标页面：<https://data.worldbank.org/indicator/SE.SEC.ENRR>
+- API：<https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.ENRR?format=json&per_page=20000>
+- 版本记录：API `lastupdated: 2026-10-08`。
+
+## `worldbank-wdi:SE.SEC.CUAT.UP.ZS` — 世界银行 WDI 高中完成率
+
+### 条款页面
+
+- 数据目录许可说明：<https://datacatalog.worldbank.org/public-licenses>，访问日期 2026-10-20。
+- Summary Terms of Use：<https://data.worldbank.org/summary-terms-of-use>，访问日期 2026-10-20。
+- WDI 数据集页面：<https://datacatalog.worldbank.org/search/dataset/0037712>，访问日期 2026-10-20。
+- 指标元信息：<https://api.worldbank.org/v2/indicator/SE.SEC.CUAT.UP.ZS?format=json>，访问日期 2026-10-20。
+
+### 结论
+
+条款与 `SP.URB.TOTL.IN.ZS` 相同（CC BY 4.0）。本项目把百分比除以 100 转成 0—1 的 share，只保留非空观测；朝鲜没有观测，因此不生成序列（不以 0 或邻国数据代替）。
+
+| 问题             | 结论 | 依据                                           |
+| ---------------- | ---- | ---------------------------------------------- |
+| 允许再分发？     | 是   | CC BY 4.0 copy / distribute。                  |
+| 允许修改？       | 是   | 百分比→share，须注明改动。                     |
+| 署名与改动说明？ | 有   | `data/SOURCES.md` 与 `sources.json` 的 notes。 |
+| 商业使用限制？   | 无   | 条款明确 including commercial use。            |
+
+**建议结论：`allowed`（待维护者确认）。**
+
+### 官方下载入口
+
+- 指标页面：<https://data.worldbank.org/indicator/SE.SEC.CUAT.UP.ZS>
+- API：<https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.CUAT.UP.ZS?format=json&per_page=20000>
+- 版本记录：API `lastupdated: 2026-10-08`。
