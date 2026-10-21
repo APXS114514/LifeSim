@@ -2,6 +2,10 @@
 
 > 这是 LifeSim 的第一个**可游玩测试版本**，不是 v0.1 公开 Alpha。范围与限制由 [ADR-0006](adr/0006-first-playable-slice.md) 定义。
 
+![重大决定与人生时间线](assets/playable-ui.png)
+
+![死亡总结](assets/playable-summary.png)
+
 ## 现在能做什么
 
 - 在中国大陆、日本、朝鲜、韩国、俄罗斯（含苏联时期）之间选择或随机出生，年份 1950—2026。
