@@ -1,0 +1,20 @@
+{
+  "name": "@lifesim/country-packs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "五个首发地区的国家包：地理、货币、锚点、断点、统计序列与出生选择",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "@lifesim/data-registry": "workspace:*",
+    "zod": "4.6.7"
+  }
+}
