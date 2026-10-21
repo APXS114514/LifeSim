@@ -65,6 +65,15 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
           .map((actor) => `${actor.id} points to a missing account`);
       },
     },
+    {
+      id: 'life.relationship-actors',
+      check(state) {
+        const ids = new Set(state.actors.map((actor) => actor.id));
+        return state.relationships
+          .filter((relationship) => !ids.has(relationship.fromId) || !ids.has(relationship.toId))
+          .map((relationship) => `${relationship.id} references a missing actor`);
+      },
+    },
   ];
 }
 

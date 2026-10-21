@@ -6,6 +6,7 @@ import {
 } from '@lifesim/content-schema';
 import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import { z } from 'zod';
+import { createBirthFamily } from './family.ts';
 import { writeMacro, type MacroState, type RegionModel } from './region.ts';
 import {
   EVENT,
@@ -109,6 +110,7 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
         evidenceIds: [evidenceId(region, 'population')],
         details: { place: placeId, settlement, familyResources },
       });
+      createBirthFamily(ctx, region, actor, born);
       for (const anchor of region.anchors) {
         if (anchor.at < ctx.at || !anchor.regionIds.includes(region.packId)) continue;
         ctx.schedule({

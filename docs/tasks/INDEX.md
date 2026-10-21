@@ -76,7 +76,7 @@
 | [M3-007](M3-007.md) | 经济周期历史锚点（按国家）                | —                      | country-packs、data                       | 高                          | 是       | 部分完成，待验收（KP 待 Q10） |
 | [M3-008](M3-008.md) | 数据驱动人生规则设计（ADR-0007 草案）     | 003、004—007           | docs/adr                                  | 高                          | 否       | 草案已提交，待采纳            |
 | [M3-009](M3-009.md) | RegionModel 扩展实现                      | 008、004—007           | systems、real-world、synthetic-world      | 高                          | 否       | 未开始                        |
-| [M3-010](M3-010.md) | 出生家庭与 Tier1 父母                     | 002                    | systems、synthetic-world                  | 高                          | 否       | 未开始                        |
+| [M3-010](M3-010.md) | 出生家庭与 Tier1 父母                     | 002                    | systems、synthetic-world                  | 高                          | 否       | 已实现，待审查（task 分支）   |
 | [M3-011](M3-011.md) | Tier1 NPC 生命周期与状态一致性            | 010                    | systems                                   | 高                          | 否       | 未开始                        |
 | [M3-012](M3-012.md) | 学制、考试与教育费用（按国家与年代）      | 009、004               | systems、content-schema                   | 高                          | 否       | 未开始                        |
 | [M3-013](M3-013.md) | 职业分类、技能与职业流动                  | 009、005               | content-schema、systems                   | 高                          | 否       | 未开始                        |

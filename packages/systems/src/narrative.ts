@@ -23,6 +23,9 @@ export const LIFE_NARRATIVE = {
       identity: {
         'polity-change': '政治归属随政体更替改为{{to}}；居住地没有改变。',
       },
+      family: {
+        parent: '{{role}}当时 {{ageAtBirth}} 岁，教育程度：{{education}}。',
+      },
       education: {
         'primary-started': '开始上小学。',
         'not-enrolled': '没有上学。',
@@ -69,6 +72,8 @@ export const LIFE_NARRATIVE = {
       cause: { illness: '慢性病', other: '其他原因' },
       phase: { normal: '经济正常', recession: '经济衰退中' },
       decidedBy: { player: '本人选择', principles: '按人生原则' },
+      role: { mother: '母亲', father: '父亲' },
+      education: { none: '未受教育', primary: '小学', secondary: '中学', tertiary: '大学' },
       otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
     },
   },
@@ -88,6 +93,9 @@ export const LIFE_NARRATIVE = {
       identity: {
         'polity-change':
           'Political allegiance changed to {{to}}; the place of residence did not change.',
+      },
+      family: {
+        parent: 'Your {{role}} was {{ageAtBirth}} then; education: {{education}}.',
       },
       education: {
         'primary-started': 'Started primary school.',
@@ -141,6 +149,13 @@ export const LIFE_NARRATIVE = {
       cause: { illness: 'chronic illness', other: 'other causes' },
       phase: { normal: 'normal economy', recession: 'during a recession' },
       decidedBy: { player: "player's choice", principles: 'by life principles' },
+      role: { mother: 'mother', father: 'father' },
+      education: {
+        none: 'no schooling',
+        primary: 'primary',
+        secondary: 'secondary',
+        tertiary: 'university',
+      },
       otherPlace: { 'other-urban': 'other urban areas', 'other-rural': 'other rural areas' },
     },
   },

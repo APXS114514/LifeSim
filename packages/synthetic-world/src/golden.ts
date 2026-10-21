@@ -8,6 +8,6 @@
 export const GOLDEN_LIFE = {
   seed: 'golden-1',
   birthDate: '1960-03-15',
-  factCount: 68,
-  fingerprint: '34074d0f36a15e13bcf05c8e14d11772',
+  factCount: 72,
+  fingerprint: 'b4b67de5d12b1a4827e238ad2051d292',
 } as const;
