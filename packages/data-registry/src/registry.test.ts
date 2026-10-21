@@ -113,7 +113,16 @@ describe('DataRegistry exact lookup', () => {
   });
 
   it('returns the point-level missing reason and never substitutes zero', () => {
-    const result = registry.lookup({ indicator: 'births', geographyId: 'country:JP', year: 1951 });
+    // M2-007 会先尝试相邻年份；这里只保留缺失点，验证没有任何可回退值时的行为。
+    const isolated = new DataRegistry([
+      {
+        ...birthsJP,
+        points: [
+          { year: 1951, age: null, value: null, missingReason: 'fixture gap', projected: false },
+        ],
+      },
+    ]);
+    const result = isolated.lookup({ indicator: 'births', geographyId: 'country:JP', year: 1951 });
     expect(result).toEqual({ status: 'missing', reason: 'fixture gap' });
     expect('value' in result).toBe(false);
   });
