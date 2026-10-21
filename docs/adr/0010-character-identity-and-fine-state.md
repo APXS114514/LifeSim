@@ -39,7 +39,7 @@
 
    `family` / `given` 为 `null` 只表示该地区与年代的姓名表有缺口（见第 6 条），界面显示「姓名待接入」；规则不得依赖姓名。
 
-2. **姓名表**放在国家包（`packages/country-packs/data/<PACK>/names*.json`），契约为新的 `NameTableSchema`（content-schema）。每个条目：稳定 `id`、适用性别（`female` / `male` / `any`）、出生年代窗口、城乡权重（可选）、频率权重及其证据等级、各语言写法（原文、`zh-Hans`、`en`）、来源 ID。表的版本并入国家包的 `dataVersion`，从而进入快照的 `dataPackVersions`；条目**只增不删**，删除或改 ID 必须升版本。合成地区使用明确虚构的音节名（D 级）。
+2. **姓名表**放在国家包（`packages/country-packs/names/<PACK>/*.json`，与统计序列的 `data/` 目录分开；2026-10-21 实现细节更正），契约为新的 `NameTableSchema`（content-schema）。每个条目：稳定 `id`、适用性别（`female` / `male` / `any`）、出生年代窗口、城乡权重（可选）、频率权重及其证据等级、各语言写法（原文、`zh-Hans`、`en`）、来源 ID。表的版本并入国家包的 `dataVersion`，从而进入快照的 `dataPackVersions`；条目**只增不删**，删除或改 ID 必须升版本。合成地区使用明确虚构的音节名（D 级）。
 3. **生成**：出生当天为每个新角色安排一个 `identity.name` 事件（每个角色一个事件、以实体 ID 为键的独立随机流），在 `life.birth` 之后处理；按命名方案、**该角色自己的出生年**、城乡、性别，从表里按权重抽取。**不改变出生事件已有的任何抽样**。该事件**不发出事实**（命名不是时间线事件；出生事实的叙事在渲染时按 `name` 查表）。
 4. **家族规则**（命名方案决定，D 级习俗假设逐条写进 M3-045）：
    - 主角随父姓（`zh`、`ja`、`ko`）；`ru` 的姓按性别取阴性或阳性形式。
