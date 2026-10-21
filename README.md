@@ -4,7 +4,7 @@
 
 可溯源的历史统计和可解释的概率模型构成现实约束；个人选择、NPC 的自主意愿和家庭因果改变个人命运，但不改写已经发生的宏观历史。
 
-> **当前状态：M2（五国数据包与证据登记）已实现，待维护者验收。** 五地 1950—2026 的出生数、单岁生命表与城镇比例、地理/币制/政体锚点、数据查询回退与出生选择器都已入库；真实地区仍不能接入人生规则（M3），**网页端还不能游玩**。进度见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+> **当前状态：第一个可玩测试版本（M3-lite）。** 五地 1950—2026 可选出生，使用真实 WPP 生命表与 M2 地理/币制，在浏览器里跑完一生、处理重大决定、查看死亡总结、切换中英并自动存档。家庭、NPC、婚育、迁居与城市权重仍属于 M3；完整公开 Alpha 仍属于 M4/M5。范围见 [docs/PLAYABLE_TEST.md](docs/PLAYABLE_TEST.md)，进度见 [docs/ROADMAP.md](docs/ROADMAP.md)。
 
 ## v0.1 目标（公开 Alpha）
 
@@ -36,6 +36,7 @@ pnpm dev          # 本地开发服务器
 pnpm verify       # 格式、lint、依赖边界、许可证、数据/覆盖率、类型检查、单元测试、构建
 pnpm test:e2e     # Playwright 冒烟测试（桌面 + 手机视口）
 pnpm life         # 用合成地区在 Node 里跑一个完整人生（加 --locale en 看英文）
+pnpm life:real    # 用真实国家包跑一局可玩切片（--region JP --year 1978）
 pnpm bench        # 可复现的性能基准（JSON 报告）
 pnpm check:data   # 来源登记、可再分发许可与孤立数据文件
 pnpm check:coverage # 数据覆盖率矩阵是否与数据同步
@@ -54,8 +55,8 @@ pnpm check:coverage # 数据覆盖率矩阵是否与数据同步
 ## 仓库结构
 
 ```text
-apps/web/                  React + Vite 网页应用（目前是角色创建页草图）
-apps/cli/                  headless 入口：pnpm life、pnpm bench
+apps/web/                  React + Vite 网页应用：出生选择、人生时间线、决定与总结
+apps/cli/                  headless 入口：pnpm life、pnpm life:real、pnpm bench
 packages/content-schema/   共享类型契约与运行时校验
 packages/simulation-core/  确定性模拟内核：推进器、事件队列、随机流、原子结算、快照
 packages/systems/          人生规则（教育、就业、财务、健康、死亡、历史锚点）与双语叙事模板
@@ -64,12 +65,14 @@ packages/save/             存档仓库接口与导入导出校验
 packages/narrative/        双语叙事渲染契约与文本一致性检查
 packages/data-registry/    统计序列查询、回退规则、断点、预测与情景标记
 packages/country-packs/    五国数据包、按日期解析、出生选择器与数据指纹
-docs/                      设计基线、架构、数据政策、质量门禁、ADR
+packages/real-world/       M3-lite 适配器：国家包 → RegionModel + 双语叙事
+docs/                      设计基线、架构、数据政策、质量门禁、ADR、可玩测试说明
 data/                      来源登记、许可审计与数据转换脚本（原始下载在 data/cache/，不进仓库）
 ```
 
 ## 文档
 
+- [docs/PLAYABLE_TEST.md](docs/PLAYABLE_TEST.md)：可玩测试版说明与已知限制
 - [docs/GDD.md](docs/GDD.md)：设计基线（冻结）
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)：仓库实际架构与依赖规则
 - [docs/DATA_POLICY.md](docs/DATA_POLICY.md)：证据等级、来源登记与许可审计
@@ -96,6 +99,6 @@ data/                      来源登记、许可审计与数据转换脚本（�
 
 LifeSim is a single-player life simulation set inside real history. Births can be chosen in Mainland China, Japan, North Korea, South Korea or Russia (including the Soviet era) between 1950 and 2026. Macro history stays fixed, while your life and family are shaped by choices, other people's own decisions and calibrated probabilities. When the protagonist dies, the run ends.
 
-**Status: stage M2 (five country data packs and evidence registry) implemented, awaiting maintainer acceptance.** Birth counts, single-age life tables and urban shares for 1950—2026, geography/currency/polity anchors, lookup fallbacks and the birth selector are in the repository. Real regions are not yet wired into the life rules (M3), so it is **not playable in the browser**.
+**Status: first playable test build (M3-lite).** Choose a birth in one of five regions between 1950 and 2026, run a whole life in the browser with real WPP life tables and M2 geography/currency, make major decisions, read the death summary, switch between Chinese and English, and resume from an autosave. Family, NPCs, marriage, children, migration and city weights are still M3; the public Alpha is M4/M5. See [docs/PLAYABLE_TEST.md](docs/PLAYABLE_TEST.md).
 
 Original code is released under the [MIT License](LICENSE). Third-party data and assets keep their own licenses.

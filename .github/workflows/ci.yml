@@ -65,6 +65,8 @@ jobs:
       - run: pnpm build
       # M1 验收：headless 完整人生，以及可复现的性能基准（报告作为产物上传）。
       - run: pnpm life --seed ci --birth 1978-05-04 --choose start-work
+      # 可玩切片：真实国家包、真实出生选择器与完整人生。
+      - run: pnpm life:real --region JP --year 1978 --birth 1978-05-04
       - run: pnpm bench --lives 500 --out "$GITHUB_WORKSPACE/bench-report.json"
       - uses: actions/upload-artifact@v7
         with:

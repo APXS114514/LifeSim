@@ -2,15 +2,15 @@
 
 > 给接手开发的 Agent 与人类协作者。本文独立于任何聊天记录，只描述**仓库现在是什么样、怎么验证、哪里还没做**。
 > 规则以 [AGENTS.md](../AGENTS.md) 为准，产品边界以 [GDD.md](GDD.md) 为准；本文不复述它们。
-> 最后更新：2026-10-20（M2 已实现，含 23 个任务；等待维护者验收）
+> 最后更新：2026-10-20（M2 已实现；第一个可玩测试版本 M3-lite 已实现，等待试玩反馈与验收）
 
 ## 1. 一页概览
 
 - **项目**：LifeSim，真实历史统计约束下的单人人生模拟（中国大陆、日本、朝鲜、韩国、俄罗斯，1950—2026 出生；中英双语；离线；MIT）。
-- **当前阶段**：M0 已验收；M1（确定性模拟内核 + 合成地区上的最小人生因果链）完成并审计，等待维护者验收；M2（五国数据包与证据登记）的 23 个任务已实现，等待维护者验收。
-- **能做什么**：在 Node 里用一个**虚构的合成地区**跑完整人生（`pnpm life`）；用真实 WPP/WDI 数据建立五国数据包、按日期解析地理/币制/政体，并按 GDD §4.3 选择出生。
-- **还不能做什么**：真实地区的 `RegionModel` 适配器、把出生上下文接入人生模拟、NPC/家庭/迁居都属于 M3；网页只有角色创建页草图，不能游玩。
-- **下一步**：维护者验收 M2（CI、Guardrails、来源复核），然后按 M3 拆分任务。
+- **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2（五国数据包与证据登记）的 23 个任务已实现；**第一个可玩测试版本（M3-lite）已实现**，等待试玩反馈与验收。
+- **能做什么**：浏览器里五地选出生、跑完整人生、处理重大决定、看死亡总结、切换中英、刷新续玩；Node 里 `pnpm life:real` 跑真实国家包人生；`pnpm life` 仍跑合成地区。
+- **还不能做什么**：家庭、NPC、婚育、收养、迁居、城市人口权重、各国特色事件、政体更替作用到在世角色都属于完整 M3；Worker、IndexedDB、PWA 与完整可玩 Alpha 属于 M4/M5。
+- **下一步**：按 [docs/PLAYABLE_TEST.md](PLAYABLE_TEST.md) 试玩并收集问题；维护者确认 M3-lite 的 D 级规则后再拆分完整 M3。
 
 ## 2. 开发环境
 
@@ -34,6 +34,7 @@ TypeScript 源码不经构建，由 Node 24 的类型剥离直接运行；因此
 | `pnpm data:sources`                          | 由 `data/sources.json` 重新生成 `data/SOURCES.md`                                                                | 改了来源时         |
 | `pnpm check:coverage` / `pnpm data:coverage` | 数据覆盖率矩阵检查 / 重新生成 `docs/data/COVERAGE.md`                                                            | 改了序列或国家包时 |
 | `pnpm life --seed demo --birth 1978-05-04`   | 合成人生（加 `--locale en`、`--choose start-work`、`--json`、`--save <文件>`）                                   | 改了规则时看效果   |
+| `pnpm life:real --region JP --year 1978`     | 真实国家包上的可玩切片（加 `--region random`、`--year random`、`--locale en`、`--json`）                         | 改了适配器或规则时 |
 | `pnpm bench --lives 1000`                    | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时   |
 | `pnpm check:commits <base>..<head>`          | 提交信息里没有 AI 工具署名                                                                                       | 提交后             |
 
@@ -50,8 +51,9 @@ packages/narrative/        叙事渲染与双语一致性检查
 packages/save/             存档仓库接口与导入导出信封
 packages/data-registry/    统计序列查询、回退规则、断点、预测与情景标记
 packages/country-packs/    五国数据包（src/packs）、按日期解析、出生选择器、数据指纹与 data/
-apps/cli/                  headless 入口：run-life.ts、bench.ts
-apps/web/                  React + Vite 网页（角色创建页草图）
+packages/real-world/       M3-lite 适配器：国家包 → RegionModel、可玩会话与双语叙事
+apps/cli/                  headless 入口：run-life.ts、run-real-life.ts、bench.ts
+apps/web/                  React + Vite 网页：出生选择、游戏会话、时间线、决定、总结与自动存档
 docs/                      GDD（冻结）、ADR、架构、数据政策、质量门禁、路线图、审计、任务、数据覆盖率
 data/                      来源登记、许可审计、数据转换脚本（data/scripts/）与本机缓存（data/cache/，不进仓库）
 scripts/                   质量门禁脚本（check-*）——高风险
@@ -63,8 +65,9 @@ qa/                        测试基线——高风险
 ```text
 apps/cli ─► synthetic-world ─► systems ─► simulation-core ─► content-schema
 apps/cli ─► save、narrative ─────────────────────────────► content-schema
-apps/web ─► narrative、content-schema（不能依赖 synthetic-world）
+apps/web ─► narrative、content-schema、systems、real-world（不能依赖 synthetic-world）
 M2 已落地：data-registry ─► content-schema；country-packs ─► data-registry、simulation-core、content-schema
+M3-lite：real-world ─► country-packs、data-registry、systems、simulation-core、narrative、content-schema
 ```
 
 ## 5. 模块职责与主要接口
@@ -124,6 +127,14 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `createPackRegistry()`：汇总序列、断点与「地点 → 国家」父级关系；`DATA_FINGERPRINTS`（15 条）锁定数据。
 - `selectBirth({ seed, region, year, birthDate? })`：年份等概率、地区按出生数加权、城乡按 urban-share、日期年内等概率；抽样顺序固定，指定项也照常抽样。缺失数据抛错，不跳过、不当 0。
 
+### real-world（M3-lite 可玩切片）
+
+- `createRealRegion(packId, birthDate, { placeId?, polityId? })`：用国家包构造 `RegionModel`；`mortality` 来自 WPP qx，其他表为 ADR-0006 的 D 级基线。
+- `createRealLifeSimulation({ seed, region, year, birthDate?, principles?, decisions? })`：先 `selectBirth`，再用出生地点/政体创建人生。
+- `createRealNarrator(pack, birthDate)` / `realNarrativeResources`：系统模板 + 该包地点/币制名；金额按币制小数位格式化。
+- 明确限制：只有主角；政体只在出生时确定；无家庭/NPC/迁居/城市权重。
+- 网页会话在 `apps/web/src/game/session.ts`：推进、决定、`finish()`、序列化/恢复；`storage.ts` 只存 localStorage。
+
 ### 其他
 
 - `synthetic-world`：`syntheticRegion`（实现 `RegionModel`）、`syntheticManifest`、`SYNTHETIC_LABELS`；`golden.ts` 的 `GOLDEN_LIFE`。
@@ -144,15 +155,15 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 
 ## 7. 已完成与未完成
 
-**已完成（M0、M1、M2）**：仓库地基与全部质量门禁；契约；确定性内核；合成地区上的教育 → 就业 → 收支 → 健康 → 死亡因果链；重大决定暂停与玩家选择；币制重定值与经济周期锚点；快照与存档往返；双语叙事；headless CLI 与基准；多 Agent 护栏。M2 另含：`StatSeries`/地理/政体更替契约、DataRegistry（回退/断点/预测/情景）、WPP 2024 出生数与单岁生命表、WDI 城镇比例、五国国家包与出生选择器、数据指纹、许可门禁与覆盖率矩阵。详见 [ROADMAP.md](ROADMAP.md)、[audits/M1-AUDIT.md](audits/M1-AUDIT.md) 与 [data/LICENSE_AUDIT.md](../data/LICENSE_AUDIT.md)。
+**已完成（M0、M1、M2、M3-lite）**：仓库地基与全部质量门禁；契约；确定性内核；合成地区上的教育 → 就业 → 收支 → 健康 → 死亡因果链；重大决定暂停与玩家选择；币制重定值与经济周期锚点；快照与存档往返；双语叙事；headless CLI 与基准；多 Agent 护栏。M2 另含：`StatSeries`/地理/政体更替契约、DataRegistry（回退/断点/预测/情景）、WPP 2024 出生数与单岁生命表、WDI 城镇比例、五国国家包与出生选择器、数据指纹、许可门禁与覆盖率矩阵。M3-lite 另含：`real-world` 适配器、五国完整人生、网页开局/时间线/决定/总结/中英切换/localStorage 续玩、`pnpm life:real` 与 E2E。详见 [ROADMAP.md](ROADMAP.md)、[PLAYABLE_TEST.md](PLAYABLE_TEST.md)、[ADR-0006](adr/0006-first-playable-slice.md)、[audits/M1-AUDIT.md](audits/M1-AUDIT.md) 与 [data/LICENSE_AUDIT.md](../data/LICENSE_AUDIT.md)。
 
 **未完成（按里程碑）**：
 
 | 里程碑 | 内容                                                                                                                       | 状态                                                          |
 | ------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | **已实现，待维护者验收**，见 [tasks/INDEX.md](tasks/INDEX.md) |
-| M3     | 真实地区的 RegionModel 适配器、家庭与 NPC 分层、婚育、迁居、政体更替作用到在世角色、城市人口权重、各国特色事件             | 未拆分                                                        |
-| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | 未拆分                                                        |
+| M3     | 真实地区的 RegionModel 适配器、家庭与 NPC 分层、婚育、迁居、政体更替作用到在世角色、城市人口权重、各国特色事件             | **M3-lite 已实现**；完整 M3 未拆分                            |
+| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | M3-lite 已有基础流程；完整 M4 未拆分                          |
 | M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                                        |
 
 **待维护者决定的产品问题**：角色是否有性别（GDD 未规定；M2 先用男女合计生命表，见 ADR-0005）。
@@ -185,7 +196,9 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - 每个事件深拷贝全部状态并校验全部角色；加入 NPC 后需重新测量性能。
 - 快照里的已处理事件键随一生增长，NPC 增多后需评估体积。
 - 跨浏览器逐位一致只在 V8 上实测过。
-- 五国数据文件约 7.5 MB JSON；浏览器构建若引入 `country-packs` 需评估包体积与按需加载。
+- 五国数据文件约 7.5 MB JSON；M3-lite 网页构建约 4.1 MB（gzip 约 690 KB），后续需要按需加载或拆分国家包。
+- M3-lite 的教育/就业/工资/价格/疾病是 **ADR-0006 的 D 级假设**，不是五国历史统计；M3 接入真实数据时必须替换并更新 ADR。
+- M3-lite 只有主角；政体只在出生时确定；没有家庭、NPC、婚育、迁居、城市权重；网页在主线程同步推进，存档只在 localStorage。
 
 ## 10. 如何接手一个任务
 
