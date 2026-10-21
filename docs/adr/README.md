@@ -11,7 +11,7 @@ GDD 没有规定、但会影响实现的决定写在这里（GDD §0）。ADR �
 | [0005](0005-m2-data-architecture.md)            | M2 数据架构                   | 已采纳 |
 | [0006](0006-first-playable-slice.md)            | 第一个可玩切片（M3-lite）     | 提议   |
 | [0007](0007-data-driven-life-rules.md)          | M3 数据驱动人生规则           | 已采纳 |
-| [0008](0008-preset-choices-and-pause-policy.md) | 预设选择与暂停策略            | 提议   |
+| [0008](0008-preset-choices-and-pause-policy.md) | 预设选择与暂停策略            | 已采纳 |
 
 ## 模板
 
