@@ -305,6 +305,13 @@
   "packs": {
     "loading": "Loading country data ({{completed}}/{{total}})…",
     "failed": "Country data could not be loaded. Reconnect if this country has not been cached, then retry. Your save has been kept.",
-    "retry": "Retry loading"
+    "retry": "Retry loading",
+    "back": "Back to birth settings"
+  },
+  "offline": {
+    "current": "You are offline. Cached regions remain playable; other content needs a connection.",
+    "unavailable": "Offline storage is unavailable in this browser. You can still play online.",
+    "updateAvailable": "A new version is available. Refresh when you are ready.",
+    "applyUpdate": "Refresh to update"
   }
 }

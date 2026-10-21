@@ -1,5 +1,6 @@
 import { StrictMode, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
+import { registerPwa } from './pwa/register.ts';
 import { App } from './app/App.tsx';
 import './i18n/index.ts';
 import './styles/tokens.css';
@@ -31,3 +32,5 @@ createRoot(container).render(
     )}
   </StrictMode>,
 );
+
+if (import.meta.env.PROD) void registerPwa(import.meta.env.BASE_URL);

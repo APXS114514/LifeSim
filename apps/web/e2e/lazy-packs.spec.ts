@@ -68,8 +68,10 @@ test('requests no country at first paint, then only the selected country and res
 
 test('shows a retryable bilingual message when the selected country cannot download', async ({
   page,
+  context,
 }) => {
-  await page.route('**/assets/jp-*.js', (route) => route.abort());
+  // A controlled page delegates the actual network request to the worker.
+  await context.route('**/assets/jp-*.js', (route) => route.abort());
   await page.goto('/');
   await page.getByRole('radio', { name: '日本', exact: true }).check();
   await page.getByRole('button', { name: '开始人生', exact: true }).click();
@@ -78,7 +80,7 @@ test('shows a retryable bilingual message when the selected country cannot downl
   await expect(page.getByRole('alert')).toContainText('Country data could not be loaded');
   await expect(page.getByRole('button', { name: 'Retry loading', exact: true })).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem('lifesim.save.v1.preserved'))).toBeNull();
-  await page.unroute('**/assets/jp-*.js');
+  await context.unroute('**/assets/jp-*.js');
   await page.getByRole('button', { name: 'Retry loading', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Life timeline' })).toBeVisible();
 });

@@ -3,6 +3,8 @@ import { loadRequiredPacks } from '@lifesim/country-packs';
 import type { RealLifeRequest } from '@lifesim/real-world';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PwaStatus } from '../components/PwaStatus.tsx';
+import { applyPwaUpdate } from '../pwa/register.ts';
 import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
 import { SaveIssuePanel } from '../components/SaveIssuePanel.tsx';
 import {
@@ -250,6 +252,16 @@ export function App() {
         {t('app.stageNotice')}
       </p>
 
+      <PwaStatus
+        onUpdate={() => {
+          if (session && !saveGame(session)) {
+            setSaveFailed(true);
+            return;
+          }
+          applyPwaUpdate();
+        }}
+      />
+
       {issue && (
         <SaveIssuePanel
           reason={issue.reason}
@@ -281,6 +293,17 @@ export function App() {
           >
             {t('packs.retry')}
           </button>
+          {packError.request && (
+            <button
+              type="button"
+              onClick={() => {
+                clearPendingStart();
+                setPackError(null);
+              }}
+            >
+              {t('packs.back')}
+            </button>
+          )}
         </section>
       )}
 
