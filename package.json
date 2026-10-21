@@ -35,8 +35,10 @@
     "check:licenses": "node scripts/check-licenses.mjs",
     "check:data": "node scripts/check-data.mjs",
     "data:sources": "node scripts/check-data.mjs --write",
+    "data:coverage": "node data/scripts/coverage.mjs --write",
+    "check:coverage": "node data/scripts/coverage.mjs",
     "notices": "node scripts/check-licenses.mjs --write",
-    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm check:data && pnpm typecheck && pnpm test:report && pnpm check:tests && pnpm build",
+    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm check:data && pnpm check:coverage && pnpm typecheck && pnpm test:report && pnpm check:tests && pnpm build",
     "check:commits": "sh scripts/check-commit-message.sh --range"
   },
   "devDependencies": {

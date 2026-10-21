@@ -14,5 +14,8 @@ THIRD_PARTY_NOTICES.md
 # 由 scripts/check-data.mjs 生成
 data/SOURCES.md
 
+# 由 data/scripts/coverage.mjs 生成
+docs/data/COVERAGE.md
+
 # 由 data/scripts/* 生成的数据文件，保持 JSON.stringify(…, null, 2) 的逐字节输出
 packages/country-packs/data/
