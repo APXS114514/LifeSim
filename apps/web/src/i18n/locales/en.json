@@ -51,6 +51,16 @@
     "noFacts": "No events to show yet.",
     "error": "This run hit a problem:"
   },
+  "saveIssue": {
+    "heading": "The previous save could not be loaded",
+    "incompatible": "This save comes from an older version (different rules or data version), so the current version cannot continue it.",
+    "unreadable": "This save is damaged or has an invalid format, so the current version cannot read it.",
+    "kept": "The original save is still kept in this browser and will not be deleted automatically. Download a backup first, then decide whether to clear it.",
+    "download": "Download the original save",
+    "clear": "Clear the save and start over",
+    "confirmClear": "Click again to confirm the deletion (cannot be undone)",
+    "retry": "Try loading again"
+  },
   "decision": {
     "eyebrow": "Major decision",
     "heading": "What will you choose?",

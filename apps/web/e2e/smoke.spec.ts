@@ -94,3 +94,62 @@ test('the play layout never scrolls sideways', async ({ page }) => {
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('keeps an incompatible save, offers a backup and clears only after confirmation', async ({
+  page,
+}) => {
+  await startLife(page, '日本', '1978');
+  const raw = await page.evaluate(() => localStorage.getItem('lifesim.save.v1'));
+  expect(raw).not.toBeNull();
+  const mutated = JSON.parse(raw ?? '{}') as { snapshot: { engineVersion: string } };
+  // 模拟 M3-001 升级 SYSTEMS_VERSION 之后的旧存档：规则版本不同。
+  mutated.snapshot.engineVersion = '0.0.0';
+  await page.evaluate((value) => {
+    localStorage.setItem('lifesim.save.v1', JSON.stringify(value));
+  }, mutated);
+
+  await page.reload();
+  await expect(page.getByRole('heading', { name: '上次的存档无法读取' })).toBeVisible();
+  await expect(page.getByText(/旧版本/)).toBeVisible();
+
+  const keys = await page.evaluate(() => ({
+    primary: localStorage.getItem('lifesim.save.v1'),
+    preserved: localStorage.getItem('lifesim.save.v1.preserved'),
+  }));
+  expect(keys.primary).not.toBeNull();
+  expect(keys.preserved).toBe(keys.primary);
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: '下载原始存档' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('lifesim-save-backup.json');
+
+  await page.getByRole('button', { name: '清除存档并开新局' }).click();
+  await page.getByRole('button', { name: '再次点击以确认清除（不可恢复）' }).click();
+  await expect(page.getByRole('heading', { name: '出生设置' })).toBeVisible();
+
+  const after = await page.evaluate(() => ({
+    primary: localStorage.getItem('lifesim.save.v1'),
+    preserved: localStorage.getItem('lifesim.save.v1.preserved'),
+  }));
+  expect(after.primary).toBeNull();
+  expect(after.preserved).toBeNull();
+});
+
+test('keeps a corrupt save instead of deleting it silently', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem('lifesim.save.v1', '{not json');
+  });
+  await page.reload();
+
+  await expect(page.getByRole('heading', { name: '上次的存档无法读取' })).toBeVisible();
+  await expect(page.getByText(/已损坏或格式不正确/)).toBeVisible();
+
+  const keys = await page.evaluate(() => ({
+    primary: localStorage.getItem('lifesim.save.v1'),
+    preserved: localStorage.getItem('lifesim.save.v1.preserved'),
+  }));
+  expect(keys.primary).toBe('{not json');
+  expect(keys.preserved).toBe('{not json');
+});

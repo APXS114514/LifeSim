@@ -503,6 +503,22 @@ legend {
   font-size: 0.85rem;
 }
 
+.save-issue {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.save-issue h2 {
+  margin-top: 0;
+}
+
+.save-issue .actions {
+  flex-wrap: wrap;
+}
+
 @media (max-width: 560px) {
   .timeline-actions {
     align-items: flex-start;

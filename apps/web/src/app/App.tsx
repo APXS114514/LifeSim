@@ -1,25 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
-import { clearGame, loadGame, saveGame } from '../game/storage.ts';
+import { SaveIssuePanel } from '../components/SaveIssuePanel.tsx';
+import {
+  clearGame,
+  downloadSaveBackup,
+  loadGame,
+  saveGame,
+  type SaveLoadResult,
+} from '../game/storage.ts';
 import { GameSession } from '../game/session.ts';
 import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 import { PlayPage } from '../pages/PlayPage.tsx';
 import type { BirthRegionId, Locale } from '@lifesim/content-schema';
 
 type GameState = { session: GameSession; revision: number };
+type SaveIssue = Extract<SaveLoadResult, { kind: 'failed' }>;
 
 export function App() {
   const { t, i18n } = useTranslation();
   const locale: Locale = i18n.resolvedLanguage === 'en' ? 'en' : 'zh-Hans';
-  const [boot] = useState(() => {
-    const saved = loadGame();
-    return { saved, restored: saved !== null };
-  });
+  const [boot] = useState<SaveLoadResult>(() => loadGame());
   const [game, setGame] = useState<GameState | null>(
-    boot.saved ? { session: boot.saved, revision: 0 } : null,
+    boot.kind === 'loaded' ? { session: boot.session, revision: 0 } : null,
   );
-  const [restored, setRestored] = useState(boot.restored);
+  const [issue, setIssue] = useState<SaveIssue | null>(boot.kind === 'failed' ? boot : null);
+  const [restored, setRestored] = useState(boot.kind === 'loaded');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,6 +45,7 @@ export function App() {
   }
 
   function start(choice: { region: BirthRegionId | 'random'; year: number | 'random' }): void {
+    if (issue) return;
     try {
       const seed =
         typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -66,6 +73,30 @@ export function App() {
     setError(null);
   }
 
+  /** 重试读取：成功则进入游戏；仍然失败则更新提示；没有存档则回到出生设置。 */
+  function retryLoad(): void {
+    const result = loadGame();
+    if (result.kind === 'loaded') {
+      setGame({ session: result.session, revision: 0 });
+      setIssue(null);
+      setRestored(true);
+      setError(null);
+      return;
+    }
+    setIssue(result.kind === 'failed' ? result : null);
+    setGame(null);
+    setRestored(false);
+  }
+
+  /** 玩家明确确认清除后才删除存档（主键与保留副本）。 */
+  function discardAndStartOver(): void {
+    clearGame();
+    setIssue(null);
+    setGame(null);
+    setRestored(false);
+    setError(null);
+  }
+
   return (
     <div className="shell">
       <header className="masthead">
@@ -80,6 +111,17 @@ export function App() {
         {t('app.stageNotice')}
       </p>
 
+      {issue && (
+        <SaveIssuePanel
+          reason={issue.reason}
+          onDownload={() => {
+            downloadSaveBackup(issue.raw);
+          }}
+          onClear={discardAndStartOver}
+          onRetry={retryLoad}
+        />
+      )}
+
       {error && (
         <div className="error-panel" role="alert">
           <p>{t('play.error')}</p>
@@ -91,7 +133,7 @@ export function App() {
       )}
 
       <main>
-        {game ? (
+        {issue ? null : game ? (
           <PlayPage
             session={game.session}
             locale={locale}
