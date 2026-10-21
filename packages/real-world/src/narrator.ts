@@ -18,7 +18,14 @@ function labels(pack: CountryPack, birthDate: ISODate, locale: Locale): MessageT
   for (const [version, name] of Object.entries(pack.currency.versionNames)) {
     currencies[pack.currency.code + '-' + version] = name[locale];
   }
-  return { enums: { place: places, currency: currencies } };
+  const polities: Record<string, string> = {};
+  for (const entity of pack.politicalEntities) {
+    polities[entity.id] = entity.names[locale];
+  }
+  // polity-change 模板使用 from/to 作为占位符名，所以同名枚举也要指向政体显示名。
+  return {
+    enums: { place: places, currency: currencies, polity: polities, from: polities, to: polities },
+  };
 }
 
 /** 真实国家包的叙事资源：系统模板 + 该包的地点与币制名称。 */

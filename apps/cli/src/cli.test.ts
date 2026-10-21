@@ -9,6 +9,7 @@ import {
   createLifeSimulation,
   restoreLifeSimulation,
 } from '@lifesim/systems';
+import { createRealLifeSimulation, createRealNarrator } from '@lifesim/real-world';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { narrator, region, resources } from './world.ts';
@@ -85,6 +86,19 @@ describe('bilingual narrative of synthetic lives', () => {
         seen.add(fact.templateId);
         for (const locale of SUPPORTED_LOCALES) narrator.render(fact, locale);
       }
+    }
+    // 政体更替只存在于真实国家包（合成地区没有 polity-change 锚点）：用一局 RU 人生补齐模板覆盖。
+    const real = createRealLifeSimulation({
+      seed: 'coverage-real-politics',
+      region: 'RU',
+      year: 1980,
+      birthDate: '1980-05-04',
+    });
+    real.simulation.advanceTo(FOREVER);
+    const realNarrator = createRealNarrator(real.pack, real.birth.birthDate);
+    for (const fact of real.simulation.facts) {
+      seen.add(fact.templateId);
+      for (const locale of SUPPORTED_LOCALES) realNarrator.render(fact, locale);
     }
     expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
     expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);

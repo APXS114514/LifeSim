@@ -19,7 +19,38 @@ export function historyEvents(region: RegionModel): EventDefinition[] {
       const evidence = [anchor.id, evidenceId(region, 'history')];
 
       if (anchor.kind === 'polity-change') {
-        throw new Error(`Polity-change anchors are applied from M3 (ADR-0005): ${anchor.id}`);
+        // 政体更替只改政治实体与国籍，不改变居住地、账户或币制（GDD §4.2、§5）。
+        const anchorFact = ctx.emit({
+          type: 'history.anchor',
+          outcomeCode: 'polity-change',
+          templateId: 'history.polity-change',
+          actorIds: [],
+          evidenceIds: evidence,
+          details: { from: anchor.fromEntityId, to: anchor.toEntityId },
+        });
+        for (const actor of ctx.state.actors) {
+          if (actor.vitalStatus.kind !== 'alive') continue;
+          if (actor.politicalEntityId !== anchor.fromEntityId) continue;
+          actor.politicalEntityId = anchor.toEntityId;
+          const seen = new Set<string>();
+          actor.citizenshipIds = actor.citizenshipIds
+            .map((id) => (id === anchor.fromEntityId ? anchor.toEntityId : id))
+            .filter((id) => {
+              if (seen.has(id)) return false;
+              seen.add(id);
+              return true;
+            });
+          ctx.emit({
+            type: 'identity.polity-change',
+            outcomeCode: 'changed',
+            templateId: 'identity.polity-change',
+            actorIds: [actor.id],
+            causes: [anchorFact],
+            evidenceIds: evidence,
+            details: { from: anchor.fromEntityId, to: anchor.toEntityId },
+          });
+        }
+        return;
       }
 
       if (anchor.kind === 'economy-phase') {

@@ -151,8 +151,8 @@ export interface RealRegionOptions {
 /**
  * 把国家包适配成现有 rules 能消费的 RegionModel。
  *
- * 政体更替锚点不进入人物模拟（ADR-0006 §4）：主角的政体在出生时确定，
- * 之后不会因 1991 年等事件自动改国籍；这属于 M3。
+ * 政体更替锚点从 M3-001 起进入人物模拟：地点不动，政治实体与国籍随锚点变化；
+ * 币制与经济锚点仍由 history.ts 处理。
  */
 export function createRealRegion(
   packId: BirthRegionId,
@@ -167,9 +167,8 @@ export function createRealRegion(
   const birthPlaceId = options.placeId ?? urbanPlace;
   const polityId = options.polityId ?? politicalEntityAt(pack, birthPlaceId, birthDate).id;
 
-  const anchors: readonly HistoricalAnchor[] = pack.anchors.filter(
-    (anchor) => anchor.kind !== 'polity-change',
-  );
+  // 全部锚点都进入模拟：polity-change 由 history.ts 作用到在世角色，但不改变居住地。
+  const anchors: readonly HistoricalAnchor[] = pack.anchors;
   const redenominations = anchors
     .filter((anchor) => anchor.kind === 'redenomination')
     .sort((left, right) => (left.at < right.at ? -1 : left.at > right.at ? 1 : 0));

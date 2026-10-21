@@ -18,6 +18,10 @@ export const LIFE_NARRATIVE = {
         redenomination: '全国实行货币重定值，旧币 {{divisor}} 元兑换新币 1 元。',
         recession: '经济陷入衰退。',
         recovery: '经济走出衰退。',
+        'polity-change': '政治实体更替：{{from}} → {{to}}。',
+      },
+      identity: {
+        'polity-change': '政治归属随政体更替改为{{to}}；居住地没有改变。',
       },
       education: {
         'primary-started': '开始上小学。',
@@ -78,6 +82,11 @@ export const LIFE_NARRATIVE = {
           'Nationwide currency redenomination: {{divisor}} old units became 1 new unit.',
         recession: 'The economy fell into recession.',
         recovery: 'The economy recovered from recession.',
+        'polity-change': 'The political entity changed: {{from}} → {{to}}.',
+      },
+      identity: {
+        'polity-change':
+          'Political allegiance changed to {{to}}; the place of residence did not change.',
       },
       education: {
         'primary-started': 'Started primary school.',
