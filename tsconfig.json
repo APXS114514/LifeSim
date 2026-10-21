@@ -5,5 +5,12 @@
     "checkJs": true,
     "types": ["node"]
   },
-  "include": ["*.ts", "*.js", "scripts/**/*.mjs"]
+  "include": [
+    "*.ts",
+    "*.js",
+    "scripts/**/*.mjs",
+    "scripts/**/*.ts",
+    "data/scripts/**/*.mjs",
+    "data/scripts/**/*.ts"
+  ]
 }

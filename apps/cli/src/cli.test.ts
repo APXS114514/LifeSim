@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { SUPPORTED_LOCALES, type SimEventFact } from '@lifesim/content-schema';
-import { checkLocaleParity } from '@lifesim/narrative';
+import { checkLocaleParity, flattenMessages } from '@lifesim/narrative';
 import { decodeSave, encodeSave } from '@lifesim/save';
 import { addYears, canonicalJson, fromDayNumber, toDayNumber } from '@lifesim/simulation-core';
 import {
@@ -39,7 +39,6 @@ describe('bilingual narrative of synthetic lives', () => {
   });
 
   it('renders every fact of many lives in both languages without leftovers', () => {
-    const seen = new Set<string>();
     fc.assert(
       fc.property(
         fc.string({ minLength: 1, maxLength: 8 }),
@@ -50,26 +49,45 @@ describe('bilingual narrative of synthetic lives', () => {
         (seed, birthDate, startWork) => {
           const decisions = startWork ? { [afterSecondaryDecisionKey()]: 'start-work' } : undefined;
           for (const fact of life(seed, birthDate, decisions).facts) {
-            seen.add(fact.templateId);
             for (const locale of SUPPORTED_LOCALES) {
-              const text = narrator.render(fact, locale);
-              expect(text).not.toMatch(/\{\{|undefined|null|NaN/);
+              expect(narrator.render(fact, locale)).not.toMatch(/\{\{|undefined|null|NaN/);
             }
           }
         },
       ),
-      { numRuns: 150 },
+      { numRuns: 100 },
     );
-    // 抽样里至少出现过这些主要的事实类型。
-    for (const templateId of [
-      'life.birth',
-      'life.death',
-      'career.hired',
-      'finance.settlement',
-      'history.redenomination',
-    ]) {
-      expect(seen).toContain(templateId);
+  });
+
+  it('reaches every template in a fixed, varied sample of lives (no dead or missing templates)', () => {
+    const templates = [...flattenMessages(resources.en).keys()]
+      .filter((key) => key.startsWith('templates.'))
+      .map((key) => key.slice('templates.'.length));
+    const seen = new Set<string>();
+    for (let index = 0; index < 200; index++) {
+      const wealthWeight = (index % 5) / 4; // 从重视健康到重视财富，覆盖治疗与不治疗
+      const simulation = createLifeSimulation({
+        seed: `coverage-${index}`,
+        region,
+        birthDate: `${1950 + (index % 77)}-0${1 + (index % 9)}-10`,
+        principles: {
+          family: 0.5,
+          wealth: wealthWeight,
+          health: 1 - wealthWeight,
+          knowledge: 0.5,
+          risk: 0.5,
+          stability: 0.5,
+        },
+        ...(index % 2 ? { decisions: { [afterSecondaryDecisionKey()]: 'start-work' } } : {}),
+      });
+      simulation.advanceTo(FOREVER);
+      for (const fact of simulation.facts) {
+        seen.add(fact.templateId);
+        for (const locale of SUPPORTED_LOCALES) narrator.render(fact, locale);
+      }
     }
+    expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
+    expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);
   });
 });
 

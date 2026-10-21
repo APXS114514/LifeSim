@@ -25,6 +25,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
+    "test:report": "vitest run --reporter=default --reporter=json --outputFile.json=test-results/vitest.json",
+    "check:tests": "node scripts/check-test-baseline.mjs test-results/vitest.json",
     "test:watch": "vitest",
     "test:e2e": "pnpm --filter @lifesim/web test:e2e",
     "life": "pnpm --filter @lifesim/cli life",
@@ -32,7 +34,7 @@
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:licenses": "node scripts/check-licenses.mjs",
     "notices": "node scripts/check-licenses.mjs --write",
-    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm typecheck && pnpm test && pnpm build",
+    "verify": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm check:licenses && pnpm typecheck && pnpm test:report && pnpm check:tests && pnpm build",
     "check:commits": "sh scripts/check-commit-message.sh --range"
   },
   "devDependencies": {

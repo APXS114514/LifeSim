@@ -271,3 +271,39 @@ describe('decisions', () => {
     });
   });
 });
+
+describe('guarantees added in the M1 audit', () => {
+  function adultSeed(): string {
+    for (let index = 0; index < 500; index++) {
+      const seed = `impure-${index}`;
+      const simulation = createToySimulation(seed);
+      simulation.advanceTo({ ...forever, targetDate: '1988-06-16' });
+      if (!simulation.ended) return seed;
+    }
+    throw new Error('no seed reaches 18');
+  }
+
+  it('rejects decision options that draw random numbers, both when pausing and when settling', () => {
+    const seed = adultSeed();
+    const paused = createToySimulation(seed, { impureDecision: true });
+    expect(() => paused.advanceTo({ ...forever, stopAtMajorDecision: true })).toThrow(
+      /impure-decision-options/,
+    );
+    const automatic = createToySimulation(seed, { impureDecision: true });
+    expect(() => automatic.advanceTo(forever)).toThrow(/impure-decision-options/);
+  });
+
+  it('freezes committed facts so callers cannot rewrite the journal', () => {
+    const simulation = createToySimulation('frozen');
+    simulation.advanceTo({ ...forever, targetDate: '1975-01-01' });
+    const fact = simulation.facts[0];
+    expect(fact).toBeDefined();
+    expect(Object.isFrozen(fact)).toBe(true);
+    expect(() => {
+      (fact as { outcomeCode: string }).outcomeCode = 'rewritten';
+    }).toThrow(TypeError);
+    expect(() => {
+      (fact?.causeEventIds as string[]).push('fact:0');
+    }).toThrow(TypeError);
+  });
+});

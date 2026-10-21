@@ -1,0 +1,23 @@
+{
+  "minTests": 150,
+  "testFiles": [
+    "apps/cli/src/cli.test.ts",
+    "apps/web/src/i18n/locales.test.ts",
+    "packages/content-schema/src/event-fact.test.ts",
+    "packages/content-schema/src/money.test.ts",
+    "packages/content-schema/src/primitives.test.ts",
+    "packages/content-schema/src/schemas.test.ts",
+    "packages/narrative/src/index.test.ts",
+    "packages/save/src/envelope.test.ts",
+    "packages/simulation-core/src/calendar.test.ts",
+    "packages/simulation-core/src/det-math.test.ts",
+    "packages/simulation-core/src/engine.test.ts",
+    "packages/simulation-core/src/index.test.ts",
+    "packages/simulation-core/src/json.test.ts",
+    "packages/simulation-core/src/policy.test.ts",
+    "packages/simulation-core/src/random.test.ts",
+    "packages/simulation-core/src/scheduler.test.ts",
+    "packages/synthetic-world/src/life.test.ts",
+    "scripts/check-guardrails.test.ts"
+  ]
+}

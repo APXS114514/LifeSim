@@ -34,6 +34,8 @@ export default defineConfig(
     files: [
       '*.{js,ts}',
       'scripts/**/*.mjs',
+      'scripts/**/*.ts',
+      'data/scripts/**/*.{mjs,ts}',
       'apps/web/*.config.ts',
       'apps/web/e2e/**/*.ts',
       'apps/cli/**/*.ts',
@@ -66,6 +68,23 @@ export default defineConfig(
         'error',
         ...['window', 'document', 'localStorage', 'sessionStorage', 'indexedDB', 'fetch'].map(
           (name) => ({ name, message: '领域包不依赖浏览器环境或网络；通过接口由应用层注入。' }),
+        ),
+      ],
+    },
+  },
+
+  // 测试不得被跳过、独占运行或标为预期失败：弱化测试会让质量门禁失效（AGENTS.md）。
+  {
+    files: ['**/*.test.ts', 'apps/web/e2e/**/*.ts'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        ...['describe', 'it', 'test'].flatMap((object) =>
+          ['skip', 'only', 'todo', 'skipIf', 'runIf', 'fails', 'fail', 'fixme'].map((property) => ({
+            object,
+            property,
+            message: '不要跳过或弱化测试；无法通过时按 AGENTS.md 报告阻塞。',
+          })),
         ),
       ],
     },

@@ -12,6 +12,7 @@ export type SimulationErrorCode =
   | 'invariant-violation'
   | 'invalid-decision'
   | 'no-eligible-option'
+  | 'impure-decision-options'
   | 'handler-failed'
   | 'date-regression'
   | 'incompatible-snapshot'

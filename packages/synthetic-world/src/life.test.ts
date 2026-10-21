@@ -26,6 +26,7 @@ import {
 } from '@lifesim/systems';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
+import { GOLDEN_LIFE } from './golden.ts';
 import { syntheticManifest, syntheticRegion } from './region.ts';
 
 const FOREVER = { targetDate: '2200-01-01', stopAtMajorDecision: false, maxWorkUnits: 1_000_000 };
@@ -218,9 +219,9 @@ describe('a whole synthetic life', () => {
   });
 
   it('matches the recorded golden fingerprint (update deliberately when rules change)', () => {
-    const { facts } = wholeLife('golden-1', '1960-03-15');
-    expect(facts.length).toBe(GOLDEN.factCount);
-    expect(fingerprint(canonicalJson(facts))).toBe(GOLDEN.fingerprint);
+    const { facts } = wholeLife(GOLDEN_LIFE.seed, GOLDEN_LIFE.birthDate);
+    expect(facts.length).toBe(GOLDEN_LIFE.factCount);
+    expect(fingerprint(canonicalJson(facts))).toBe(GOLDEN_LIFE.fingerprint);
   });
 
   it('reports seed, event and date when the region data is broken', () => {
@@ -237,9 +238,6 @@ describe('a whole synthetic life', () => {
     );
   });
 });
-
-/** 黄金指纹：规则或数据有意变化时，确认差异合理后更新这里（并在提交说明里写明原因）。 */
-const GOLDEN = { factCount: 68, fingerprint: '34074d0f36a15e13bcf05c8e14d11772' };
 
 describe('the major decision after secondary school', () => {
   /** 找一个能读完中学、在 18 岁面临决定的种子。 */

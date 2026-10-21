@@ -1,0 +1,28 @@
+name: Guardrails
+
+# 单独的工作流：维护者加上或去掉 arch-approved 标签时会重新运行。
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  high-risk-paths:
+    name: High-risk paths need arch-approved
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Check changed paths
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: node scripts/check-guardrails.mjs --base "$BASE" --head "$HEAD" --labels "$LABELS"

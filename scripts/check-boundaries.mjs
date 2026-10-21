@@ -17,6 +17,13 @@ const ALLOWED_INTERNAL = {
   '@lifesim/save': ['@lifesim/content-schema'],
   '@lifesim/narrative': ['@lifesim/content-schema'],
   '@lifesim/systems': ['@lifesim/content-schema', '@lifesim/simulation-core'],
+  // M2 计划中的包（docs/tasks/）：先登记依赖方向，任务执行者不需要修改本脚本。
+  '@lifesim/data-registry': ['@lifesim/content-schema'],
+  '@lifesim/country-packs': [
+    '@lifesim/content-schema',
+    '@lifesim/data-registry',
+    '@lifesim/simulation-core',
+  ],
   // 合成数据只供测试与 headless 运行：网页应用不在允许名单里，因此不会进入公开构建。
   '@lifesim/synthetic-world': [
     '@lifesim/content-schema',

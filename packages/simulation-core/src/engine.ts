@@ -19,7 +19,7 @@ import {
 import { SimulationError, type SimulationErrorCode } from './errors.ts';
 import { canonicalJson, cloneJson, type JsonValue } from './json.ts';
 import { chooseByPrinciples } from './policy.ts';
-import { RNG_ALGORITHM, deriveStream } from './random.ts';
+import { RNG_ALGORITHM, deriveStream, type RandomStream } from './random.ts';
 import {
   EventQueue,
   RngStateSchema,
@@ -98,6 +98,15 @@ interface SimulationInit {
 }
 
 const FACT_ID = /^fact:(\d+)$/;
+
+/** 事实提交后冻结：日志里的事实不可变（GDD §7），调用方拿到的引用也改不动。 */
+function freezeFact(fact: SimEventFact): SimEventFact {
+  Object.freeze(fact.actorIds);
+  Object.freeze(fact.causeEventIds);
+  Object.freeze(fact.evidenceIds);
+  if (fact.details) Object.freeze(fact.details);
+  return Object.freeze(fact);
+}
 
 /**
  * 规范模拟推进器（GDD §4.1、§7、§11.4）。
@@ -381,12 +390,47 @@ export class Simulation implements SimulationEngine {
     );
   }
 
-  /** 在一份丢弃式草稿上列出决策选项，不影响真实状态。 */
+  /** 列出决策选项（暂停时展示与结算时使用同一条路径，保证所见即所得）。 */
   #evaluateOptions(occurrence: Occurrence, definition: EventDefinition): DecisionOption[] {
     const spec = definition.decision;
     if (!spec) return [];
-    const { context } = this.#makeContext(occurrence, definition, cloneJson(this.#state));
-    return spec.options(context);
+    return spec.options(this.#optionsView(occurrence, this.#state));
+  }
+
+  /**
+   * 给 `DecisionSpec.options()` 的只读视图：状态是一份丢弃式拷贝，抽随机数、追加事实、安排事件都会报错。
+   * 选项因此只能取决于当前状态，暂停时给玩家看的选项与随后结算用的选项必然一致。
+   */
+  #optionsView(occurrence: Occurrence, state: SimState): EventContext {
+    const copy = cloneJson(state);
+    const impure = (what: string) => (): never => {
+      throw this.#error(
+        'impure-decision-options',
+        `Decision options must be pure: ${what} is not allowed in options()`,
+        occurrence,
+      );
+    };
+    const forbiddenRandom = {
+      nextUint32: impure('random'),
+      next: impure('random'),
+      chance: impure('random'),
+      int: impure('random'),
+      weighted: impure('random'),
+    } as unknown as RandomStream;
+    return {
+      at: occurrence.at,
+      occurrence,
+      state: copy,
+      random: forbiddenRandom,
+      choice: null,
+      actor: (id: string): CharacterState => {
+        const actor = copy.actors.find((candidate) => candidate.id === id);
+        if (!actor) throw this.#error('handler-failed', `Unknown actor ${id}`, occurrence);
+        return actor;
+      },
+      emit: impure('emit'),
+      schedule: impure('schedule'),
+    };
   }
 
   #makeContext(occurrence: Occurrence, definition: EventDefinition, draft: SimState) {
@@ -498,7 +542,7 @@ export class Simulation implements SimulationEngine {
     if (!spec) throw this.#error('handler-failed', 'Not a decision event', occurrence);
     const actorId = spec.actorId(occurrence);
     const actor = context.actor(actorId);
-    const options = spec.options(context);
+    const options = spec.options(this.#optionsView(occurrence, context.state));
     const recorded = this.#decisions.get(occurrence.key);
 
     let optionId: string;
@@ -590,6 +634,7 @@ export class Simulation implements SimulationEngine {
     this.#queue.shift();
     this.#processed.add(occurrence.key);
     for (const next of scheduled) this.#queue.insert(next);
+    for (const fact of facts) freezeFact(fact);
     this.#journal.push(...facts);
     this.#lastSequence += facts.length;
     this.#clock = occurrence.at;

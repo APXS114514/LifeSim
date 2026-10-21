@@ -43,7 +43,7 @@ export function macroAtBirth(region: RegionModel, birthDate: ISODate): MacroStat
     currency: { ...region.initialMacro.currency },
   };
   for (const anchor of region.anchors) {
-    if (anchor.at >= birthDate) continue;
+    if (anchor.at >= birthDate || !anchor.regionIds.includes(region.packId)) continue;
     if (anchor.kind === 'economy-phase') macro.economyPhase = anchor.phase;
     else if (anchor.currencyCode === macro.currency.code) macro.currency.version = anchor.toVersion;
   }

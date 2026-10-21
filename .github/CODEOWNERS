@@ -1,0 +1,27 @@
+# 高风险路径：修改需要维护者审查（与 scripts/check-guardrails.mjs 的清单一致）。
+# 配合 GitHub 分支保护的「Require review from Code Owners」生效。
+/packages/simulation-core/src/      @APXS114514
+/packages/content-schema/src/       @APXS114514
+/packages/systems/src/region.ts     @APXS114514
+/packages/systems/src/shared.ts     @APXS114514
+/packages/systems/src/module.ts     @APXS114514
+/packages/synthetic-world/src/golden.ts @APXS114514
+/packages/country-packs/data/       @APXS114514
+/packages/country-packs/src/        @APXS114514
+/packages/data-registry/src/        @APXS114514
+/data/                              @APXS114514
+/qa/                                @APXS114514
+/scripts/check-*                    @APXS114514
+/.github/                           @APXS114514
+/.githooks/                         @APXS114514
+/.claude/                           @APXS114514
+/eslint.config.js                   @APXS114514
+/vitest.config.ts                   @APXS114514
+/tsconfig.base.json                 @APXS114514
+/package.json                       @APXS114514
+/pnpm-workspace.yaml                @APXS114514
+/docs/GDD.md                        @APXS114514
+/docs/AGENT_PROMPTS.md              @APXS114514
+/docs/FLASH_AGENT_PROMPT.md         @APXS114514
+/docs/adr/                          @APXS114514
+/AGENTS.md                          @APXS114514

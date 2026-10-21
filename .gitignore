@@ -18,3 +18,6 @@ AGENT-NOTES.md
 
 # Claude Code 的个人本地设置
 .claude/settings.local.json
+
+# 数据管线下载的原始文件（体积大、许可另议），只在本机缓存
+data/cache/

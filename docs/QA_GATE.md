@@ -8,21 +8,23 @@ P0 与 P1 的定义以 GDD §14.1 为准：存在任何 P0，或者存在影响�
 
 ## 当前自动化（M0、M1 起生效）
 
-| 门禁           | 命令                        | CI 任务         | 保证什么                                                                                       |
-| -------------- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
-| 格式           | `pnpm format:check`         | checks          | Prettier 格式一致（GDD 与任务原文除外）                                                        |
-| 静态检查       | `pnpm lint`                 | checks          | ESLint 与 typescript-eslint 类型感知规则；领域包禁用非确定性 API、浏览器全局对象与网络         |
-| 依赖边界       | `pnpm check:boundaries`     | checks          | 包依赖方向、源码导入与声明一致、无环                                                           |
-| 依赖许可证     | `pnpm check:licenses`       | checks          | 生产依赖只用白名单许可证；`THIRD_PARTY_NOTICES.md` 与依赖同步                                  |
-| 类型           | `pnpm typecheck`            | checks          | 所有工作区包通过 TypeScript 严格模式（含 `exactOptionalPropertyTypes`）                        |
-| 单元与性质测试 | `pnpm test`                 | checks          | 见下方「M1 确定性与人生不变量」，以及 schema、存档往返与篡改检测、双语文本一致性               |
-| 构建           | `pnpm build`                | checks          | 生产构建成功                                                                                   |
-| headless 人生  | `pnpm life`                 | checks          | 用合成地区在 Node 里跑完一个完整人生（含一次重大决定）并打印双语生平                           |
-| 性能基准       | `pnpm bench --lives 500`    | checks          | 固定种子的批量人生；报告随 CI 产物上传（`bench-report.json`），工作量指纹可复现                |
-| 提交信息       | `pnpm check:commits <范围>` | commit-messages | 新提交中没有 AI 工具的自动署名（AGENTS.md「Git 提交规则」）                                    |
-| 端到端冒烟     | `pnpm test:e2e`             | e2e             | 桌面与手机视口（Chromium）：页面渲染、语言切换不丢状态、年份越界提示、无横向滚动、无控制台错误 |
+| 门禁           | 命令                           | CI 任务          | 保证什么                                                                                                                               |
+| -------------- | ------------------------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 格式           | `pnpm format:check`            | checks           | Prettier 格式一致（GDD 与任务原文除外）                                                                                                |
+| 静态检查       | `pnpm lint`                    | checks           | ESLint 与 typescript-eslint 类型感知规则；领域包禁用非确定性 API、浏览器全局对象与网络                                                 |
+| 依赖边界       | `pnpm check:boundaries`        | checks           | 包依赖方向、源码导入与声明一致、无环                                                                                                   |
+| 依赖许可证     | `pnpm check:licenses`          | checks           | 生产依赖只用白名单许可证；`THIRD_PARTY_NOTICES.md` 与依赖同步                                                                          |
+| 类型           | `pnpm typecheck`               | checks           | 所有工作区包通过 TypeScript 严格模式（含 `exactOptionalPropertyTypes`）                                                                |
+| 单元与性质测试 | `pnpm test`                    | checks           | 见下方「M1 确定性与人生不变量」，以及 schema、存档往返与篡改检测、双语文本一致性                                                       |
+| 测试基线       | `pnpm check:tests`             | checks           | 无失败、无跳过；测试总数不低于 `qa/test-baseline.json`；基线里的测试文件一个不能少（lint 另外禁止 `skip` / `only` / `todo` / `fails`） |
+| 构建           | `pnpm build`                   | checks           | 生产构建成功                                                                                                                           |
+| headless 人生  | `pnpm life`                    | checks           | 用合成地区在 Node 里跑完一个完整人生（含一次重大决定）并打印双语生平                                                                   |
+| 性能基准       | `pnpm bench --lives 500`       | checks           | 固定种子的批量人生；报告随 CI 产物上传（`bench-report.json`），工作量指纹可复现                                                        |
+| 提交信息       | `pnpm check:commits <范围>`    | commit-messages  | 新提交中没有 AI 工具的自动署名（AGENTS.md「Git 提交规则」）                                                                            |
+| 高风险路径     | `scripts/check-guardrails.mjs` | guardrails（PR） | 改动内核、契约、数据、门禁、CI、规范文档或删除测试文件的 PR，必须由维护者加 `arch-approved` 标签                                       |
+| 端到端冒烟     | `pnpm test:e2e`                | e2e              | 桌面与手机视口（Chromium）：页面渲染、语言切换不丢状态、年份越界提示、无横向滚动、无控制台错误                                         |
 
-`pnpm verify` 依次运行格式、lint、依赖边界、许可证、类型、单元测试与构建，与 CI 的 checks 任务的主体一致。
+`pnpm verify` 依次运行格式、lint、依赖边界、许可证、类型、单元测试（JSON 报告）、测试基线与构建，与 CI 的 checks 任务的主体一致。多 Agent 协作的审查流程见 [AGENT_HANDOFF.md](AGENT_HANDOFF.md) 第 8 节。
 
 ### M1 确定性与人生不变量（`pnpm test` 中）
 

@@ -57,7 +57,9 @@ jobs:
       - run: pnpm check:boundaries
       - run: pnpm check:licenses
       - run: pnpm typecheck
-      - run: pnpm test
+      # 测试结果写成 JSON，再对照 qa/test-baseline.json：不能少测试、不能跳过。
+      - run: pnpm test:report
+      - run: pnpm check:tests
       - run: pnpm build
       # M1 验收：headless 完整人生，以及可复现的性能基准（报告作为产物上传）。
       - run: pnpm life --seed ci --birth 1978-05-04 --choose start-work

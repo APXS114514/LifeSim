@@ -14,6 +14,8 @@ export type TrapKind =
 
 export interface ToyWorldOptions {
   trap?: { age: number; kind: TrapKind };
+  /** 让 18 岁决定的 options() 违规抽随机数，验证内核会拒绝。 */
+  impureDecision?: boolean;
 }
 
 export function makeActor(id: string, birthDate: ISODate): CharacterState {
@@ -136,11 +138,19 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
     decision: {
       major: true,
       actorId: () => TOY_ACTOR,
-      options: () => [
-        { id: 'study', eligible: true, scores: { knowledge: 1, wealth: -0.2 } },
-        { id: 'work', eligible: true, scores: { wealth: 1, stability: 0.3 } },
-        { id: 'emigrate', eligible: false, ineligibleReason: 'not-available', scores: { risk: 1 } },
-      ],
+      options: (ctx) => {
+        if (options.impureDecision) ctx.random.next();
+        return [
+          { id: 'study', eligible: true, scores: { knowledge: 1, wealth: -0.2 } },
+          { id: 'work', eligible: true, scores: { wealth: 1, stability: 0.3 } },
+          {
+            id: 'emigrate',
+            eligible: false,
+            ineligibleReason: 'not-available',
+            scores: { risk: 1 },
+          },
+        ];
+      },
     },
     handle(ctx) {
       ctx.emit({
