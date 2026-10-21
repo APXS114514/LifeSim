@@ -5,5 +5,19 @@
     "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
     "sha256": "286ac36bb1415e2e1ade03acfef0a29f0e4c087e2f78e38c48f50c5df89082bc",
     "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "life-table-both-1950-2023",
+    "file": "WPP2024_Life_Table_Complete_Medium_Both_1950-2023.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Both_1950-2023.csv.gz",
+    "sha256": "7ad8748f4dec567dcfd74fb7161a369e09f6501489c49bce1cd0572c16484058",
+    "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "life-table-both-2024-2100",
+    "file": "WPP2024_Life_Table_Complete_Medium_Both_2024-2100.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Both_2024-2100.csv.gz",
+    "sha256": "ca2977c727b77a27548673d82cf065fe10e87162a3e31af5eaa811ea507ce390",
+    "retrievedAt": "2026-10-20"
   }
 ]
