@@ -153,6 +153,7 @@ async function deploymentFixture() {
 
 test('offers an explicit update, protects an unsaved life, then activates one consistent cache', async ({
   page,
+  context,
 }) => {
   const deployment = await deploymentFixture();
   try {
@@ -160,7 +161,6 @@ test('offers an explicit update, protects an unsaved life, then activates one co
     await shellReady(page, deployment.url);
     await japan(page);
     await page.getByRole('button', { name: '下一年', exact: true }).click();
-    const saved = await page.evaluate(() => localStorage.getItem('lifesim.save.v1'));
     const before = await page.evaluate(() => caches.keys());
     deployment.update();
     await page.evaluate(async () => {
@@ -168,6 +168,13 @@ test('offers an explicit update, protects an unsaved life, then activates one co
     });
     await expect(page.locator('.pwa-status')).toContainText('有新版本');
     expect(await page.evaluate(() => caches.keys())).toEqual(expect.arrayContaining(before));
+    await context.setOffline(true);
+    await expect(page.getByRole('button', { name: '刷新以更新', exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: '下一年', exact: true }).click();
+    await expect(page.locator('.time-age')).toHaveText('2 岁');
+    await context.setOffline(false);
+    await expect(page.getByRole('button', { name: '刷新以更新', exact: true })).toBeEnabled();
+    const saved = await page.evaluate(() => localStorage.getItem('lifesim.save.v1'));
     await page.evaluate(() => {
       const descriptor = Object.getOwnPropertyDescriptor(Storage.prototype, 'setItem');
       if (!descriptor) throw new Error('Storage fixture has no setter');
@@ -192,7 +199,7 @@ test('offers an explicit update, protects an unsaved life, then activates one co
     });
     await page.getByRole('button', { name: '刷新以更新', exact: true }).click();
     await expect(page.getByText('已恢复上次自动存档。', { exact: true })).toBeVisible();
-    await expect(page.locator('.time-age')).toHaveText('1 岁');
+    await expect(page.locator('.time-age')).toHaveText('2 岁');
     expect(await page.evaluate(() => localStorage.getItem('lifesim.save.v1'))).toBe(saved);
     await expect
       .poll(() => page.evaluate(() => caches.keys()))

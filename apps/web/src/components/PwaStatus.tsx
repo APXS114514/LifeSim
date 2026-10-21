@@ -12,8 +12,8 @@ export function PwaStatus({ onUpdate }: { onUpdate: () => void }) {
       {state.unavailable && <p>{t('offline.unavailable')}</p>}
       {state.updateAvailable && (
         <p>
-          {t('offline.updateAvailable')}{' '}
-          <button type="button" onClick={onUpdate}>
+          {t(state.offline ? 'offline.updateWhenOnline' : 'offline.updateAvailable')}{' '}
+          <button type="button" onClick={onUpdate} disabled={state.offline}>
             {t('offline.applyUpdate')}
           </button>
         </p>

@@ -30,6 +30,7 @@ export function pwaSnapshot(): PwaState {
   return snapshot;
 }
 export function applyPwaUpdate(): void {
+  if (!navigator.onLine) return;
   if (registration?.waiting) {
     requestedUpdate = true;
     registration.waiting.postMessage({ type: 'LIFESIM_APPLY_UPDATE' });

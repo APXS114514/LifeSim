@@ -312,6 +312,7 @@
     "current": "You are offline. Cached regions remain playable; other content needs a connection.",
     "unavailable": "Offline storage is unavailable in this browser. You can still play online.",
     "updateAvailable": "A new version is available. Refresh when you are ready.",
+    "updateWhenOnline": "Connect to update. You can continue your life offline.",
     "applyUpdate": "Refresh to update"
   }
 }

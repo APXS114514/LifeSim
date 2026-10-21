@@ -312,6 +312,7 @@
     "current": "当前离线。已缓存的地区仍可游玩；其他内容需要联网加载。",
     "unavailable": "此浏览器暂不能保存离线内容，你仍可在线游玩。",
     "updateAvailable": "有新版本，准备好后可刷新更新。",
+    "updateWhenOnline": "联网后可更新，当前进度可继续离线游玩。",
     "applyUpdate": "刷新以更新"
   }
 }
