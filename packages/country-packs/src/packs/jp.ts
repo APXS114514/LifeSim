@@ -14,6 +14,7 @@ import healthExpenditure from '../../data/JP/wdi-health-expenditure.json' with {
 import healthOutOfPocket from '../../data/JP/wdi-health-out-of-pocket.json' with { type: 'json' };
 import qx from '../../data/JP/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/JP/wdi-urban-share.json' with { type: 'json' };
+import type { HistoricalAnchor } from '@lifesim/content-schema';
 import type { CountryPack } from '../schema.ts';
 
 /** 日本国家包。 */
@@ -158,7 +159,29 @@ export const JP_PACK: CountryPack = {
     initialVersion: 1,
     versionNames: { '1': { 'zh-Hans': '日元', en: 'Japanese yen' } },
   },
-  anchors: [],
+  anchors: (
+    [
+      ['anchor:jp-recession-1973', '1973-11-01', 'recession', 1973],
+      ['anchor:jp-recovery-1975', '1975-03-01', 'normal', 1975],
+      ['anchor:jp-recession-1991', '1991-02-01', 'recession', 1991],
+      ['anchor:jp-recovery-1993', '1993-10-01', 'normal', 1993],
+      ['anchor:jp-recession-2008', '2008-02-01', 'recession', 2008],
+      ['anchor:jp-recovery-2009', '2009-03-01', 'normal', 2009],
+    ] as const
+  ).map(([id, at, phase, year]): HistoricalAnchor => ({
+    id,
+    at,
+    regionIds: ['JP'],
+    evidence: {
+      grade: 'A',
+      sourceIds: ['cao:business-cycle-dates'],
+      modelVersion: 'jp-pack-0.1.0',
+      geographyId: 'country:JP',
+      yearRange: [year, year],
+    },
+    kind: 'economy-phase',
+    phase,
+  })),
   breakpoints: [],
   series: [
     StatSeriesSchema.parse(births),

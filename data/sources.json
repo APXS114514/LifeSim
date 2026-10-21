@@ -30,6 +30,28 @@
     "notes": "只引用史实，不再分发文本。原文：Another Currency Reform was carried out on June 10, 1962 ... New won-denominated currency, which had a face value ten times higher than that of the hwan-denominated currency。访问日期 2026-10-20。"
   },
   {
+    "id": "brookings:russia-1998",
+    "title": "Who Lost Greece? Parallels with Russia in 1998 (Brookings)",
+    "publisher": "Brookings Institution",
+    "url": "https://www.brookings.edu/articles/who-lost-greece-parallels-with-russia-in-1998/",
+    "version": "1998-08-17 default",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用 1998-08-17 俄罗斯债务违约这一事实，不再分发原文。用于 M3-007 经济衰退锚点起点。访问日期 2026-10-20。"
+  },
+  {
+    "id": "cao:business-cycle-dates",
+    "title": "Business-Cycle Dating（Reference Dates of Business Cycle）",
+    "publisher": "Cabinet Office, Government of Japan (ESRI)",
+    "url": "https://www.esri.cao.go.jp/en/stat/di/rdates.html",
+    "version": "2022-07-19",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用景气循环峰谷月份：1973-11→1975-03、1991-02→1993-10、2008-02→2009-03；不再分发页面文本。访问日期 2026-10-20。"
+  },
+  {
     "id": "cn-gazetteer:sichuan",
     "title": "四川省地方志：历史沿革（1954 年撤销大区一级行政机构与省市合并）",
     "publisher": "四川省地方志工作办公室",
@@ -128,6 +150,17 @@
     "redistribution": "unknown",
     "verifiedAt": "2026-10-20",
     "notes": "只引用法律事实，不再分发文本。第65条把 Москва 与 Санкт-Петербург 列为联邦直辖市（города федерального значения）。访问日期 2026-10-20。"
+  },
+  {
+    "id": "nbs:china-2020-gdp",
+    "title": "Preliminary Accounting Results of GDP for the First and Second Quarter of 2020",
+    "publisher": "National Bureau of Statistics of China",
+    "url": "https://www.stats.gov.cn/english/PressRelease/202004/t20200420_1739811.html",
+    "version": "2020-04-20 / 2020-07-17",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用季度 GDP 事实：2020Q1 同比下降 6.8%，Q2 同比增长 3.2%（Q2 发布页 https://www.stats.gov.cn/english/PressRelease/202007/t20200717_1776596.html）；不再分发原文。访问日期 2026-10-20。"
   },
   {
     "id": "osaka-pref:statistical-yearbook",
@@ -240,6 +273,17 @@
     "redistribution": "allowed",
     "verifiedAt": "2026-10-20",
     "notes": "Attribution: World Bank, World Development Indicators, indicator FP.CPI.TOTL, CC BY 4.0; base 2010=100; only non-null observations emitted. CPI is used for purchasing-power conversion, not as a wage or income series."
+  },
+  {
+    "id": "worldbank-wdi:NY.GDP.MKTP.KD.ZG",
+    "title": "GDP growth (annual %) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator NY.GDP.MKTP.KD.ZG, CC BY 4.0; used only to identify annual recession/recovery years (Korea 1998, Russia 1992–1997/1998–1999/2009–2010), no series file emitted."
   },
   {
     "id": "worldbank-wdi:SE.SEC.CUAT.UP.ZS",

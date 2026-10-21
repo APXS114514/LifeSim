@@ -142,13 +142,10 @@ export function validateCountryPack(pack: unknown): string[] {
     }
   }
 
-  // 规则 8：锚点适用于本包，且类型只能是币制重定值或政体更替。
+  // 规则 8：锚点适用于本包；M2 允许币制重定值/政体更替，M3 起允许经济周期。
   for (const anchor of value.anchors) {
     if (!anchor.regionIds.includes(packId)) {
       problems.push(`锚点 ${anchor.id} 的 regionIds 不包含 ${packId}`);
-    }
-    if (anchor.kind !== 'redenomination' && anchor.kind !== 'polity-change') {
-      problems.push(`锚点 ${anchor.id} 的类型 ${anchor.kind} 不允许出现在 M2 国家包中`);
     }
   }
 

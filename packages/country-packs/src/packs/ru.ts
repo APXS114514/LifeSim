@@ -14,6 +14,7 @@ import healthExpenditure from '../../data/RU/wdi-health-expenditure.json' with {
 import healthOutOfPocket from '../../data/RU/wdi-health-out-of-pocket.json' with { type: 'json' };
 import qx from '../../data/RU/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/RU/wdi-urban-share.json' with { type: 'json' };
+import type { HistoricalAnchor } from '@lifesim/content-schema';
 import type { CountryPack } from '../schema.ts';
 
 const RU_EVIDENCE = (year: number) => ({
@@ -211,51 +212,118 @@ export const RU_PACK: CountryPack = {
       '3': { 'zh-Hans': '俄罗斯卢布', en: 'Russian ruble' },
     },
   },
-  anchors: [
-    {
-      id: 'anchor:ru-redenomination-1961',
-      at: '1961-01-01',
-      regionIds: ['RU'],
-      evidence: {
-        grade: 'A',
-        sourceIds: ['prlib:1961-reform'],
-        modelVersion: 'ru-pack-0.1.0',
-        geographyId: 'country:RU',
-        yearRange: [1961, 1961],
+  anchors: (
+    [
+      {
+        id: 'anchor:ru-redenomination-1961',
+        at: '1961-01-01',
+        regionIds: ['RU'],
+        evidence: {
+          grade: 'A',
+          sourceIds: ['prlib:1961-reform'],
+          modelVersion: 'ru-pack-0.1.0',
+          geographyId: 'country:RU',
+          yearRange: [1961, 1961],
+        },
+        kind: 'redenomination',
+        currencyCode: 'RUB',
+        fromVersion: 1,
+        toVersion: 2,
+        divisor: 10,
       },
-      kind: 'redenomination',
-      currencyCode: 'RUB',
-      fromVersion: 1,
-      toVersion: 2,
-      divisor: 10,
-    },
-    {
-      id: 'anchor:ru-polity-change-1991',
-      at: '1991-12-26',
-      regionIds: ['RU'],
-      evidence: RU_EVIDENCE(1991),
-      kind: 'polity-change',
-      fromEntityId: 'polity:ussr',
-      toEntityId: 'polity:ru-russian-federation',
-    },
-    {
-      id: 'anchor:ru-redenomination-1998',
-      at: '1998-01-01',
-      regionIds: ['RU'],
-      evidence: {
-        grade: 'A',
-        sourceIds: ['ru-gov:1998-denomination'],
-        modelVersion: 'ru-pack-0.1.0',
-        geographyId: 'country:RU',
-        yearRange: [1998, 1998],
+      {
+        id: 'anchor:ru-polity-change-1991',
+        at: '1991-12-26',
+        regionIds: ['RU'],
+        evidence: RU_EVIDENCE(1991),
+        kind: 'polity-change',
+        fromEntityId: 'polity:ussr',
+        toEntityId: 'polity:ru-russian-federation',
       },
-      kind: 'redenomination',
-      currencyCode: 'RUB',
-      fromVersion: 2,
-      toVersion: 3,
-      divisor: 1000,
-    },
-  ],
+      {
+        id: 'anchor:ru-redenomination-1998',
+        at: '1998-01-01',
+        regionIds: ['RU'],
+        evidence: {
+          grade: 'A',
+          sourceIds: ['ru-gov:1998-denomination'],
+          modelVersion: 'ru-pack-0.1.0',
+          geographyId: 'country:RU',
+          yearRange: [1998, 1998],
+        },
+        kind: 'redenomination',
+        currencyCode: 'RUB',
+        fromVersion: 2,
+        toVersion: 3,
+        divisor: 1000,
+      },
+      ...(
+        [
+          [
+            'anchor:ru-recession-1992',
+            '1992-01-01',
+            'recession',
+            'worldbank-wdi:NY.GDP.MKTP.KD.ZG',
+            'B',
+            1992,
+          ],
+          [
+            'anchor:ru-recovery-1997',
+            '1997-01-01',
+            'normal',
+            'worldbank-wdi:NY.GDP.MKTP.KD.ZG',
+            'B',
+            1997,
+          ],
+          [
+            'anchor:ru-recession-1998',
+            '1998-08-17',
+            'recession',
+            'brookings:russia-1998',
+            'B',
+            1998,
+          ],
+          [
+            'anchor:ru-recovery-1999',
+            '1999-01-01',
+            'normal',
+            'worldbank-wdi:NY.GDP.MKTP.KD.ZG',
+            'B',
+            1999,
+          ],
+          [
+            'anchor:ru-recession-2009',
+            '2009-01-01',
+            'recession',
+            'worldbank-wdi:NY.GDP.MKTP.KD.ZG',
+            'B',
+            2009,
+          ],
+          [
+            'anchor:ru-recovery-2010',
+            '2010-01-01',
+            'normal',
+            'worldbank-wdi:NY.GDP.MKTP.KD.ZG',
+            'B',
+            2010,
+          ],
+        ] as const
+      ).map(([id, at, phase, sourceId, grade, year]): HistoricalAnchor => ({
+        id,
+        at,
+        regionIds: ['RU'],
+        evidence: {
+          grade,
+          sourceIds: [sourceId],
+          modelVersion: 'ru-pack-0.1.0',
+          geographyId: 'country:RU',
+          yearRange: [year, year],
+        },
+        kind: 'economy-phase',
+        phase,
+      })),
+    ] as HistoricalAnchor[]
+  ).sort((left, right) => left.at.localeCompare(right.at)),
   breakpoints: [],
   series: [
     StatSeriesSchema.parse(births),

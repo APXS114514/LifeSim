@@ -213,3 +213,31 @@ WDI 数据集页面的 "Data Access and Licensing" 部分：
 - 条款页面：同上；指标元信息 <https://api.worldbank.org/v2/indicator/SH.XPD.CHEX.PC.CD?format=json>，访问日期 2026-10-20。
 - 结论：CC BY 4.0；单位为现价美元/人，**不是 PPP**，跨国比较时必须披露这一点；只保留非空观测。
 - 建议结论：`allowed`（待维护者确认）。
+
+## 经济周期锚点来源（M3-007）
+
+以下来源只用于**事实引用**（衰退/复苏日期），不再分发原文；与 `sources.json` 中 `redistribution: 'unknown'` 记录对应。
+
+### `cao:business-cycle-dates` — 日本内阁府景气循环参考日期
+
+- 页面：<https://www.esri.cao.go.jp/en/stat/di/rdates.html>，访问日期 2026-10-20。
+- 引用事实：1973-11 峰 → 1975-03 谷；1991-02 峰 → 1993-10 谷；2008-02 峰 → 2009-03 谷。
+- 结论：官方统计口径，证据等级 A；只引用日期事实，不复制页面文本。
+
+### `nbs:china-2020-gdp` — 中国国家统计局 2020 年季度 GDP
+
+- Q1 发布页：<https://www.stats.gov.cn/english/PressRelease/202004/t20200420_1739811.html>；Q2 发布页：<https://www.stats.gov.cn/english/PressRelease/202007/t20200717_1776596.html>；访问日期 2026-10-20。
+- 引用事实：2020Q1 GDP 同比下降 6.8%，Q2 同比增长 3.2%。
+- 结论：官方统计口径，证据等级 A；只引用季度增速，不复制原文。
+
+### `brookings:russia-1998` — 俄罗斯 1998 年违约
+
+- 页面：<https://www.brookings.edu/articles/who-lost-greece-parallels-with-russia-in-1998/>，访问日期 2026-10-20。
+- 引用事实：1998-08-17 俄罗斯债务违约/卢布贬值；只引用日期与事件，不再分发原文。
+- 结论：权威研究机构，证据等级 B。
+
+### `worldbank-wdi:NY.GDP.MKTP.KD.ZG` — 世界银行 GDP 年增长率
+
+- 指标页：<https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG>；API：<https://api.worldbank.org/v2/country/KOR;RUS/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=20000>，访问日期 2026-10-20。
+- 条款：CC BY 4.0，允许再分发；本项目只用它判断年度衰退/复苏年份（韩国 1998；俄罗斯 1992—1996、1998、2009），不生成序列文件。
+- 结论：`allowed`；须署名并注明改动/用途。**日期粒度是年，不是月**；锚点取当年 1 月 1 日，报告里已注明口径。
