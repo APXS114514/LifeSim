@@ -95,6 +95,8 @@ export const SchedulerStateSchema = z.strictObject({
   processedKeys: z.array(z.string().min(1)),
   /** 玩家对决策的选择（动作序列），键为决策事件的幂等键。 */
   decisions: z.record(z.string().min(1), z.string().min(1)),
+  /** 尚未用到的预设选择（ADR-0008）；没有预设时省略，旧快照没有这个字段。 */
+  presets: z.record(z.string().min(1), z.string().min(1)).optional(),
   ended: z.boolean(),
   dayCounter: z.strictObject({
     at: ISODateSchema.nullable(),

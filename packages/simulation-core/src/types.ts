@@ -52,7 +52,7 @@ export interface DecisionOption {
 
 export interface Choice {
   optionId: string;
-  decidedBy: 'player' | 'principles';
+  decidedBy: 'player' | 'preset' | 'principles';
   /** 代理决策时贡献最大的价值维度；玩家决定时为空。 */
   reasons: LifePrincipleKey[];
   /** 记录这次决定的 `decision.made` 事实。 */
@@ -62,6 +62,8 @@ export interface Choice {
 export interface DecisionSpec {
   /** 重大不可逆决定：按介入策略暂停等玩家选择（GDD §2 决定 03、§6.2）。 */
   major: boolean;
+  /** 永不暂停：只由预设或人生原则决定（例如年度重点，ADR-0008）。 */
+  background?: boolean;
   actorId(occurrence: Occurrence): string;
   /** 列出选项及资格。必须是纯函数：不修改状态，不抽随机数。 */
   options(context: EventContext): DecisionOption[];

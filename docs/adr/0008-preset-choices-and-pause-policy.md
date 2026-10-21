@@ -55,3 +55,10 @@
 - 维护者答复 D3 选择 B 或 C 时（需要决定类别字段）；
 - 需要「中途修改人生原则」时（另立 ADR：修改原则也要成为动作序列的一部分）；
 - Worker（M4-004）上线后，预设与暂停策略经 RPC 传递时。
+
+## 实施记录（M3-037A，2026-10-21）
+
+- `simulation-core`：`AdvanceRequest.pauseOn`、`PausePolicy`、`DecisionSpec.background`、`Choice.decidedBy` 增加 `'preset'`、`Simulation.preset()`、`pendingDecision(pauseOn)`；`decide()` 接受按 `all` 判定的待决事项；预设在事件提交、作废或主角死亡时移除；快照只在有预设时写 `schedulerState.presets`。
+- 测试：toy world 增加 background 的年度重点（`work` 16 岁起可选）与 10 岁的普通决定；新增 6 项测试覆盖本 ADR 验收 1—5（含 fast-check：相同预设下逐年与快进逐字节相同）。
+- 缺省行为不变：黄金指纹、基准工作量指纹 `3f03ad12…`、平均快照字节数（14,734）与全部既有测试不变。
+- 叙事枚举 `decidedBy.preset` 留给 M3-041（第一个产生预设事实的任务），避免与规则道同时改 `narrative.ts`。

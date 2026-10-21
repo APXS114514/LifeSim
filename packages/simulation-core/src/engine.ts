@@ -15,6 +15,7 @@ import {
   type AdvanceResult,
   type AdvanceStopReason,
   type CancellationToken,
+  type PausePolicy,
   type SimulationEngine,
 } from './contract.ts';
 import { SimulationError, type SimulationErrorCode } from './errors.ts';
@@ -92,6 +93,7 @@ interface SimulationInit {
   queue: readonly Occurrence[];
   processedKeys: readonly string[];
   decisions: Readonly<Record<string, string>>;
+  presets: Readonly<Record<string, string>>;
   ended: boolean;
   clock: ISODate;
   dayCounter: { at: ISODate | null; count: number };
@@ -129,6 +131,7 @@ export class Simulation implements SimulationEngine {
   readonly #queue: EventQueue;
   readonly #processed: Set<string>;
   readonly #decisions: Map<string, string>;
+  readonly #presets: Map<string, string>;
   #ended: boolean;
   #clock: ISODate;
   #dayCounter: { at: ISODate | null; count: number };
@@ -153,6 +156,7 @@ export class Simulation implements SimulationEngine {
     this.#queue = new EventQueue(init.queue);
     this.#processed = new Set(init.processedKeys);
     this.#decisions = new Map(Object.entries(init.decisions));
+    this.#presets = new Map(Object.entries(init.presets));
     this.#ended = init.ended;
     this.#clock = init.clock;
     this.#dayCounter = init.dayCounter;
@@ -170,6 +174,7 @@ export class Simulation implements SimulationEngine {
       queue: [],
       processedKeys: [],
       decisions: options.decisions ?? {},
+      presets: {},
       ended: false,
       clock: options.genesis.at,
       dayCounter: { at: null, count: 0 },
@@ -233,6 +238,7 @@ export class Simulation implements SimulationEngine {
       queue: scheduler.queue,
       processedKeys: scheduler.processedKeys,
       decisions: scheduler.decisions,
+      presets: scheduler.presets ?? {},
       ended: scheduler.ended,
       clock: parsed.at,
       dayCounter: scheduler.dayCounter,
@@ -264,7 +270,12 @@ export class Simulation implements SimulationEngine {
   }
 
   advanceTo(request: AdvanceRequest, cancellation?: CancellationToken): AdvanceResult {
-    const { targetDate, stopAtMajorDecision, maxWorkUnits } = AdvanceRequestSchema.parse(request);
+    const {
+      targetDate,
+      stopAtMajorDecision,
+      maxWorkUnits,
+      pauseOn = 'major',
+    } = AdvanceRequestSchema.parse(request);
     if (targetDate < this.#clock) {
       throw new SimulationError('date-regression', `Cannot advance backwards from ${this.#clock}`, {
         seed: this.seed,
@@ -288,7 +299,7 @@ export class Simulation implements SimulationEngine {
       }
       if (work >= maxWorkUnits) return finish('work-budget-exhausted');
       if (stopAtMajorDecision) {
-        const pending = this.pendingDecision();
+        const pending = this.pendingDecision(pauseOn);
         if (pending) {
           this.#clock = head.at;
           return finish('major-decision', pending);
@@ -299,13 +310,19 @@ export class Simulation implements SimulationEngine {
     }
   }
 
-  /** 队首若是尚无选择的重大决定（且当事人在世），返回它；否则为 null。 */
-  pendingDecision(): PendingDecision | null {
+  /**
+   * 队首若是按暂停策略需要玩家决定的事项（没有直接选择、没有预设、当事人在世），返回它；否则为 null。
+   * `major`（缺省）只认重大决定；`all` 也认普通决定；`background` 决定永远不算（ADR-0008）。
+   */
+  pendingDecision(pauseOn: PausePolicy = 'major'): PendingDecision | null {
     const head = this.#queue.peek();
-    if (!head || this.#ended || this.#decisions.has(head.key)) return null;
+    if (!head || this.#ended || this.#decisions.has(head.key) || this.#presets.has(head.key)) {
+      return null;
+    }
     const definition = this.#definition(head.type, { seed: this.seed, eventKey: head.key });
     const spec = definition.decision;
-    if (!spec?.major) return null;
+    if (!spec || spec.background) return null;
+    if (pauseOn === 'major' && !spec.major) return null;
     const actorId = spec.actorId(head);
     const actor = this.#state.actors.find((candidate) => candidate.id === actorId);
     if (!actor || actor.vitalStatus.kind === 'deceased') return null;
@@ -322,7 +339,7 @@ export class Simulation implements SimulationEngine {
   }
 
   decide(decisionKey: string, optionId: string): void {
-    const pending = this.pendingDecision();
+    const pending = this.pendingDecision('all');
     if (pending?.key !== decisionKey) {
       throw new SimulationError(
         'invalid-decision',
@@ -341,6 +358,29 @@ export class Simulation implements SimulationEngine {
     this.#decisions.set(decisionKey, optionId);
   }
 
+  /**
+   * 为尚未处理的决策事件预设选项；`null` 清除（ADR-0008）。预设是「软」的：
+   * 结算时若该选项不合格，改由人生原则决定，并在 `decision.made` 里记录 `presetIgnored`。
+   */
+  preset(decisionKey: string, optionId: string | null): void {
+    const context = { seed: this.seed, eventKey: decisionKey };
+    const invalid = (message: string) => new SimulationError('invalid-decision', message, context);
+    const parts = decisionKey.split('|');
+    const type = parts[0] ?? '';
+    if (parts.length < 3 || !this.#registry.get(type)?.decision) {
+      throw invalid(`${decisionKey} is not the key of a decision event`);
+    }
+    if (this.#ended || this.#processed.has(decisionKey)) {
+      throw invalid(`Decision ${decisionKey} was already settled`);
+    }
+    if (optionId === null) {
+      this.#presets.delete(decisionKey);
+      return;
+    }
+    if (optionId.length === 0) throw invalid('A preset needs an option id');
+    this.#presets.set(decisionKey, optionId);
+  }
+
   snapshot(): SimulationSnapshot {
     return cloneJson({
       schemaVersion: SNAPSHOT_SCHEMA_VERSION,
@@ -353,6 +393,11 @@ export class Simulation implements SimulationEngine {
         queue: this.#queue.toArray(),
         processedKeys: [...this.#processed].sort(),
         decisions: Object.fromEntries([...this.#decisions].sort(([a], [b]) => (a < b ? -1 : 1))),
+        ...(this.#presets.size > 0
+          ? {
+              presets: Object.fromEntries([...this.#presets].sort(([a], [b]) => (a < b ? -1 : 1))),
+            }
+          : {}),
         ended: this.#ended,
         dayCounter: this.#dayCounter,
       },
@@ -545,10 +590,12 @@ export class Simulation implements SimulationEngine {
     const actor = context.actor(actorId);
     const options = spec.options(this.#optionsView(occurrence, context.state));
     const recorded = this.#decisions.get(occurrence.key);
+    const preset = this.#presets.get(occurrence.key);
 
     let optionId: string;
     let decidedBy: Choice['decidedBy'];
     let reasons: Choice['reasons'] = [];
+    let presetIgnored: string | null = null;
     if (recorded !== undefined) {
       if (!options.find((option) => option.id === recorded)?.eligible) {
         throw this.#error(
@@ -559,7 +606,11 @@ export class Simulation implements SimulationEngine {
       }
       optionId = recorded;
       decidedBy = 'player';
+    } else if (preset !== undefined && options.find((option) => option.id === preset)?.eligible) {
+      optionId = preset;
+      decidedBy = 'preset';
     } else {
+      if (preset !== undefined) presetIgnored = preset;
       const choice = chooseByPrinciples(actor.lifePrinciples, options);
       if (!choice) {
         throw this.#error(
@@ -582,6 +633,7 @@ export class Simulation implements SimulationEngine {
         decidedBy,
         reason1: reasons[0] ?? null,
         reason2: reasons[1] ?? null,
+        ...(presetIgnored !== null ? { presetIgnored } : {}),
       },
     });
     return { optionId, decidedBy, reasons, factId };
@@ -612,6 +664,7 @@ export class Simulation implements SimulationEngine {
     if (subject?.vitalStatus.kind === 'deceased') {
       this.#queue.shift();
       this.#processed.add(occurrence.key);
+      this.#presets.delete(occurrence.key);
       this.#dayCounter = { at: occurrence.at, count: dayCount };
       this.#clock = occurrence.at;
       return [];
@@ -634,6 +687,7 @@ export class Simulation implements SimulationEngine {
     this.#state = draft;
     this.#queue.shift();
     this.#processed.add(occurrence.key);
+    this.#presets.delete(occurrence.key);
     for (const next of scheduled) this.#queue.insert(next);
     for (const fact of facts) freezeFact(fact);
     this.#journal.push(...facts);
@@ -645,6 +699,7 @@ export class Simulation implements SimulationEngine {
     if (protagonist?.vitalStatus.kind === 'deceased') {
       this.#ended = true;
       this.#queue.clear();
+      this.#presets.clear();
     }
     return facts;
   }

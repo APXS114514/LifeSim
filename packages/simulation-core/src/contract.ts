@@ -14,11 +14,19 @@ import type { PendingDecision } from './types.ts';
  * 快进只省略展示，不省略状态变化。
  */
 
+/**
+ * 暂停策略（ADR-0008）：`major` 只在重大决定前暂停（缺省，即原行为）；`all` 在任何没有选择也没有预设的
+ * 决定前暂停。标为 `background` 的决定永不暂停。暂停与否不改变结果，所以它不写进快照。
+ */
+export const PausePolicySchema = z.enum(['major', 'all']);
+export type PausePolicy = z.infer<typeof PausePolicySchema>;
+
 /** GDD §11.4 `AdvanceRequest`。`maxWorkUnits` 是单次调用最多处理的事件数，用完即返回、可续跑。 */
 export const AdvanceRequestSchema = z.strictObject({
   targetDate: ISODateSchema,
   stopAtMajorDecision: z.boolean(),
   maxWorkUnits: z.number().int().positive(),
+  pauseOn: PausePolicySchema.optional(),
 });
 export type AdvanceRequest = z.infer<typeof AdvanceRequestSchema>;
 
@@ -44,6 +52,8 @@ export interface SimulationEngine {
   advanceTo(request: AdvanceRequest, cancellation?: CancellationToken): AdvanceResult;
   /** 玩家对当前待决事项作出选择，记入动作序列；下一次 `advanceTo` 按它结算。 */
   decide(decisionKey: string, optionId: string): void;
-  pendingDecision(): PendingDecision | null;
+  /** 为尚未处理的决策事件预设选项（`null` 清除）；事件发生时若不合格，改由人生原则决定（ADR-0008）。 */
+  preset(decisionKey: string, optionId: string | null): void;
+  pendingDecision(pauseOn?: PausePolicy): PendingDecision | null;
   snapshot(): SimulationSnapshot;
 }

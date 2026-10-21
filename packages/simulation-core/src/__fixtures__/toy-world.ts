@@ -31,7 +31,18 @@ export interface ToyWorldOptions {
   companions?: number;
   /** 出生时让同伴 0 成为主角的家长（一条 parent-child 关系）；需要 companions ≥ 1。 */
   family?: boolean;
+  /**
+   * 增加两类决定（ADR-0008 的测试）：每个生日一次「年度重点」`toy.focus`（background，永不暂停；
+   * `work` 只在 16 岁及以上可选），以及 10 岁时一次普通决定 `toy.hobby`（非重大）。
+   */
+  choices?: boolean;
 }
+
+export function focusKey(age: number): string {
+  return `toy.focus|${TOY_ACTOR}|age:${age}`;
+}
+
+export const HOBBY_KEY = `toy.hobby|${TOY_ACTOR}|age:10`;
 
 export const TOY_PARENT_RELATIONSHIP = 'rel:toy-parent';
 
@@ -155,6 +166,12 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
           causes: [fact],
         });
       }
+      if (options.choices) {
+        ctx.schedule({ type: 'toy.focus', at: ctx.at, entityId: TOY_ACTOR, period: `age:${age}` });
+        if (age === 10) {
+          ctx.schedule({ type: 'toy.hobby', at: ctx.at, entityId: TOY_ACTOR, period: 'age:10' });
+        }
+      }
       if (age === 18) {
         ctx.schedule({
           type: 'toy.career',
@@ -221,6 +238,60 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
     handle(ctx) {
       ctx.emit({
         type: 'toy.career',
+        outcomeCode: ctx.choice?.optionId ?? 'none',
+        actorIds: [TOY_ACTOR],
+        causes: ctx.choice ? [ctx.choice.factId] : [],
+      });
+    },
+  };
+
+  const focus: EventDefinition = {
+    type: 'toy.focus',
+    version: 1,
+    priority: 15,
+    decision: {
+      major: false,
+      background: true,
+      actorId: () => TOY_ACTOR,
+      options: (ctx) => {
+        const age = ageOf(ctx.occurrence.period);
+        return [
+          { id: 'rest', eligible: true, scores: { health: 0.6, stability: 0.4 } },
+          { id: 'study', eligible: true, scores: { knowledge: 1 } },
+          {
+            id: 'work',
+            eligible: age >= 16,
+            ...(age >= 16 ? {} : { ineligibleReason: 'too-young' }),
+            scores: { wealth: 1 },
+          },
+        ];
+      },
+    },
+    handle(ctx) {
+      ctx.emit({
+        type: 'toy.focus',
+        outcomeCode: ctx.choice?.optionId ?? 'none',
+        actorIds: [TOY_ACTOR],
+        causes: ctx.choice ? [ctx.choice.factId] : [],
+      });
+    },
+  };
+
+  const hobby: EventDefinition = {
+    type: 'toy.hobby',
+    version: 1,
+    priority: 16,
+    decision: {
+      major: false,
+      actorId: () => TOY_ACTOR,
+      options: () => [
+        { id: 'music', eligible: true, scores: { knowledge: 0.5 } },
+        { id: 'sport', eligible: true, scores: { health: 0.8 } },
+      ],
+    },
+    handle(ctx) {
+      ctx.emit({
+        type: 'toy.hobby',
         outcomeCode: ctx.choice?.optionId ?? 'none',
         actorIds: [TOY_ACTOR],
         causes: ctx.choice ? [ctx.choice.factId] : [],
@@ -317,7 +388,7 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
   return [
     {
       id: 'toy',
-      events: [birth, birthday, death, career, chain, trap],
+      events: [birth, birthday, death, career, focus, hobby, chain, trap],
       invariants: [
         {
           id: 'toy.residence-is-a-place',

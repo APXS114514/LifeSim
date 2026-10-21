@@ -10,11 +10,13 @@ import fc from 'fast-check';
 import { describe, expect, it, vi } from 'vitest';
 import {
   FAR_FUTURE,
+  HOBBY_KEY,
   TOY_ACTOR,
   TOY_PARENT_RELATIONSHIP,
   companionAccountId,
   companionId,
   createToySimulation,
+  focusKey,
   toyModules,
   type TrapKind,
 } from './__fixtures__/toy-world.ts';
@@ -414,5 +416,153 @@ describe('guarantees added in the M1 audit', () => {
     expect(() => {
       (fact?.causeEventIds as string[]).push('fact:0');
     }).toThrow(TypeError);
+  });
+});
+
+describe('preset choices and pause policy (ADR-0008, M3-037A)', () => {
+  function decisionFacts(simulation: Simulation, type: string) {
+    return simulation.facts.filter(
+      (fact) => fact.type === 'decision.made' && fact.details?.['decision'] === type,
+    );
+  }
+
+  /** 一个活过 18 岁的种子（toy world 的死亡是随机的）。 */
+  function adult(): string {
+    for (let index = 0; index < 500; index++) {
+      const seed = `adr8-${index}`;
+      const simulation = createToySimulation(seed, { choices: true });
+      simulation.advanceTo({ ...forever, targetDate: '1988-06-16' });
+      if (!simulation.ended) return seed;
+    }
+    throw new Error('no seed reaches 18');
+  }
+
+  it('adopts a preset and records it as decided by preset', () => {
+    const simulation = createToySimulation('adr8-preset', { choices: true });
+    simulation.preset(focusKey(3), 'study');
+    simulation.advanceTo({ ...forever, targetDate: '1973-06-15' });
+    const fact = decisionFacts(simulation, 'toy.focus').find((f) => f.at === '1973-06-15');
+    expect(fact?.details?.['option']).toBe('study');
+    expect(fact?.details?.['decidedBy']).toBe('preset');
+    expect(fact?.details).not.toHaveProperty('presetIgnored');
+  });
+
+  it('falls back to life principles when a preset is no longer eligible, without throwing', () => {
+    const simulation = createToySimulation('adr8-fallback', { choices: true });
+    simulation.preset(focusKey(5), 'work'); // 5 岁不能选「工作」
+    simulation.advanceTo({ ...forever, targetDate: '1975-06-15' });
+    const fact = decisionFacts(simulation, 'toy.focus').find((f) => f.at === '1975-06-15');
+    expect(fact?.details?.['decidedBy']).toBe('principles');
+    expect(fact?.details?.['presetIgnored']).toBe('work');
+    expect(fact?.details?.['option']).not.toBe('work');
+  });
+
+  it('lets a preset be changed or cleared before the event, and refuses invalid keys', () => {
+    const simulation = createToySimulation('adr8-edit', { choices: true });
+    simulation.preset(focusKey(2), 'study');
+    simulation.preset(focusKey(2), 'rest');
+    simulation.preset(focusKey(4), 'study');
+    simulation.preset(focusKey(4), null);
+    simulation.advanceTo({ ...forever, targetDate: '1974-06-15' });
+    const byDate = new Map(decisionFacts(simulation, 'toy.focus').map((f) => [f.at, f.details]));
+    expect(byDate.get('1972-06-15')?.['option']).toBe('rest');
+    expect(byDate.get('1972-06-15')?.['decidedBy']).toBe('preset');
+    expect(byDate.get('1974-06-15')?.['decidedBy']).toBe('principles');
+
+    for (const [key, code] of [
+      [focusKey(2), 'invalid-decision'], // 已处理
+      ['toy.unknown|char:toy|age:30', 'invalid-decision'], // 未注册的类型
+      [`toy.birthday|${TOY_ACTOR}|age:30`, 'invalid-decision'], // 不是决策事件
+      ['not-a-key', 'invalid-decision'],
+    ] as const) {
+      let error: unknown;
+      try {
+        simulation.preset(key, 'rest');
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error, key).toBeInstanceOf(SimulationError);
+      expect((error as SimulationError).code).toBe(code);
+    }
+  });
+
+  it('pauses before ordinary decisions only when asked to, and never before background ones', () => {
+    const seed = adult();
+    const major = createToySimulation(seed, { choices: true });
+    const first = major.advanceTo({ ...forever, stopAtMajorDecision: true });
+    expect(first.pendingDecision?.type).toBe('toy.career');
+
+    const all = createToySimulation(seed, { choices: true });
+    const stop = all.advanceTo({ ...forever, stopAtMajorDecision: true, pauseOn: 'all' });
+    expect(stop.stopReason).toBe('major-decision');
+    expect(stop.pendingDecision?.key).toBe(HOBBY_KEY);
+    expect(all.clock).toBe('1980-06-15');
+    expect(all.pendingDecision()).toBeNull(); // 只看重大决定时，普通决定不算待决
+    expect(all.pendingDecision('all')?.key).toBe(HOBBY_KEY);
+    // 年度重点是 background：1—10 岁的十个生日都没有停下来（10 岁当天重点的优先级 15 先于爱好的 16）。
+    expect(decisionFacts(all, 'toy.focus')).toHaveLength(10);
+
+    all.decide(HOBBY_KEY, 'music');
+    const next = all.advanceTo({ ...forever, stopAtMajorDecision: true, pauseOn: 'all' });
+    expect(next.pendingDecision?.type).toBe('toy.career');
+    const hobby = decisionFacts(all, 'toy.hobby')[0];
+    expect(hobby?.details?.['decidedBy']).toBe('player');
+    expect(hobby?.details?.['option']).toBe('music');
+  });
+
+  it('keeps presets in snapshots until used and restores snapshots that have none', () => {
+    const simulation = createToySimulation('adr8-snap', { choices: true });
+    simulation.preset(focusKey(6), 'study');
+    simulation.preset(focusKey(2), 'rest');
+    simulation.advanceTo({ ...forever, targetDate: '1971-01-01' });
+    const saved = simulation.snapshot();
+    expect(saved.schedulerState).toMatchObject({
+      presets: { [focusKey(2)]: 'rest', [focusKey(6)]: 'study' },
+    });
+    const restored = Simulation.restore(
+      SimulationSnapshotSchema.parse(JSON.parse(JSON.stringify(saved))),
+      {
+        modules: toyModules({ choices: true }),
+        dataPackVersions: { TOY: '1' },
+      },
+    );
+    restored.advanceTo({ ...forever, targetDate: '1977-01-01' });
+    simulation.advanceTo({ ...forever, targetDate: '1977-01-01' });
+    expect(canonicalJson(restored.facts)).toBe(
+      canonicalJson(simulation.facts.filter((fact) => fact.at >= '1971-01-01')),
+    );
+    // 用过的预设不再留在快照里；没有预设时快照里没有这个字段（旧快照的形状）。
+    expect(canonicalJson(simulation.snapshot().schedulerState)).not.toContain('presets');
+    const plain = createToySimulation('adr8-plain').snapshot();
+    expect(plain.schedulerState).not.toHaveProperty('presets');
+    expect(() =>
+      Simulation.restore(plain, { modules: toyModules(), dataPackVersions: { TOY: '1' } }),
+    ).not.toThrow();
+  });
+
+  it('gives identical lives for the same presets, whether played year by year or fast-forwarded', () => {
+    const choice = fc.constantFrom('rest', 'study', 'work');
+    fc.assert(
+      fc.property(
+        seeds,
+        fc.dictionary(fc.integer({ min: 1, max: 40 }).map(String), choice, { maxKeys: 12 }),
+        (seed, presets) => {
+          const make = () => {
+            const simulation = createToySimulation(seed, { choices: true });
+            for (const [age, option] of Object.entries(presets)) {
+              simulation.preset(focusKey(Number(age)), option);
+            }
+            return simulation;
+          };
+          const fast = runToEnd(make());
+          const again = runToEnd(make());
+          const yearly = runYearByYear(make());
+          expect(canonicalJson(again.facts)).toBe(canonicalJson(fast.facts));
+          expect(canonicalJson(yearly.facts)).toBe(canonicalJson(fast.facts));
+          expect(canonicalJson(yearly.snapshot)).toBe(canonicalJson(fast.snapshot));
+        },
+      ),
+      { numRuns: 40 },
+    );
   });
 });
