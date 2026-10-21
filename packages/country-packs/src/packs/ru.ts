@@ -3,6 +3,10 @@
 // 领土与政体分开（GDD §5）：地点在 1991-12-26 前属于苏联，之后属于俄罗斯联邦；
 // 地点本身不移动。列宁格勒在 1991-09-06 恢复历史名称圣彼得堡，地点 ID 不变。
 // 1992—1993 年苏联卢布按 1:1 换成俄罗斯卢布，不是重定值，仍属币制版本 2。
+import { StatSeriesSchema } from '@lifesim/content-schema';
+import births from '../../data/RU/wpp2024-births.json' with { type: 'json' };
+import qx from '../../data/RU/wpp2024-qx.json' with { type: 'json' };
+import urbanShare from '../../data/RU/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
 const RU_EVIDENCE = (year: number) => ({
@@ -246,5 +250,9 @@ export const RU_PACK: CountryPack = {
     },
   ],
   breakpoints: [],
-  series: [],
+  series: [
+    StatSeriesSchema.parse(births),
+    StatSeriesSchema.parse(qx),
+    StatSeriesSchema.parse(urbanShare),
+  ],
 };

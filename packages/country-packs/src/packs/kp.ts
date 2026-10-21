@@ -2,6 +2,10 @@
 //
 // 资料局限（GDD §16）：朝鲜的货币改革细节主要来自韩国官方教育机构与国际媒体的整理，
 // 非朝鲜官方来源；2009 年改革的兑换上限、价格调整等细节在 M2 不建模。
+import { StatSeriesSchema } from '@lifesim/content-schema';
+import births from '../../data/KP/wpp2024-births.json' with { type: 'json' };
+import qx from '../../data/KP/wpp2024-qx.json' with { type: 'json' };
+import urbanShare from '../../data/KP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
 const KP_EVIDENCE_1959 = {
@@ -156,5 +160,9 @@ export const KP_PACK: CountryPack = {
     },
   ],
   breakpoints: [],
-  series: [],
+  series: [
+    StatSeriesSchema.parse(births),
+    StatSeriesSchema.parse(qx),
+    StatSeriesSchema.parse(urbanShare),
+  ],
 };

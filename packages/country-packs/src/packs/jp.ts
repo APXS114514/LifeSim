@@ -3,6 +3,10 @@
 // 已知简化（维护者已决定，见 M2-014）：
 // - 1952-04-28 之前的盟军占领期不作为政体更替处理，整个覆盖期是同一政治实体。
 // - 冲绳在 1972-05-15 之前由美国管理；M2 不单列冲绳，人口池地点按日本处理。
+import { StatSeriesSchema } from '@lifesim/content-schema';
+import births from '../../data/JP/wpp2024-births.json' with { type: 'json' };
+import qx from '../../data/JP/wpp2024-qx.json' with { type: 'json' };
+import urbanShare from '../../data/JP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
 /** 日本国家包。 */
@@ -149,5 +153,9 @@ export const JP_PACK: CountryPack = {
   },
   anchors: [],
   breakpoints: [],
-  series: [],
+  series: [
+    StatSeriesSchema.parse(births),
+    StatSeriesSchema.parse(qx),
+    StatSeriesSchema.parse(urbanShare),
+  ],
 };

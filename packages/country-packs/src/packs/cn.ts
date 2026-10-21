@@ -3,6 +3,10 @@
 // 重庆：1954-06-19 撤销直辖、并入四川省（中央人民政府委员会第32次会议决定）；
 // 1997-03-14 全国人大批准设立重庆直辖市，1997-06-18 正式挂牌。本包以 1997-06-18 作为
 // 新行政单位的生效日；批准日记录在此，供维护者复核（M2-017 的待核实项）。
+import { StatSeriesSchema } from '@lifesim/content-schema';
+import births from '../../data/CN/wpp2024-births.json' with { type: 'json' };
+import qx from '../../data/CN/wpp2024-qx.json' with { type: 'json' };
+import urbanShare from '../../data/CN/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
 /** 中国大陆国家包。 */
@@ -193,5 +197,9 @@ export const CN_PACK: CountryPack = {
     },
   ],
   breakpoints: [],
-  series: [],
+  series: [
+    StatSeriesSchema.parse(births),
+    StatSeriesSchema.parse(qx),
+    StatSeriesSchema.parse(urbanShare),
+  ],
 };

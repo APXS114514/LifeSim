@@ -120,6 +120,9 @@ importers:
       '@lifesim/data-registry':
         specifier: workspace:*
         version: link:../data-registry
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../simulation-core
       zod:
         specifier: 4.6.7
         version: 4.6.7

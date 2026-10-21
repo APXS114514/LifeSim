@@ -15,6 +15,7 @@
   "dependencies": {
     "@lifesim/content-schema": "workspace:*",
     "@lifesim/data-registry": "workspace:*",
+    "@lifesim/simulation-core": "workspace:*",
     "zod": "4.6.7"
   }
 }
