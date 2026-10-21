@@ -93,6 +93,12 @@
       "balance": "Savings"
     }
   },
+  "saveWriteIssue": {
+    "heading": "Current progress has not been saved",
+    "detail": "Browser storage is unavailable or full. Your progress is still on this page, but closing or refreshing may lose it. Retry saving or export a backup first.",
+    "retry": "Retry saving",
+    "download": "Export current progress"
+  },
   "saveIssue": {
     "heading": "The previous save could not be loaded",
     "incompatible": "This save comes from an older version (different rules or data version), so the current version cannot continue it.",

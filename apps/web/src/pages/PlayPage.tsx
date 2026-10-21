@@ -43,12 +43,14 @@ export function PlayPage({
   session,
   locale,
   restored,
+  saveFailed,
   control,
   onNewLife,
 }: {
   session: GameSession;
   locale: Locale;
   restored: boolean;
+  saveFailed: boolean;
   control: TimeControl;
   onNewLife: () => void;
 }) {
@@ -62,10 +64,7 @@ export function PlayPage({
   const age = session.isEnded ? (summary.ageAtDeath ?? 0) : Math.max(0, session.age);
   const packName = session.pack.names[locale];
   const settlement = session.label('settlement', session.birth.settlement, locale);
-  const currency = session.currencyName(
-    session.birth.currency.code + '-' + session.birth.currency.version,
-    locale,
-  );
+  const currency = session.currencyName(summary.currency, locale);
   const snapshot = session.simulation.snapshot();
   const actor = snapshot.actors.find((candidate) => candidate.id === snapshot.activeCharacterId);
   if (!actor) throw new Error('Snapshot has no active character');
@@ -210,7 +209,7 @@ export function PlayPage({
               />
               <span>{showFinance ? t('play.hideFinance') : t('play.showFinance')}</span>
             </label>
-            <p className="hint">{t('play.autoSave')}</p>
+            {!saveFailed && <p className="hint">{t('play.autoSave')}</p>}
             {!session.isEnded && (
               <button type="button" className="secondary" onClick={onNewLife}>
                 {t('play.newLife')}

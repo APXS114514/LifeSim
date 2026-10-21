@@ -17,6 +17,7 @@ import {
 import {
   addYears,
   ageOn,
+  type AdvanceResult,
   type AdvanceStopReason,
   type PendingDecision,
   type Simulation,
@@ -242,18 +243,26 @@ export class GameSession {
     return pending;
   }
 
-  /** 推进到 `targetDate`；事实只来自 `advanceTo` 的 `newFacts`，按序号追加。 */
+  /** 推进到 `targetDate`；即使后续事件失败，也同步内核已提交的事实。 */
   #advance(targetDate: ISODate): StepResult {
     const newFacts: SimEventFact[] = [];
     for (let round = 0; round < MAX_ROUNDS; round += 1) {
-      const result = this.simulation.advanceTo({
-        targetDate,
-        stopAtMajorDecision: true,
-        maxWorkUnits: MAX_WORK_PER_ROUND,
-      });
-      if (result.newFacts.length > 0) {
-        newFacts.push(...result.newFacts);
-        this.facts = [...this.facts, ...result.newFacts];
+      const journalStart = this.simulation.facts.length;
+      let result: AdvanceResult;
+      try {
+        result = this.simulation.advanceTo({
+          targetDate,
+          stopAtMajorDecision: true,
+          maxWorkUnits: MAX_WORK_PER_ROUND,
+        });
+      } finally {
+        // advanceTo 按单事件提交，抛错不代表整轮回滚。读档后的内核日志只包含
+        // 恢复以来的新事实，因此用本轮日志偏移取增量，不能用会话的总事实数切片。
+        const committed = this.simulation.facts.slice(journalStart);
+        if (committed.length > 0) {
+          newFacts.push(...committed);
+          this.facts = [...this.facts, ...committed];
+        }
       }
       if (result.stopReason === 'work-budget-exhausted') continue;
       if (result.stopReason === 'major-decision') {

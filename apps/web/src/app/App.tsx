@@ -28,6 +28,7 @@ export function App() {
   const [issue, setIssue] = useState<SaveIssue | null>(boot.kind === 'failed' ? boot : null);
   const [restored, setRestored] = useState(boot.kind === 'loaded');
   const [error, setError] = useState<string | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   useEffect(() => {
     document.title = t('app.title');
@@ -42,7 +43,7 @@ export function App() {
       session,
       scheduler: timerScheduler(),
       onChange: () => {
-        saveGame(session);
+        setSaveFailed(!saveGame(session));
         setGame((current) =>
           current ? { session: current.session, revision: current.revision + 1 } : current,
         );
@@ -69,7 +70,7 @@ export function App() {
       });
       // 只结算出生当天，然后停在出生日等玩家自己开始推进（M3-034）。
       created.settleBirthDay();
-      saveGame(created);
+      setSaveFailed(!saveGame(created));
       setGame({ session: created, revision: 0 });
       setRestored(false);
       setError(null);
@@ -83,6 +84,7 @@ export function App() {
     setGame(null);
     setRestored(false);
     setError(null);
+    setSaveFailed(false);
   }
 
   /** 重试读取：成功则进入游戏；仍然失败则更新提示；没有存档则回到出生设置。 */
@@ -93,11 +95,13 @@ export function App() {
       setIssue(null);
       setRestored(true);
       setError(null);
+      setSaveFailed(false);
       return;
     }
     setIssue(result.kind === 'failed' ? result : null);
     setGame(null);
     setRestored(false);
+    setSaveFailed(false);
   }
 
   /** 玩家明确确认清除后才删除存档（主键与保留副本）。 */
@@ -107,6 +111,7 @@ export function App() {
     setGame(null);
     setRestored(false);
     setError(null);
+    setSaveFailed(false);
   }
 
   return (
@@ -161,12 +166,39 @@ export function App() {
         </div>
       )}
 
+      {saveFailed && session && (
+        <section className="save-issue" role="alert">
+          <h2>{t('saveWriteIssue.heading')}</h2>
+          <p>{t('saveWriteIssue.detail')}</p>
+          <div className="actions">
+            <button
+              type="button"
+              onClick={() => {
+                setSaveFailed(!saveGame(session));
+              }}
+            >
+              {t('saveWriteIssue.retry')}
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                downloadSaveBackup(JSON.stringify(session.serialize()));
+              }}
+            >
+              {t('saveWriteIssue.download')}
+            </button>
+          </div>
+        </section>
+      )}
+
       <main>
         {issue ? null : game && control ? (
           <PlayPage
             session={game.session}
             locale={locale}
             restored={restored}
+            saveFailed={saveFailed}
             control={control}
             onNewLife={newLife}
           />

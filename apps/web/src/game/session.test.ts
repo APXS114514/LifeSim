@@ -10,6 +10,36 @@ const request = {
 };
 
 describe('GameSession', () => {
+  it.each([false, true])(
+    'keeps committed facts recoverable after a later event fails (restored=%s)',
+    (restoreFirst) => {
+      let session = GameSession.create({ ...request, seed: 'review-error' });
+      session.settleBirthDay();
+      if (restoreFirst) session = GameSession.restore(session.serialize());
+      const mortality = session.region.mortalityQ.bind(session.region);
+      // 测试夹具：入学事实提交后，让同一天的健康检查失败。
+      const failure = vi.spyOn(session.region, 'mortalityQ').mockImplementation((year, age) => {
+        if (age === 7) throw new Error('fixture-health-table-unavailable');
+        return mortality(year, age);
+      });
+      try {
+        for (let age = 1; age < 7; age += 1) session.stepYear();
+        expect(() => session.stepYear()).toThrow('fixture-health-table-unavailable');
+        expect(session.facts).toHaveLength(session.simulation.lastSequence + 1);
+        const restored = GameSession.restore(
+          parseGameSave(JSON.parse(JSON.stringify(session.serialize()))),
+        );
+        expect(restored.facts).toEqual(session.facts);
+        restored.finish();
+        const uninterrupted = GameSession.create({ ...request, seed: 'review-error' });
+        uninterrupted.finish();
+        expect(canonicalJson(restored.facts)).toBe(canonicalJson(uninterrupted.facts));
+      } finally {
+        failure.mockRestore();
+      }
+    },
+  );
+
   it('advances to a major decision and applies a player choice', () => {
     const session = GameSession.create(request);
     session.advance();
