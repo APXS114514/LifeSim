@@ -254,7 +254,7 @@ export function mulDivMinor(value: number, numerator: number, denominator: numbe
 
 ### 8. 版本与兼容（Q9）
 
-- M3-009 修改 `RegionModel` 后提升 `SYSTEMS_VERSION` 到 `0.3.0`；旧快照不能恢复时**保留原始内容、允许导出、提示不兼容**（M3-000 已实现），不静默删除。
+- M3-010 先把 `SYSTEMS_VERSION` 提升到 `0.3.0`；M3-009 修改 `RegionModel` 后提升到 **`0.4.0`**（2026-10-20 实施记录）。旧快照不能恢复时**保留原始内容、允许导出、提示不兼容**（M3-000 已实现），不静默删除。
 - `SNAPSHOT_SCHEMA_VERSION` 保持 1，除非 M3-013/014/015 真的新增持久字段；新增字段必须同时更新 schema、迁移说明与测试。
 - 数据包 `dataVersion` 按包提升（例如 `0.2.0`）；规则事实的 `evidence.modelVersion` 记录当时的数据版本，避免「用新数据解释旧事实」。
 - 不做静默数据迁移；不把旧存档的 D 级结果改写成新数据结果。
@@ -330,7 +330,7 @@ M3-009 必须先合入，后续任务才能共享 `queries`；M3-010/011 只依�
 3. Q5：在没有可再分发工资序列时，是否接受「D 级基准 + 明确标注 + 可替换」继续，而不是用 GDP 推算？
 4. Q8：乘数上下限（0.5/3.0）、容差（2 个百分点或 10%）与死因权重 D 级是否接受？
 5. Q11：M3 是否继续用人口池、不做城市权重？
-6. 是否同意 M3-009 提升 `SYSTEMS_VERSION` 到 `0.3.0`、保持 `SNAPSHOT_SCHEMA_VERSION` 1？
+6. 是否同意 M3-009 提升 `SYSTEMS_VERSION` 到 `0.4.0`（M3-010 已先到 `0.3.0`）、保持 `SNAPSHOT_SCHEMA_VERSION` 1？
 7. 是否同意实施顺序与「M3-009 不改黄金指纹」的约束？
 
 ## 何时重新评估
