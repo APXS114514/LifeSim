@@ -2,14 +2,16 @@
 
 GDD 没有规定、但会影响实现的决定写在这里（GDD §0）。ADR 不能推翻 GDD 已冻结的 23 项产品决定；如果需要改变这些决定，要先发起提案并发布新版 GDD。
 
-| 编号                                   | 标题                          | 状态   |
-| -------------------------------------- | ----------------------------- | ------ |
-| [0001](0001-toolchain-and-monorepo.md) | 工具链与 monorepo 结构        | 已采纳 |
-| [0002](0002-docs-single-source.md)     | 设计文档以 GDD 为唯一来源     | 已采纳 |
-| [0003](0003-synthetic-world.md)        | M1 使用的合成地区（D 类假设） | 已采纳 |
-| [0004](0004-deterministic-kernel.md)   | 确定性模拟内核的设计          | 已采纳 |
-| [0005](0005-m2-data-architecture.md)   | M2 数据架构                   | 已采纳 |
-| [0007](0007-data-driven-life-rules.md) | M3 数据驱动人生规则           | 已采纳 |
+| 编号                                            | 标题                          | 状态   |
+| ----------------------------------------------- | ----------------------------- | ------ |
+| [0001](0001-toolchain-and-monorepo.md)          | 工具链与 monorepo 结构        | 已采纳 |
+| [0002](0002-docs-single-source.md)              | 设计文档以 GDD 为唯一来源     | 已采纳 |
+| [0003](0003-synthetic-world.md)                 | M1 使用的合成地区（D 类假设） | 已采纳 |
+| [0004](0004-deterministic-kernel.md)            | 确定性模拟内核的设计          | 已采纳 |
+| [0005](0005-m2-data-architecture.md)            | M2 数据架构                   | 已采纳 |
+| [0006](0006-first-playable-slice.md)            | 第一个可玩切片（M3-lite）     | 提议   |
+| [0007](0007-data-driven-life-rules.md)          | M3 数据驱动人生规则           | 已采纳 |
+| [0008](0008-preset-choices-and-pause-policy.md) | 预设选择与暂停策略            | 提议   |
 
 ## 模板
 
