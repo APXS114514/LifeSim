@@ -7,6 +7,8 @@ import {
 } from '@lifesim/content-schema';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PolityFlag } from '../components/PolityFlag.tsx';
+import { polityForRegionAt } from '../game/flags.ts';
 
 type RegionChoice = 'random' | BirthRegionId;
 type YearMode = 'random' | 'specific';
@@ -74,6 +76,9 @@ export function CharacterCreationPage({
 
   const yearValid = /^\d{4}$/.test(yearText) && isSelectableBirthYear(Number(yearText));
   const showYearError = yearMode === 'specific' && !yearValid;
+  // 旗帜跟随选择的年份：随机年份按现代显示；指定年份可看到苏联等历史旗帜。
+  const flagYear = yearMode === 'specific' && yearValid ? Number(yearText) : BIRTH_YEAR_MAX;
+  const flagDate = `${flagYear}-01-01`;
 
   const regionLabel =
     region === 'random' ? t('creation.summary.randomRegion') : t(`creation.region.${region}`);
@@ -95,6 +100,7 @@ export function CharacterCreationPage({
           {BIRTH_REGION_IDS.map((id) => (
             <li key={id}>
               <span className="intro-code">{id}</span>
+              <PolityFlag polityId={polityForRegionAt(id, flagDate)} date={flagDate} />
               <span>{t(`creation.region.${id}`)}</span>
             </li>
           ))}
@@ -139,6 +145,7 @@ export function CharacterCreationPage({
                     setRegion(id);
                   }}
                 />
+                <PolityFlag polityId={polityForRegionAt(id, flagDate)} date={flagDate} />
                 <span>{t(`creation.region.${id}`)}</span>
               </label>
             ))}

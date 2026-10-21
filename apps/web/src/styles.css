@@ -601,6 +601,38 @@ legend {
   font-size: 1.28rem;
 }
 
+.polity-flag {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 15px;
+  object-fit: contain;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: var(--surface);
+}
+
+.polity-flag-empty {
+  background: var(--surface-2);
+}
+
+.region-flag {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.region-flag .polity-flag {
+  width: 38px;
+  height: 26px;
+  border-radius: 4px;
+}
+
+.choice .polity-flag,
+.intro-regions .polity-flag {
+  width: 20px;
+  height: 14px;
+}
+
 .region-mark {
   display: inline-flex;
   flex: 0 0 auto;
@@ -643,6 +675,12 @@ legend {
 .meta-value {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.meta-value.with-flag {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .place-label {

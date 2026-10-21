@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DecisionCard } from '../components/DecisionCard.tsx';
 import { PlacePolityLabel } from '../components/PlacePolityLabel.tsx';
+import { PolityFlag } from '../components/PolityFlag.tsx';
 import { SummaryCard } from '../components/SummaryCard.tsx';
 import { Timeline } from '../components/Timeline.tsx';
 import type { GameSession } from '../game/session.ts';
@@ -57,6 +58,9 @@ export function PlayPage({
         <aside className="game-side">
           <section className="character-card" aria-labelledby="character-heading">
             <div className="character-head">
+              <span className="region-flag" aria-hidden="true">
+                <PolityFlag polityId={actor.politicalEntityId} date={session.currentDate} />
+              </span>
               <span className="region-mark" aria-hidden="true">
                 {session.birth.packId}
               </span>
@@ -73,7 +77,15 @@ export function PlayPage({
             <p className="character-line">{currency}</p>
             <p className="character-meta">
               <span className="meta-label">{t('play.birthPlace')}</span>
-              <PlacePolityLabel place={locations.birth.place} polity={locations.birth.polity} />
+              <span className="meta-value with-flag">
+                <span className="birth-flag">
+                  <PolityFlag
+                    polityId={session.birth.politicalEntityId}
+                    date={session.birth.birthDate}
+                  />
+                </span>
+                <PlacePolityLabel place={locations.birth.place} polity={locations.birth.polity} />
+              </span>
             </p>
             <p className="character-meta">
               <span className="meta-label">{t('play.currentResidence')}</span>
