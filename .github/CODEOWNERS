@@ -11,6 +11,7 @@
 /packages/data-registry/src/        @APXS114514
 /data/                              @APXS114514
 /qa/                                @APXS114514
+/third_party/                       @APXS114514
 /scripts/check-*                    @APXS114514
 /.github/                           @APXS114514
 /.githooks/                         @APXS114514

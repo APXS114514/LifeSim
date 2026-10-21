@@ -44,7 +44,6 @@
     "sameAsBirth": "同出生地",
     "politicalEntity": "政治归属",
     "citizenship": "国籍",
-
     "age": "年龄",
     "died": "享年",
     "newLife": "开始新人生",
@@ -123,7 +122,6 @@
     "decisions": "重大决定",
     "birthPlace": "出生地",
     "residence": "去世时居住地",
-
     "decisionLine": "{{decision}}：{{option}}"
   },
   "about": {
@@ -131,6 +129,7 @@
     "notPrediction": "这是受历史统计启发的交互式模拟，不是对个人命运的科学预测。",
     "historyFixed": "真实的宏观历史固定不变；个人与家庭的经历是模拟产生的虚构结果。",
     "notGlobal": "随机出生只在五个首发地区之间抽样，不代表全球出生分布。",
-    "offline": "默认不连接任何服务器，也不调用 AI 模型。"
+    "offline": "默认不连接任何服务器，也不调用 AI 模型。",
+    "licenses": "开源许可与第三方声明"
   }
 }

@@ -182,6 +182,9 @@ export function App() {
           <li>{t('about.historyFixed')}</li>
           <li>{t('about.notGlobal')}</li>
           <li>{t('about.offline')}</li>
+          <li>
+            <a href={`${import.meta.env.BASE_URL}THIRD_PARTY_NOTICES.txt`}>{t('about.licenses')}</a>
+          </li>
         </ul>
       </footer>
     </div>

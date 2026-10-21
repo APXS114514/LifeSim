@@ -19,6 +19,7 @@ export const HIGH_RISK = [
   [/^packages\/country-packs\/src\/(?!.*\.test\.ts$)/, '国家包定义、校验与出生选择'],
   [/^packages\/data-registry\/src\/(?!.*\.test\.ts$)/, '数据查询与回退规则'],
   [/^qa\//, '测试基线'],
+  [/^third_party\//, '移植代码登记与第三方许可证'],
   [/^scripts\/check-/, '质量门禁脚本'],
   [/^\.github\//, 'CI 与代码所有者'],
   [/^\.githooks\//, '提交钩子'],

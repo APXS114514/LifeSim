@@ -255,3 +255,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## 移植的源代码 / Ported source code
+
+> 从其他开源项目移植或改写进本仓库的源代码，登记在 `third_party/ported-code.json`；许可证原文见下。
+
+| 来源 | Commit | 上游位置 | 许可证 | 本仓库文件 | 改动 |
+| --- | --- | --- | --- | --- | --- |
+| [satorunet/1injp](https://github.com/satorunet/1injp) | `5f19a0e` | app.js 576-577, 677, 680-688, 705-708, 731 | MIT | apps/web/src/game/year-pacing.ts | Rewritten as pure TypeScript functions (pace constants, per-frame progress with the 250 ms cap, reveal count, date interpolation); DOM, sound, animation frames and wall-clock reads removed; dates use LifeSim's canonical calendar and never pass the authoritative clock. |
+
+### satorunet/1injp（third_party/1injp/LICENSE）
+
+```text
+MIT License
+
+Copyright (c) 2026 satoru.net
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

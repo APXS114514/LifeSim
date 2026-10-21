@@ -44,7 +44,6 @@
     "sameAsBirth": "Same as birthplace",
     "politicalEntity": "Political entity",
     "citizenship": "Citizenship",
-
     "age": "Age",
     "died": "Died at",
     "newLife": "Start a new life",
@@ -123,7 +122,6 @@
     "decisions": "Major decisions",
     "birthPlace": "Birthplace",
     "residence": "Residence at death",
-
     "decisionLine": "{{decision}}: {{option}}"
   },
   "about": {
@@ -131,6 +129,7 @@
     "notPrediction": "This is an interactive simulation informed by historical statistics, not a scientific prediction of anyone's fate.",
     "historyFixed": "Real macro history stays fixed; personal and family outcomes are simulated fiction.",
     "notGlobal": "Random births are drawn from the five launch regions only, not from the global birth distribution.",
-    "offline": "By default it connects to no server and calls no AI model."
+    "offline": "By default it connects to no server and calls no AI model.",
+    "licenses": "Open-source licences and third-party notices"
   }
 }

@@ -11,8 +11,9 @@ describe('PR guardrails', () => {
       { status: 'M', path: 'qa/test-baseline.json' },
       { status: 'M', path: '.github/workflows/ci.yml' },
       { status: 'M', path: 'docs/adr/0005-x.md' },
+      { status: 'M', path: 'third_party/ported-code.json' },
     ]);
-    expect(flagged.map((entry) => entry.path)).toHaveLength(7);
+    expect(flagged.map((entry) => entry.path)).toHaveLength(8);
   });
 
   it('flags deleted test files but not new or edited tests', () => {

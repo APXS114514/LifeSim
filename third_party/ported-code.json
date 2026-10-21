@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {
+      "id": "1injp-year-pacing",
+      "project": "satorunet/1injp",
+      "url": "https://github.com/satorunet/1injp",
+      "commit": "5f19a0e7b4233c27492ea110c516eb0ab1c50948",
+      "license": "MIT",
+      "copyright": "Copyright (c) 2026 satoru.net",
+      "licenseFile": "third_party/1injp/LICENSE",
+      "upstream": [
+        {
+          "file": "app.js",
+          "lines": "576-577, 677, 680-688, 705-708, 731",
+          "sha256": "f24de1ce792d6c9e4e4c7463aaada08bcaa0470268c03243457f9b5da712ffbf"
+        }
+      ],
+      "ported": ["apps/web/src/game/year-pacing.ts"],
+      "changes": "Rewritten as pure TypeScript functions (pace constants, per-frame progress with the 250 ms cap, reveal count, date interpolation); DOM, sound, animation frames and wall-clock reads removed; dates use LifeSim's canonical calendar and never pass the authoritative clock.",
+      "task": "M3-044",
+      "accessed": "2026-10-21"
+    }
+  ]
+}
