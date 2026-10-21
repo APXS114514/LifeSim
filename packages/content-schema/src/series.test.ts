@@ -143,3 +143,83 @@ describe('StatSeriesSchema', () => {
     }
   });
 });
+
+/** M3 新增指标的测试夹具，数值虚构，只为覆盖 schema 规则。 */
+const m3Indicators = [
+  ['education-enrollment-secondary', 'percent', 62],
+  ['education-completion-upper-secondary', 'share', 0.42],
+  ['labor-force-participation', 'share', 0.61],
+  ['employment-agriculture-share', 'share', 0.35],
+  ['cpi-index', 'index', 135.2],
+  ['health-out-of-pocket-share', 'share', 0.28],
+  ['health-expenditure-per-capita', 'usd-per-capita', 640.5],
+] as const;
+
+function m3Fixture(
+  indicator: (typeof m3Indicators)[number][0],
+  unit: (typeof m3Indicators)[number][1],
+  value: number,
+  year = 2000,
+): StatSeries {
+  return {
+    id: `test/CN/${indicator}`,
+    indicator,
+    geographyId: 'country:CN',
+    unit,
+    ageBasis: 'none',
+    sex: 'both',
+    evidence: {
+      grade: 'B',
+      sourceIds: ['worldbank-wdi:fixture'],
+      modelVersion: 'fixture',
+      geographyId: 'country:CN',
+      yearRange: [1950, 2100],
+    },
+    points: [{ year, age: null, value, projected: false }],
+  };
+}
+
+describe('M3 indicator units', () => {
+  it('accepts a fixture for every new indicator', () => {
+    for (const [indicator, unit, value] of m3Indicators) {
+      expect(StatSeriesSchema.safeParse(m3Fixture(indicator, unit, value)).success, indicator).toBe(
+        true,
+      );
+    }
+  });
+
+  it('checks percent, index and usd-per-capita ranges', () => {
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', 100))
+        .success,
+    ).toBe(true);
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', 100.1))
+        .success,
+    ).toBe(false);
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', -1))
+        .success,
+    ).toBe(false);
+
+    expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'index', 1)).success).toBe(true);
+    expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'index', 0)).success).toBe(false);
+
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('health-expenditure-per-capita', 'usd-per-capita', 0))
+        .success,
+    ).toBe(true);
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('health-expenditure-per-capita', 'usd-per-capita', -1))
+        .success,
+    ).toBe(false);
+  });
+
+  it('rejects an indicator paired with the wrong unit', () => {
+    expect(
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'share', 0.62))
+        .success,
+    ).toBe(false);
+    expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'percent', 135)).success).toBe(false);
+  });
+});

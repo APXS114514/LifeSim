@@ -2,12 +2,30 @@ import { z } from 'zod';
 import { EvidenceMetaSchema } from './evidence.ts';
 import { EntityIdSchema } from './primitives.ts';
 
-/** M2 的统计指标（ADR-0005 §3）。新增指标需要架构审查。 */
-export const INDICATORS = ['births', 'life-table-qx', 'urban-share'] as const;
+/** 统计指标（M2 三项 + M3 教育与劳动力、价格与卫生；ADR-0005 §3、M3-003）。新增指标需要架构审查。 */
+export const INDICATORS = [
+  'births',
+  'life-table-qx',
+  'urban-share',
+  'education-enrollment-secondary',
+  'education-completion-upper-secondary',
+  'labor-force-participation',
+  'employment-agriculture-share',
+  'cpi-index',
+  'health-out-of-pocket-share',
+  'health-expenditure-per-capita',
+] as const;
 export const IndicatorSchema = z.enum(INDICATORS);
 export type Indicator = z.infer<typeof IndicatorSchema>;
 
-export const SERIES_UNITS = ['thousand-persons', 'probability', 'share'] as const;
+export const SERIES_UNITS = [
+  'thousand-persons',
+  'probability',
+  'share',
+  'percent',
+  'index',
+  'usd-per-capita',
+] as const;
 export type SeriesUnit = (typeof SERIES_UNITS)[number];
 export const AGE_BASES = ['none', 'single-year'] as const;
 export type AgeBasis = (typeof AGE_BASES)[number];
@@ -17,6 +35,13 @@ export const INDICATOR_SPEC: Record<Indicator, { unit: SeriesUnit; ageBasis: Age
   births: { unit: 'thousand-persons', ageBasis: 'none' },
   'life-table-qx': { unit: 'probability', ageBasis: 'single-year' },
   'urban-share': { unit: 'share', ageBasis: 'none' },
+  'education-enrollment-secondary': { unit: 'percent', ageBasis: 'none' },
+  'education-completion-upper-secondary': { unit: 'share', ageBasis: 'none' },
+  'labor-force-participation': { unit: 'share', ageBasis: 'none' },
+  'employment-agriculture-share': { unit: 'share', ageBasis: 'none' },
+  'cpi-index': { unit: 'index', ageBasis: 'none' },
+  'health-out-of-pocket-share': { unit: 'share', ageBasis: 'none' },
+  'health-expenditure-per-capita': { unit: 'usd-per-capita', ageBasis: 'none' },
 };
 
 const pointBase = {
@@ -131,15 +156,26 @@ export const StatSeriesSchema = z
       }
 
       if (point.value !== null) {
+        const value = point.value;
         const outOfRange =
-          spec.unit === 'thousand-persons' ? point.value < 0 : point.value < 0 || point.value > 1;
+          (spec.unit === 'thousand-persons' || spec.unit === 'usd-per-capita') && value < 0
+            ? true
+            : (spec.unit === 'probability' || spec.unit === 'share') && (value < 0 || value > 1)
+              ? true
+              : spec.unit === 'percent' && (value < 0 || value > 100)
+                ? true
+                : spec.unit === 'index' && value <= 0;
         if (outOfRange) {
           ctx.addIssue({
             code: 'custom',
             message:
-              spec.unit === 'thousand-persons'
-                ? 'values must be non-negative'
-                : 'probability and share values must be within [0, 1]',
+              spec.unit === 'percent'
+                ? 'percent values must be within [0, 100]'
+                : spec.unit === 'index'
+                  ? 'index values must be greater than zero'
+                  : spec.unit === 'usd-per-capita' || spec.unit === 'thousand-persons'
+                    ? 'values must be non-negative'
+                    : 'probability and share values must be within [0, 1]',
             path: ['points', index, 'value'],
           });
         }
