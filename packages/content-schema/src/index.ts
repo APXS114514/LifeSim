@@ -10,3 +10,4 @@ export * from './event-fact.ts';
 export * from './character-state.ts';
 export * from './snapshot.ts';
 export * from './relationships.ts';
+export * from './names.ts';
