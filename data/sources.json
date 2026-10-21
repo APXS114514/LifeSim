@@ -264,6 +264,17 @@
     "notes": "只引用史实，不再分发文本；非朝鲜官方来源。页面标注 KOGL 第4类（署名、禁止商用、禁止变更）。原文：2차 화폐개혁은 내각결정 11호에 의해 1959년 2월 13일부터 17일까지 실시 ... 100:1；5차 화폐개혁은 ... 2009년 11월 30일부터 12월 6일까지 ... 교환비율은 현금의 경우 100:1。访问日期 2026-10-20。"
   },
   {
+    "id": "wikidata:names",
+    "title": "Wikidata：名字（given name）与姓氏（family name）条目",
+    "publisher": "Wikimedia Foundation（维基数据社区）",
+    "url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+    "version": "2026-10-21",
+    "license": "CC0-1.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-21",
+    "notes": "只取结构性事实（条目原文写法、语言标签与转写），不复制任何频率表或排行榜。许可原文：All structured data from the main, Property, Lexeme, and EntitySchema namespaces is available under the Creative Commons CC0 License。抽查条目 Q3110320（一郎）、Q102168838（花子）、Q978692（佐藤）、Q104373216（秀英）、Q75965797（建国）、Q6862481（Min-jun）、Q7451448（Seo-yeon）、Q666578（Anna）、Q19812227（Dmitri）。访问日期 2026-10-21。"
+  },
+  {
     "id": "worldbank-wdi:FP.CPI.TOTL",
     "title": "Consumer price index (2010 = 100) — World Development Indicators",
     "publisher": "World Bank",
