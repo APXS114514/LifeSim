@@ -145,3 +145,52 @@ WDI 数据集页面的 "Data Access and Licensing" 部分：
 - 指标页面：<https://data.worldbank.org/indicator/SE.SEC.CUAT.UP.ZS>
 - API：<https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.CUAT.UP.ZS?format=json&per_page=20000>
 - 版本记录：API `lastupdated: 2026-10-08`。
+
+## `worldbank-wdi:SL.TLF.CACT.ZS` — 世界银行 WDI 劳动参与率
+
+### 条款页面
+
+- 数据目录许可说明：<https://datacatalog.worldbank.org/public-licenses>，访问日期 2026-10-20。
+- Summary Terms of Use：<https://data.worldbank.org/summary-terms-of-use>，访问日期 2026-10-20。
+- WDI 数据集页面：<https://datacatalog.worldbank.org/search/dataset/0037712>，访问日期 2026-10-20。
+- 指标元信息：<https://api.worldbank.org/v2/indicator/SL.TLF.CACT.ZS?format=json>，访问日期 2026-10-20。
+
+### 结论
+
+条款与 `SP.URB.TOTL.IN.ZS` 相同（CC BY 4.0）。**注意**：这是 ILO 模型估计（15 岁及以上），不是各国普查值；本项目在来源 notes 与界面上按 B 级数据披露。百分比 ÷ 100 转为 share，只保留非空观测。
+
+| 问题             | 结论 | 依据                                     |
+| ---------------- | ---- | ---------------------------------------- |
+| 允许再分发？     | 是   | CC BY 4.0 copy / distribute。            |
+| 允许修改？       | 是   | 百分比→share，须注明改动。               |
+| 署名与改动说明？ | 有   | `sources.json` 的 notes 与统计面板披露。 |
+| 商业使用限制？   | 无   | 条款明确 including commercial use。      |
+
+**建议结论：`allowed`（待维护者确认）。**
+
+## `worldbank-wdi:SL.AGR.EMPL.ZS` — 世界银行 WDI 农业就业占比
+
+### 条款页面
+
+- 数据目录许可说明：<https://datacatalog.worldbank.org/public-licenses>，访问日期 2026-10-20。
+- Summary Terms of Use：<https://data.worldbank.org/summary-terms-of-use>，访问日期 2026-10-20。
+- WDI 数据集页面：<https://datacatalog.worldbank.org/search/dataset/0037712>，访问日期 2026-10-20。
+- 指标元信息：<https://api.worldbank.org/v2/indicator/SL.AGR.EMPL.ZS?format=json>，访问日期 2026-10-20。
+
+### 结论
+
+条款与 `SP.URB.TOTL.IN.ZS` 相同（CC BY 4.0）。**注意**：这是 ILO 模型估计，不是各国普查的行业分类；百分比 ÷ 100 转为 share，只保留非空观测。
+
+| 问题             | 结论 | 依据                                     |
+| ---------------- | ---- | ---------------------------------------- |
+| 允许再分发？     | 是   | CC BY 4.0 copy / distribute。            |
+| 允许修改？       | 是   | 百分比→share，须注明改动。               |
+| 署名与改动说明？ | 有   | `sources.json` 的 notes 与统计面板披露。 |
+| 商业使用限制？   | 无   | 条款明确 including commercial use。      |
+
+**建议结论：`allowed`（待维护者确认）。**
+
+### 官方下载入口
+
+- 指标页面：<https://data.worldbank.org/indicator/SL.TLF.CACT.ZS>、<https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS>
+- 版本记录：API `lastupdated: 2026-10-08`。

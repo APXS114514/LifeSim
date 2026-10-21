@@ -14,6 +14,20 @@
     "retrievedAt": "2026-10-20"
   },
   {
+    "id": "employment-agriculture",
+    "file": "employment-agriculture.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SL.AGR.EMPL.ZS?format=json&per_page=20000",
+    "sha256": "ad859dde5f2b338c46055c8a962046df9c681d8bd4354c4b52d79248f1755a13",
+    "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "labor-participation",
+    "file": "labor-participation.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SL.TLF.CACT.ZS?format=json&per_page=20000",
+    "sha256": "ddabe42b54c9e084bce327a83ec11fb10a016cdcf96fb78f05f836dc0844f4e9",
+    "retrievedAt": "2026-10-20"
+  },
+  {
     "id": "urban-share",
     "file": "urban-share.json",
     "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=20000",

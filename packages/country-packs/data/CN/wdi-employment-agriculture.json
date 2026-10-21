@@ -1,0 +1,233 @@
+{
+  "id": "wdi/CN/employment-agriculture-share",
+  "indicator": "employment-agriculture-share",
+  "geographyId": "country:CN",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SL.AGR.EMPL.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:CN",
+    "yearRange": [
+      1991,
+      2025
+    ],
+    "methodId": "wdi-employment-agriculture-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 1991,
+      "age": null,
+      "projected": false,
+      "value": 0.596400851916364
+    },
+    {
+      "year": 1992,
+      "age": null,
+      "projected": false,
+      "value": 0.585001088483213
+    },
+    {
+      "year": 1993,
+      "age": null,
+      "projected": false,
+      "value": 0.56400437403951
+    },
+    {
+      "year": 1994,
+      "age": null,
+      "projected": false,
+      "value": 0.542999028550458
+    },
+    {
+      "year": 1995,
+      "age": null,
+      "projected": false,
+      "value": 0.522001077716619
+    },
+    {
+      "year": 1996,
+      "age": null,
+      "projected": false,
+      "value": 0.505003585804529
+    },
+    {
+      "year": 1997,
+      "age": null,
+      "projected": false,
+      "value": 0.499004535957066
+    },
+    {
+      "year": 1998,
+      "age": null,
+      "projected": false,
+      "value": 0.49799675036850405
+    },
+    {
+      "year": 1999,
+      "age": null,
+      "projected": false,
+      "value": 0.5009944338665899
+    },
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 0.5003956126622591
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 0.5000000758180341
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 0.499999932729708
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 0.490994891398691
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 0.469002521281439
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 0.448001963078147
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 0.42600488114455604
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 0.408000442662963
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 0.39600070939320603
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 0.380998847578432
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.367006103588109
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 0.347997907041488
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 0.33600592285725
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 0.314002857020434
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 0.295004728042914
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 0.283004717268993
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 0.274221249065299
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 0.266835826166189
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 0.257514953274594
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 0.247219896643701
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.235998596785258
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 0.228687780404897
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 0.240801085619325
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 0.228008772042629
+    },
+    {
+      "year": 2024,
+      "age": null,
+      "projected": false,
+      "value": 0.22216498294765
+    },
+    {
+      "year": 2025,
+      "age": null,
+      "projected": false,
+      "value": 0.21676862333695598
+    }
+  ]
+}

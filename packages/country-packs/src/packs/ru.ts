@@ -7,6 +7,8 @@ import { StatSeriesSchema } from '@lifesim/content-schema';
 import births from '../../data/RU/wpp2024-births.json' with { type: 'json' };
 import educationCompletion from '../../data/RU/wdi-education-completion.json' with { type: 'json' };
 import educationEnrollment from '../../data/RU/wdi-education-enrollment.json' with { type: 'json' };
+import employmentAgriculture from '../../data/RU/wdi-employment-agriculture.json' with { type: 'json' };
+import laborParticipation from '../../data/RU/wdi-labor-participation.json' with { type: 'json' };
 import qx from '../../data/RU/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/RU/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -257,6 +259,8 @@ export const RU_PACK: CountryPack = {
     StatSeriesSchema.parse(qx),
     StatSeriesSchema.parse(urbanShare),
     StatSeriesSchema.parse(educationEnrollment),
+    StatSeriesSchema.parse(laborParticipation),
+    StatSeriesSchema.parse(employmentAgriculture),
     StatSeriesSchema.parse(educationCompletion),
   ],
 };

@@ -1,0 +1,239 @@
+{
+  "id": "wdi/CN/labor-force-participation",
+  "indicator": "labor-force-participation",
+  "geographyId": "country:CN",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SL.TLF.CACT.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:CN",
+    "yearRange": [
+      1990,
+      2025
+    ],
+    "methodId": "wdi-labor-participation-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 1990,
+      "age": null,
+      "projected": false,
+      "value": 0.7917000000000001
+    },
+    {
+      "year": 1991,
+      "age": null,
+      "projected": false,
+      "value": 0.78706
+    },
+    {
+      "year": 1992,
+      "age": null,
+      "projected": false,
+      "value": 0.7823399999999999
+    },
+    {
+      "year": 1993,
+      "age": null,
+      "projected": false,
+      "value": 0.77754
+    },
+    {
+      "year": 1994,
+      "age": null,
+      "projected": false,
+      "value": 0.77267
+    },
+    {
+      "year": 1995,
+      "age": null,
+      "projected": false,
+      "value": 0.7677299999999999
+    },
+    {
+      "year": 1996,
+      "age": null,
+      "projected": false,
+      "value": 0.76271
+    },
+    {
+      "year": 1997,
+      "age": null,
+      "projected": false,
+      "value": 0.75762
+    },
+    {
+      "year": 1998,
+      "age": null,
+      "projected": false,
+      "value": 0.7524599999999999
+    },
+    {
+      "year": 1999,
+      "age": null,
+      "projected": false,
+      "value": 0.74722
+    },
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 0.7419
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 0.73878
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 0.73563
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 0.73246
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 0.7292700000000001
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 0.7260500000000001
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 0.7228100000000001
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 0.71954
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 0.71625
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 0.71294
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.7095999999999999
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 0.7086
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 0.7041
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 0.6997
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 0.6965
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 0.693
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 0.6888
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 0.6835
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 0.6781
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 0.6738
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.6572100000000001
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 0.6711
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 0.6579999999999999
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 0.6583
+    },
+    {
+      "year": 2024,
+      "age": null,
+      "projected": false,
+      "value": 0.6491
+    },
+    {
+      "year": 2025,
+      "age": null,
+      "projected": false,
+      "value": 0.64551
+    }
+  ]
+}

@@ -253,6 +253,28 @@
     "notes": "Attribution: World Bank, World Development Indicators, indicator SE.SEC.ENRR, CC BY 4.0; changes: only non-null annual observations emitted; values kept as gross percent (may exceed 100)."
   },
   {
+    "id": "worldbank-wdi:SL.AGR.EMPL.ZS",
+    "title": "Employment in agriculture (% of total employment) (modeled ILO estimate) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SL.AGR.EMPL.ZS, CC BY 4.0; modeled ILO estimate, not a national census value; changes: percent divided by 100 into a 0–1 share, only non-null observations emitted."
+  },
+  {
+    "id": "worldbank-wdi:SL.TLF.CACT.ZS",
+    "title": "Labor force participation rate, total (% of total population ages 15+) (modeled ILO estimate) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SL.TLF.CACT.ZS",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SL.TLF.CACT.ZS, CC BY 4.0; modeled ILO estimate (age 15+), not a national census value; changes: percent divided by 100 into a 0–1 share, only non-null observations emitted."
+  },
+  {
     "id": "worldbank-wdi:SP.URB.TOTL.IN.ZS",
     "title": "Urban population (% of total population) — World Development Indicators",
     "publisher": "World Bank",
