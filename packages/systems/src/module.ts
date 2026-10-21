@@ -18,6 +18,7 @@ import { financeEvents } from './finance.ts';
 import { healthEvents } from './health.ts';
 import { historyEvents } from './history.ts';
 import { lifeEvents } from './life.ts';
+import { npcEvents } from './npc.ts';
 import { MacroStateSchema, type RegionModel } from './region.ts';
 import { EVENT, PROTAGONIST_ID, SYSTEMS_VERSION } from './shared.ts';
 
@@ -66,6 +67,34 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
       },
     },
     {
+      id: 'life.deceased-no-new-activity',
+      check(state, at) {
+        const problems: string[] = [];
+        const deceased = new Set(
+          state.actors
+            .filter((actor) => actor.vitalStatus.kind === 'deceased')
+            .map((actor) => actor.id),
+        );
+        if (deceased.size === 0) return problems;
+        for (const actor of state.actors) {
+          if (actor.vitalStatus.kind !== 'deceased') continue;
+          if (actor.vitalStatus.deathDate > at) {
+            problems.push(`${actor.id} has a death date after ${at}`);
+          }
+        }
+        // 去世后不再共同居住：死亡事件必须把它参与的关系置为 coResident=false（关系本身不解除）。
+        for (const relationship of state.relationships) {
+          if (!relationship.coResident) continue;
+          for (const actorId of [relationship.fromId, relationship.toId]) {
+            if (deceased.has(actorId)) {
+              problems.push(`${relationship.id} still lists deceased ${actorId} as co-resident`);
+            }
+          }
+        }
+        return problems;
+      },
+    },
+    {
       id: 'life.relationship-actors',
       check(state) {
         const ids = new Set(state.actors.map((actor) => actor.id));
@@ -83,6 +112,7 @@ export function lifeModule(region: RegionModel): SimulationModule {
     events: [
       ...lifeEvents(region),
       ...historyEvents(region),
+      ...npcEvents(region),
       ...educationEvents(region),
       ...careerEvents(region),
       ...financeEvents(region),

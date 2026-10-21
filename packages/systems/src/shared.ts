@@ -3,7 +3,7 @@ import { ageOn, type EventContext, type SimState } from '@lifesim/simulation-cor
 import type { RegionModel } from './region.ts';
 
 /** 系统规则版本：规则行为变化时提升，写入快照的 `dataPackVersions.systems`。 */
-export const SYSTEMS_VERSION = '0.4.0';
+export const SYSTEMS_VERSION = '0.5.0';
 
 export const PROTAGONIST_ID = 'char:protagonist';
 
@@ -24,17 +24,23 @@ export const EVENT = {
   retirement: 'career.retirement',
   healthCheck: 'health.check',
   treatment: 'choice.treatment',
+  /** M3-011：Tier1 NPC 的年度生日推进（每个 NPC 一条独立事件流）。 */
+  npcBirthday: 'npc.birthday',
 } as const;
 
 /**
  * 同一天内的处理顺序：历史锚点 → 死亡 → 生日 → 年度结算（结算过去一年，用变化前的状态）
  * → 教育 → 升学决定 → 就业 → 健康 → 治疗决定。
+ *
+ * NPC 的年度事件排在主角的生日之后（M3-011）：NPC 的生日通常与主角不同，
+ * 只在恰好同一天时才有先后之分，排在主角的步骤之后可以让主角一整天的事实保持原有的顺序。
  */
 export const PRIORITY = {
   birth: 0,
   anchor: 1,
   death: 2,
   birthday: 10,
+  npcBirthday: 11,
   settle: 20,
   education: 30,
   afterSecondary: 35,

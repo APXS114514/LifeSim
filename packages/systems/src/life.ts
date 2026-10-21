@@ -7,6 +7,7 @@ import {
 import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import { z } from 'zod';
 import { createBirthFamily } from './family.ts';
+import { npcBirthdayRequest, npcRoleOf } from './npc.ts';
 import { writeMacro, type MacroState, type RegionModel } from './region.ts';
 import {
   EVENT,
@@ -111,6 +112,11 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
         details: { place: placeId, settlement, familyResources },
       });
       createBirthFamily(ctx, region, actor, born);
+      // M3-011：出生家庭里的 Tier1 NPC 从下一个生日开始推进自己的生命周期。
+      for (const npc of ctx.state.actors) {
+        if (npc.tier !== 'tier1') continue;
+        ctx.schedule(npcBirthdayRequest(npc, ctx.at));
+      }
       for (const anchor of region.anchors) {
         if (anchor.at < ctx.at || !anchor.regionIds.includes(region.packId)) continue;
         ctx.schedule({
@@ -198,14 +204,24 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const { cause } = DeathPayloadSchema.parse(ctx.occurrence.payload);
+      const age = ageAt(actor, ctx);
+      // 主角沿用 life.death；NPC 用 npc.death 并写明是谁（关系称谓），时间线上才看得出人。
+      const npc = actor.tier !== 'protagonist';
       const factId = ctx.emit({
         type: 'life.death',
         outcomeCode: cause,
+        templateId: npc ? 'npc.death' : 'life.death',
         actorIds: [actor.id],
         evidenceIds: [evidenceId(region, 'mortality')],
-        details: { age: ageAt(actor, ctx), cause },
+        details: npc ? { age, cause, role: npcRoleOf(actor.id) } : { age, cause },
       });
       actor.vitalStatus = { kind: 'deceased', deathDate: ctx.at, deathFactId: factId };
+      // 去世后不再共同居住；亲子关系本身不因死亡解除（until 保持 null）。
+      for (const relationship of ctx.state.relationships) {
+        if (relationship.fromId === actor.id || relationship.toId === actor.id) {
+          relationship.coResident = false;
+        }
+      }
     },
   };
 

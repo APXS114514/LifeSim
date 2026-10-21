@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { SUPPORTED_LOCALES, type SimEventFact } from '@lifesim/content-schema';
 import { checkLocaleParity, flattenMessages } from '@lifesim/narrative';
@@ -168,4 +169,117 @@ describe('headless CLI', () => {
     expect(a.workload.fingerprint).toBe(b.workload.fingerprint);
     expect(a.workload.facts).toBe(b.workload.facts);
   });
+});
+describe('NPC narrative (M3-011)', () => {
+  it('renders every NPC fact class with relation terms in both languages', () => {
+    const seen = new Set<string>();
+    const render = (
+      list: readonly SimEventFact[],
+      provider: {
+        render: (fact: SimEventFact, locale: (typeof SUPPORTED_LOCALES)[number]) => string;
+      },
+    ) => {
+      for (const fact of list) {
+        if (!fact.templateId.startsWith('npc.')) continue;
+        seen.add(fact.templateId);
+        for (const locale of SUPPORTED_LOCALES) {
+          const text = provider.render(fact, locale);
+          expect(text).not.toContain('{{');
+          expect(text).not.toMatch(/undefined|null|NaN/);
+        }
+      }
+    };
+
+    for (let index = 0; index < 40; index += 1) {
+      const simulation = createLifeSimulation({
+        seed: `npc-narrative-${index}`,
+        region,
+        birthDate: `${1950 + (index % 20)}-${String(1 + (index % 12)).padStart(2, '0')}-15`,
+      });
+      simulation.advanceTo(FOREVER);
+      render(simulation.facts, narrator);
+    }
+
+    // 政体更替只在真实国家包里：用一局 RU 人生补齐 npc.polity-change。
+    const real = createRealLifeSimulation({
+      seed: 'npc-narrative-real',
+      region: 'RU',
+      year: 1980,
+      birthDate: '1980-05-04',
+    });
+    real.simulation.advanceTo(FOREVER);
+    render(real.simulation.facts, createRealNarrator(real.pack, real.birth.birthDate));
+
+    const templates = [...flattenMessages(resources.en).keys()]
+      .filter((key) => key.startsWith('templates.npc.'))
+      .map((key) => key.slice('templates.'.length));
+    expect(templates.length).toBeGreaterThan(0);
+    expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
+  }, 20_000);
+});
+describe('protagonist projection (M3-011)', () => {
+  /**
+   * 主角投影：只取 `actorIds` 全部是主角（或为空）的事实，把（日期、类型、结果、details）
+   * 按序拼接后取 SHA-256。基线值是在实现之前、干净工作区上测得的——NPC 的加入不得改变它。
+   */
+  function projection(options: {
+    readonly seedSet: string;
+    readonly firstYear: number;
+    readonly span: number;
+    readonly includeEmptyActorFacts: boolean;
+  }): { hash: string; entries: number } {
+    const parts: string[] = [];
+    for (let index = 0; index < 300; index += 1) {
+      const year = options.firstYear + (index % options.span);
+      const month = String(1 + (index % 12)).padStart(2, '0');
+      const day = String(1 + (index % 28)).padStart(2, '0');
+      const simulation = createLifeSimulation({
+        seed: `${options.seedSet}-${index}`,
+        region,
+        birthDate: `${year}-${month}-${day}`,
+        ...(index % 3 === 0 ? { decisions: { [afterSecondaryDecisionKey()]: 'start-work' } } : {}),
+      });
+      simulation.advanceTo(FOREVER);
+      for (const fact of simulation.facts) {
+        const own = fact.actorIds.length === 1 && fact.actorIds[0] === 'char:protagonist';
+        const empty = fact.actorIds.length === 0;
+        if (!own && !(options.includeEmptyActorFacts && empty)) continue;
+        parts.push(
+          [fact.at, fact.type, fact.outcomeCode, canonicalJson(fact.details ?? {})].join('|'),
+        );
+      }
+    }
+    return {
+      hash: createHash('sha256').update(parts.join('\n')).digest('hex'),
+      entries: parts.length,
+    };
+  }
+
+  it('is byte-identical for 300 seeds across the whole birth-year range', () => {
+    // 1970 年之后出生：币制改革已在出生之前完成，投影里只有主角事实与宏观锚点事实。
+    expect(
+      projection({
+        seedSet: 'proj-S2',
+        firstYear: 1970,
+        span: 57,
+        includeEmptyActorFacts: true,
+      }),
+    ).toEqual({
+      hash: '767d9d8f6bb58e71a139a6d5d20fbfde98624775789260d6ecebf2e9cdad7b6c',
+      entries: 23275,
+    });
+    // 1950 年起出生：覆盖 1970 年币制改革之前的人生。这里只取主角本人的事实，
+    // 因为 actor 为空的事实里会新增「已故 NPC 存款换算」——本任务要求的新事实。
+    expect(
+      projection({
+        seedSet: 'proj-S1',
+        firstYear: 1950,
+        span: 77,
+        includeEmptyActorFacts: false,
+      }),
+    ).toEqual({
+      hash: '917dffbd45d8a0141daee603b1ea7291e56bd168d41dfd031e779bffaa6408fc',
+      entries: 21871,
+    });
+  }, 120_000);
 });

@@ -54,6 +54,19 @@ export const LIFE_NARRATIVE = {
         'treatment-started': '开始接受治疗，花费 {{costMinor}}（{{currency}}）。',
         'treatment-declined': '没有接受治疗。',
       },
+      npc: {
+        hired: '{{role}}找到了工作（按{{level}}学历定薪）。',
+        'job-search-failed': '{{role}}这一年没有找到工作（{{phase}}）。',
+        'job-lost': '{{role}}失去了工作（{{phase}}）。',
+        retired: '{{role}}退休，按{{level}}学历领取养老金。',
+        'illness-onset': '{{role}}患上了慢性病。',
+        death: '{{role}}在 {{age}} 岁去世（{{cause}}）。',
+        'polity-change': '{{role}}的政治归属随政体更替改为{{to}}。',
+        redenominated:
+          '{{role}}的存款随币制改革换算：{{beforeMinor}}（{{fromCurrency}}）→ {{afterMinor}}（{{toCurrency}}）。',
+        'estate-redenominated':
+          '已故{{role}}的存款随币制改革换算：{{beforeMinor}}（{{fromCurrency}}）→ {{afterMinor}}（{{toCurrency}}）。',
+      },
       choice: {
         'after-secondary': {
           'apply-university': '中学毕业后决定报考大学（{{decidedBy}}）。',
@@ -72,7 +85,7 @@ export const LIFE_NARRATIVE = {
       cause: { illness: '慢性病', other: '其他原因' },
       phase: { normal: '经济正常', recession: '经济衰退中' },
       decidedBy: { player: '本人选择', principles: '按人生原则' },
-      role: { mother: '母亲', father: '父亲' },
+      role: { mother: '母亲', father: '父亲', relative: '亲属' },
       education: { none: '未受教育', primary: '小学', secondary: '中学', tertiary: '大学' },
       otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
     },
@@ -125,6 +138,19 @@ export const LIFE_NARRATIVE = {
         'treatment-started': 'Began treatment, costing {{costMinor}} ({{currency}}).',
         'treatment-declined': 'Went without treatment.',
       },
+      npc: {
+        hired: 'The {{role}} found a job (paid at the {{level}} level).',
+        'job-search-failed': 'The {{role}} could not find a job this year ({{phase}}).',
+        'job-lost': 'The {{role}} lost the job ({{phase}}).',
+        retired: 'The {{role}} retired with a pension at the {{level}} level.',
+        'illness-onset': 'The {{role}} developed a chronic illness.',
+        death: 'The {{role}} died at {{age}} ({{cause}}).',
+        'polity-change': 'Political allegiance of the {{role}} changed to {{to}}.',
+        redenominated:
+          'Savings of the {{role}} were converted in the redenomination: {{beforeMinor}} ({{fromCurrency}}) → {{afterMinor}} ({{toCurrency}}).',
+        'estate-redenominated':
+          'Savings of the late {{role}} were converted in the redenomination: {{beforeMinor}} ({{fromCurrency}}) → {{afterMinor}} ({{toCurrency}}).',
+      },
       choice: {
         'after-secondary': {
           'apply-university':
@@ -149,7 +175,7 @@ export const LIFE_NARRATIVE = {
       cause: { illness: 'chronic illness', other: 'other causes' },
       phase: { normal: 'normal economy', recession: 'during a recession' },
       decidedBy: { player: "player's choice", principles: 'by life principles' },
-      role: { mother: 'mother', father: 'father' },
+      role: { mother: 'mother', father: 'father', relative: 'relative' },
       education: {
         none: 'no schooling',
         primary: 'primary',

@@ -1,5 +1,6 @@
 import { redenominateMinor, sameCurrency } from '@lifesim/content-schema';
 import type { EventDefinition } from '@lifesim/simulation-core';
+import { npcFactType, npcRoleOf } from './npc.ts';
 import { currencyLabel, readMacro, writeMacro, type RegionModel } from './region.ts';
 import { EVENT, PRIORITY, evidenceId } from './shared.ts';
 
@@ -40,14 +41,18 @@ export function historyEvents(region: RegionModel): EventDefinition[] {
               seen.add(id);
               return true;
             });
+          // 不是主角时用 npc.* 模板，时间线上写清是谁的归属变了（M3-011）。
+          const npc = actor.tier !== 'protagonist';
           ctx.emit({
-            type: 'identity.polity-change',
+            type: npc ? npcFactType('identity.polity-change') : 'identity.polity-change',
             outcomeCode: 'changed',
-            templateId: 'identity.polity-change',
+            templateId: npc ? npcFactType('identity.polity-change') : 'identity.polity-change',
             actorIds: [actor.id],
             causes: [anchorFact],
             evidenceIds: evidence,
-            details: { from: anchor.fromEntityId, to: anchor.toEntityId },
+            details: npc
+              ? { from: anchor.fromEntityId, to: anchor.toEntityId, role: npcRoleOf(actor.id) }
+              : { from: anchor.fromEntityId, to: anchor.toEntityId },
           });
         }
         return;
@@ -87,18 +92,49 @@ export function historyEvents(region: RegionModel): EventDefinition[] {
         const beforeMinor = account.balanceMinor;
         account.balanceMinor = redenominateMinor(beforeMinor, anchor.divisor);
         account.currency = { ...to };
+        const converted = {
+          beforeMinor,
+          afterMinor: account.balanceMinor,
+          fromCurrency: currencyLabel(from),
+          toCurrency: currencyLabel(to),
+        };
+        const owners = account.ownerIds.map((id) =>
+          ctx.state.actors.find((actor) => actor.id === id),
+        );
+        const npcOwner = owners.find((owner) => owner && owner.tier !== 'protagonist');
+        if (!npcOwner) {
+          ctx.emit({
+            type: 'finance.redenominated',
+            outcomeCode: 'converted',
+            actorIds: [...account.ownerIds],
+            causes: [anchorFact],
+            evidenceIds: evidence,
+            details: converted,
+          });
+          continue;
+        }
+        const role = npcRoleOf(npcOwner.id);
+        if (npcOwner.vitalStatus.kind === 'deceased') {
+          // 所有者已去世：内核拒绝「死后仍参与事实」，所以事实不点名任何角色，
+          // 用 estate 模板写明这是谁的存款；换算与归属逻辑不变（M3-011）。
+          ctx.emit({
+            type: npcFactType('finance.redenominated'),
+            outcomeCode: 'converted',
+            templateId: 'npc.estate-redenominated',
+            actorIds: [],
+            causes: [anchorFact],
+            evidenceIds: evidence,
+            details: { ...converted, role },
+          });
+          continue;
+        }
         ctx.emit({
-          type: 'finance.redenominated',
+          type: npcFactType('finance.redenominated'),
           outcomeCode: 'converted',
-          actorIds: [...account.ownerIds],
+          actorIds: [npcOwner.id],
           causes: [anchorFact],
           evidenceIds: evidence,
-          details: {
-            beforeMinor,
-            afterMinor: account.balanceMinor,
-            fromCurrency: currencyLabel(from),
-            toCurrency: currencyLabel(to),
-          },
+          details: { ...converted, role },
         });
       }
     },
