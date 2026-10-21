@@ -1,5 +1,45 @@
 [
   {
+    "id": "e-gov:local-autonomy-act",
+    "title": "地方自治法（昭和二十二年法律第六十七号）",
+    "publisher": "日本国 政府（e-Gov 法令検索）",
+    "url": "https://laws.e-gov.go.jp/law/322AC0000000067",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用法律事实，不再分发文本。第一条の三：普通地方公共団体は、都道府県及び市町村とする。第二条：都道府県は、市町村を包括する広域の地方公共団体。访问日期 2026-10-20。"
+  },
+  {
+    "id": "osaka-pref:statistical-yearbook",
+    "title": "令和7年度 大阪府統計年鑑 — 大阪府の沿革",
+    "publisher": "大阪府",
+    "url": "https://www.pref.osaka.lg.jp/documents/128538/hp_all_r7nenkan.pdf",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文档。沿革段：明治4年(1871年)の廃藩置県を経て、大阪府は大阪市街地と摂津七郡…を管轄することとなった；说明大阪府自 1871 年起存在，覆盖 1950 年起点。访问日期 2026-10-20。"
+  },
+  {
+    "id": "shugiin:denomination-2008",
+    "title": "デノミネーション実施に関する質問に対する答弁書（第169回国会 答弁第二一四号）",
+    "publisher": "衆議院（内閣答弁）",
+    "url": "https://www.shugiin.go.jp/internet/itdb_shitsumon.nsf/html/shitsumon/b169214.htm",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。政府答弁：御指摘の「新円切り替え」後現在までに、デノミの具体的な実施についての検討をしたことはない；支持 1950 年后日元没有币制重定值。访问日期 2026-10-20。"
+  },
+  {
+    "id": "tokyo-metro:assembly-history",
+    "title": "都議会の沿革（東京都議会）",
+    "publisher": "東京都議会",
+    "url": "https://www.gikai.metro.tokyo.lg.jp/outline/history.html",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：昭和18年（1943年）6月1日 東京都制制定（7月1日施行）；说明东京都在 1950 年前已是第一级地方公共团体。访问日期 2026-10-20。"
+  },
+  {
     "id": "un-wpp:2024",
     "title": "World Population Prospects 2024",
     "publisher": "United Nations, Department of Economic and Social Affairs, Population Division",
