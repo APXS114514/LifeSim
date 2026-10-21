@@ -22,9 +22,11 @@ P0 与 P1 的定义以 GDD §14.1 为准：存在任何 P0，或者存在影响�
 | 性能基准       | `pnpm bench --lives 500`       | checks           | 固定种子的批量人生；报告随 CI 产物上传（`bench-report.json`），工作量指纹可复现                                                        |
 | 提交信息       | `pnpm check:commits <范围>`    | commit-messages  | 新提交中没有 AI 工具的自动署名（AGENTS.md「Git 提交规则」）                                                                            |
 | 高风险路径     | `scripts/check-guardrails.mjs` | guardrails（PR） | 改动内核、契约、数据、门禁、CI、规范文档或删除测试文件的 PR，必须由维护者加 `arch-approved` 标签                                       |
-| 端到端冒烟     | `pnpm test:e2e`                | e2e              | 桌面与手机视口（Chromium）：页面渲染、语言切换不丢状态、年份越界提示、无横向滚动、无控制台错误                                         |
+| 端到端冒烟     | `pnpm test:e2e`                | e2e              | 桌面与手机视口（Chromium）：开局、语言切换后事实不变、自动结局与总结、刷新恢复存档、年份越界提示、无横向滚动、无控制台错误             |
 
-`pnpm verify` 依次运行格式、lint、依赖边界、许可证、类型、单元测试（JSON 报告）、测试基线与构建，与 CI 的 checks 任务的主体一致。多 Agent 协作的审查流程见 [AGENT_HANDOFF.md](AGENT_HANDOFF.md) 第 8 节。
+`pnpm verify` 依次运行格式、lint、依赖边界、许可证、数据/覆盖率、类型、单元测试（JSON 报告）、测试基线与构建，与 CI 的 checks 任务的主体一致。多 Agent 协作的审查流程见 [AGENT_HANDOFF.md](AGENT_HANDOFF.md) 第 8 节。
+
+**关于本地 Git 推送**：默认用本地 Git 提交并 `git push origin HEAD`，不要求 PR。直接推送不会触发 Guardrails；因此高风险改动必须先在完成报告里列出风险点，推 `task/*` 分支，由维护者本地 `git merge --ff-only` 审查合并。若 GitHub 开启了“必须走 PR”的 `main` 分支保护，则直接推送会被拒绝，按 PR 流程处理。
 
 ### M1 确定性与人生不变量（`pnpm test` 中）
 

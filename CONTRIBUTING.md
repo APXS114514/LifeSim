@@ -16,11 +16,31 @@
 
 ## 提交流程
 
-1. 从 `main` 拉分支，一个 PR 只做一件事。
+1. 外部贡献者从 `main` 拉分支，一个 PR 只做一件事；维护者与本机 Agent 也可以按下面的“本地 Git 推送”流程直接提交。
 2. 行为改动要带测试；随机相关的缺陷，测试里要固定种子，失败时输出种子、事件 ID 和日期。
-3. 提交前运行 `pnpm verify`；改了界面还要运行 `pnpm test:e2e`，并在 PR 里附截图。
+3. 提交前运行 `pnpm verify`；改了界面还要运行 `pnpm test:e2e`，并在 PR 或完成报告里附截图。
 4. 新的工程决定写成 ADR（[docs/adr/](docs/adr/)）。
-5. CI 全部通过、经过审查后合并。
+5. 外部 PR 在 CI 全部通过、经过审查后合并。
+
+### 维护者与本机 Agent：本地 Git 推送
+
+本项目**不要求必须走 Pull Request**。维护者或本机 Agent 可以直接用本地 Git 提交并推送：
+
+```sh
+git status -sb
+git pull --ff-only
+pnpm verify
+git add <files>
+git commit -m "feat(scope): 简述"
+pnpm check:commits origin/main..HEAD
+git push origin HEAD
+```
+
+- 在 `main` 上工作就推送 `main`；在任务分支上工作就推送该分支。不需要 PR。
+- 高风险改动（内核、契约、数据、门禁、CI、Agent 配置等）先推 `task/*` 分支，在完成报告里列出风险点，由维护者本地审查后 `git merge --ff-only` 合并。
+- 不要 force push、rebase 已推送的公共分支、amend 已推送的提交，或覆盖别人未提交的修改。
+- 如果 GitHub 的 `main` 分支保护要求必须走 PR，直接推送会被拒绝；此时推任务分支，由维护者本地合并，或按维护者要求开 PR。
+- 合并后的任务分支先确认 `git branch --merged main`，再删除；用 `git fetch --prune` 清理远程引用。
 
 提交信息建议使用 Conventional Commits 风格，例如 `feat(save): 校验导入文件大小`、`fix(narrative): 英文模板缺少占位符`。
 

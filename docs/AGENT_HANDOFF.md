@@ -38,7 +38,7 @@ TypeScript 源码不经构建，由 Node 24 的类型剥离直接运行；因此
 | `pnpm bench --lives 1000`                    | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时   |
 | `pnpm check:commits <base>..<head>`          | 提交信息里没有 AI 工具署名                                                                                       | 提交后             |
 
-CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。
+CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、`pnpm life:real`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。**直接 `git push` 不会触发 Guardrails**；高风险改动按第 8/10 节先推任务分支并请维护者确认。
 
 ## 4. 仓库地图
 
@@ -183,9 +183,11 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 
 **高风险路径**（清单以 `scripts/check-guardrails.mjs` 为准）：模拟内核、公共契约、`systems` 的 `region.ts` / `shared.ts` / `module.ts`、黄金指纹、数据与数据脚本（`data/scripts/lib/` 除外）、国家包数据、测试基线、门禁脚本、CI、提交钩子、Agent 配置、工具链配置、GDD / ADR / Agent 提示词与 `AGENTS.md`。删除测试文件也算。
 
-改动高风险路径的 PR 必须由维护者审查后加上 `arch-approved` 标签，Guardrails 才会通过。执行任务的 Agent **不得自己加这个标签**。
+- 走 PR：改动高风险路径的 PR 必须由维护者审查后加上 `arch-approved` 标签，Guardrails 才会通过。
+- 走本地 Git：高风险改动先推 `task/*` 分支，Agent 在报告里列出高风险点并请维护者确认；维护者本地审查后用 `git merge --ff-only` 合并。直接推送不会触发 Guardrails，所以不能把“CI 通过”当成架构审查。
+- 执行任务的 Agent **不得自己加这个标签，也不得声称已完成架构审查**。
 
-**建议维护者在 GitHub 开启**：`main` 分支保护（要求 PR、要求 CI / Guardrails 通过、要求 Code Owners 审查、禁止强制推送）、私密漏洞报告。
+**建议维护者决定**：如果希望所有改动强制走 PR/Guardrails，就在 GitHub 开启“要求 PR”的 `main` 分支保护（此时直接推送会被拒绝，Agent 必须推任务分支）；如果希望用本地 Git 直接推送，则不要开启该保护，或允许维护者绕过。无论哪种方式，都建议开启禁止强制推送与私密漏洞报告。
 
 ## 9. 已知风险
 
@@ -206,3 +208,17 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 2. M2 的 23 个任务已完成，等待维护者验收；验收后再为 M3 拆分任务。执行单个任务时，在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并。
 3. 只读这个任务文件和它列出的源码，按规程执行，完成后停止并提交报告。
 4. 改动数据或国家包时，依次运行 `pnpm data:sources`、`pnpm data:coverage`，再运行 `pnpm verify`；有意更新数据时同步维护 `DATA_FINGERPRINTS` 并说明原因。
+5. 默认用本地 Git 上交，不需要开 PR：
+
+   ```sh
+   git status -sb                 # 确认没有别人的未提交修改
+   git pull --ff-only             # 在 main 上工作时先同步
+   pnpm verify                    # 改了界面再加 pnpm test:e2e
+   git add <允许修改的文件>
+   git commit -m "feat(scope): TASK_ID 简述"
+   pnpm check:commits origin/main..HEAD
+   git push origin HEAD           # main 上就是推 main；任务分支则推该分支
+   ```
+
+6. 高风险改动或维护者要求审查时：推 `task/<任务编号>-<短名>` 分支，在报告里列出高风险点；维护者本地审查后 `git merge --ff-only` 再推送。不要 force push、rebase 已推送分支或 amend 已推送提交。
+7. 分支合并进 `main` 后，确认 `git branch --merged main`，再删除本地/远程任务分支；用 `git fetch --prune` 清理远程引用。

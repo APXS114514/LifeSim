@@ -22,7 +22,7 @@
 
 1. `git status -sb` 干净：没有不属于你的未提交修改。
 2. 任务文件「前置依赖」里的每个任务都已合并到 `main`，且它们产出的文件确实存在。
-3. 从最新的 `main` 建分支 `task/{{TASK_ID}}-<短名>`（或使用独立的 git worktree）。不要在 `main` 上工作。
+3. 确认本地 `main` 与 `origin/main` 同步（`git pull --ff-only`）。默认可以直接在 `main` 上提交并用本地 Git 推送；任务文件或维护者要求分支/审查时，建 `task/{{TASK_ID}}-<短名>` 分支或独立 worktree。
 4. `pnpm install` 成功。
 5. 在你改动之前运行 `pnpm verify`，必须通过；记录输出最后几行。原本就失败时报告阻塞，不要尝试修复无关问题。
 
@@ -58,13 +58,17 @@
 3. 没有遗留调试输出（`console.log` 等），没有无关的格式化改动。
 4. 新增的导出与文件都是任务要求的。
 
-### 6. 提交
+### 6. 提交与推送（默认用本地 Git）
 
 - 使用当前环境已有的 Git 身份：不加 `--author`，不改 `git config`，不设置 `GIT_AUTHOR_*` / `GIT_COMMITTER_*`。
 - 提交信息格式：`<type>(<scope>): {{TASK_ID}} <简述>`，例如 `feat(content-schema): M2-001 统计序列契约`；正文写改了什么、为什么。
 - **提交信息与 PR 描述里不得有任何 AI 署名**：没有 `Co-Authored-By`（AI）、`Generated with …`、`Claude-Session` 等。不要用 `--no-verify`。
 - 不 amend 已推送的提交，不 rebase 公共分支，不 force push。
-- 有推送权限时：推送任务分支，开 PR，PR 描述贴完成报告；任务风险为「高」时在 PR 标题前加 `[需要架构审查]`。**不要自己加 `arch-approved` 标签，不要合并 PR。** 没有推送权限时：停在本地分支，在报告里写明分支名。
+- **默认上交方式**：本地提交后直接 `git push origin HEAD`。当前在 `main` 就推送 `main`；在任务分支就推送该分支。**不需要开 Pull Request。**
+- 推送前运行 `pnpm verify`（改了界面再跑 `pnpm test:e2e`），并用 `pnpm check:commits <base>..HEAD` 检查提交信息。
+- **高风险改动**：先推 `task/{{TASK_ID}}-<短名>` 分支，在报告里列出高风险点并请维护者确认；维护者本地审查后用 `git merge --ff-only` 合并。**不要自己加 `arch-approved` 标签，也不要声称已经完成架构审查。**
+- 只有维护者明确要求时才开 PR；此时 PR 描述贴完成报告，任务风险为「高」时在标题前加 `[需要架构审查]`，但仍不得自己加标签或合并。
+- 没有推送权限时：停在本地提交，在报告里写明分支名与提交 SHA。
 
 ### 7. 报告，然后停止
 
@@ -76,7 +80,7 @@
 ## {{TASK_ID}} 完成报告
 
 - 状态：DONE
-- 分支 / 提交：task/{{TASK_ID}}-… / <sha>
+- 分支 / 提交 / 推送：task/{{TASK_ID}}-… / <sha> / 已推送 origin 或本地未推送
 - 改动文件：
   - path/to/file.ts：用途
 - 实现摘要：

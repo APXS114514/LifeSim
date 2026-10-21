@@ -53,17 +53,27 @@
 
 ## 高风险变更
 
-以下改动需要维护者做架构审查，PR 要由维护者加上 `arch-approved` 标签（Guardrails 工作流会检查；清单以 `scripts/check-guardrails.mjs` 为准）：
+以下改动需要维护者做架构审查（清单以 `scripts/check-guardrails.mjs` 为准）：
 
 模拟内核 · 公共契约（`content-schema`）· `systems` 的 `region.ts` / `shared.ts` / `module.ts` · 黄金指纹 · 数据、来源登记与数据脚本 · 国家包数据 · 测试基线 · 门禁脚本 · CI · 提交钩子 · Agent 配置 · 工具链配置 · GDD / ADR / Agent 提示词 / 本文件 · 删除测试文件。
 
-改变随机数算法、公共状态的归属、已冻结的经济与历史原则，属于架构决定，必须先有 ADR。执行任务的 Agent 不得自己加 `arch-approved` 标签。
+- 走 Pull Request 时，由维护者在 PR 上加 `arch-approved` 标签（Guardrails 工作流会检查）。
+- 采用本地 Git 直接推送时，Agent 必须在推送前把高风险点写进完成报告，并请维护者确认；高风险改动原则上先推 `task/*` 分支，由维护者本地审查后再合并到 `main`。
+- 执行任务的 Agent 不得自己加 `arch-approved` 标签，也不得在报告里声称已经完成架构审查。
 
-## 分支与工作树
+改变随机数算法、公共状态的归属、已冻结的经济与历史原则，属于架构决定，必须先有 ADR。
 
-- 每个任务在独立分支或独立工作树上完成：分支名 `task/<任务编号>-<短名>`，例如 `task/M2-001-series-contract`。
-- 不直接提交到 `main`；不同 Agent 不共用同一个工作树。
-- 合并前必须通过 CI 与 Guardrails；合并由维护者完成，Agent 不合并自己的 PR。
+## 分支、工作树与本地推送
+
+默认用**本地 Git** 完成提交和上交，**不要求开 Pull Request**。
+
+- **开始前**：运行 `git status -sb`，确认没有别人的未提交修改；在 `main` 上工作时先 `git pull --ff-only`。如果本地与远程已经分叉，停止并报告，不要自行 merge、rebase 或 reset。
+- **默认流程**：在当前分支完成一个内聚任务 → `pnpm verify` → 提交 → `pnpm check:commits <base>..HEAD` → `git push origin HEAD`（在 `main` 上就是推送 `main`；在任务分支上则推送该分支）。不需要 PR。
+- **需要审查时**：高风险改动或维护者要求时，推 `task/<任务编号>-<短名>` 分支，由维护者用 `git merge --ff-only` 在本地合并后再推送；分支名示例 `task/M2-001-series-contract`。
+- **不同 Agent**：不要共用同一个工作树；同一台机器上并行时使用独立 worktree 或独立 clone。
+- **已合并分支**：确认 `git branch --merged main` 后可以删除本地与远程任务分支；删除前先 `git fetch --prune`，不要删除未合并的分支。
+- **GitHub 分支保护**：如果 `main` 开启了“必须走 PR”的保护，直接推送会被拒绝；此时推任务分支，由维护者在本地合并，或由维护者临时调整保护设置。
+- **不允许**：force push、rebase 已推送的公共分支、amend 已推送的提交、覆盖或删除别人未提交的修改。
 
 ## Git 提交规则
 
