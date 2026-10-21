@@ -31,41 +31,43 @@ export function Timeline({
   const groups = groupByYear(facts);
 
   return (
-    <section className="timeline" aria-labelledby="timeline-heading">
-      <div className="section-heading">
+    <section className="panel timeline" aria-labelledby="timeline-heading">
+      <div className="panel-head">
         <h2 id="timeline-heading">{t('play.timeline')}</h2>
-        <span className="section-rule" aria-hidden="true" />
+        <span className="panel-aside">{t('play.timelineCount', { count: facts.length })}</span>
       </div>
-      {facts.length === 0 ? (
-        <p className="hint">{t('play.noFacts')}</p>
-      ) : (
-        <ol className="timeline-list" aria-live="polite">
-          {groups.map(([year, items]) => (
-            <li className="timeline-year-block" key={year}>
-              <p className="timeline-year" aria-hidden="true">
-                <span className="timeline-year-label">{year}</span>
-                <span className="timeline-year-line" />
-              </p>
-              <ol className="timeline-year-facts">
-                {items.map((fact) => {
-                  const category = factCategory(fact);
-                  return (
-                    <li className={'fact fact-' + category} key={fact.id}>
-                      <span className="fact-icon" aria-hidden="true">
-                        <FactIcon category={category} />
-                      </span>
-                      <time className="fact-date" dateTime={fact.at}>
-                        {fact.at.slice(5)}
-                      </time>
-                      <p className="fact-text">{session.render(fact, locale)}</p>
-                    </li>
-                  );
-                })}
-              </ol>
-            </li>
-          ))}
-        </ol>
-      )}
+      <div className="panel-body">
+        {facts.length === 0 ? (
+          <p className="hint">{t('play.noFacts')}</p>
+        ) : (
+          <ol className="timeline-list" aria-live="polite">
+            {groups.map(([year, items]) => (
+              <li className="timeline-year-block" key={year}>
+                <p className="timeline-year" aria-hidden="true">
+                  <span className="timeline-year-label">{year}</span>
+                  <span className="timeline-year-line" />
+                </p>
+                <ol className="timeline-year-facts">
+                  {items.map((fact) => {
+                    const category = factCategory(fact);
+                    return (
+                      <li className={'fact fact-' + category} key={fact.id}>
+                        <span className="fact-icon" aria-hidden="true">
+                          <FactIcon category={category} />
+                        </span>
+                        <time className="fact-date" dateTime={fact.at}>
+                          {fact.at.slice(5)}
+                        </time>
+                        <p className="fact-text">{session.render(fact, locale)}</p>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
     </section>
   );
 }

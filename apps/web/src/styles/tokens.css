@@ -1,0 +1,109 @@
+/*
+ * 设计令牌（M4-022 UI-01）：主品牌色 #66CCFF。所有界面颜色只从这里取。
+ *
+ * #66CCFF 是浅色：它只作填充（标题栏、主按钮、选中、数据条），上面用深色文字 --color-on-primary；
+ * 白底上需要强调的小字、链接与图标用 --color-primary-strong。对比度由 tokens.test.ts 校验。
+ * 像素美术的调色板属于素材数据，集中在 src/pixel/，不在这里。
+ */
+:root {
+  --color-primary: #66ccff;
+  --color-primary-hover: #4abef2;
+  --color-primary-soft: #e8f7ff;
+  --color-primary-tint: #d2efff;
+  --color-primary-strong: #12658a;
+  --color-on-primary: #0d2a3a;
+
+  --color-background: #f3f8fa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #edf5f8;
+  --color-paper: #fbfdfe;
+
+  --color-text: #173042;
+  --color-text-secondary: #536774;
+  --color-text-faint: #71858f;
+  --color-border: #d9e6eb;
+  --color-border-strong: #758d99;
+  --color-rule: #c4d6de;
+
+  --color-success: #38977a;
+  --color-success-ink: #2b7a62;
+  --color-warning: #d49b42;
+  --color-warning-ink: #8a5a12;
+  --color-danger: #d45b66;
+  --color-danger-ink: #b23a47;
+
+  --color-focus: #12658a;
+  --color-guilloche: rgba(18, 101, 138, 0.07);
+  --color-scrim: rgba(13, 42, 58, 0.45);
+
+  --shadow-card: 0 1px 2px rgba(23, 48, 66, 0.05), 0 10px 28px -20px rgba(23, 48, 66, 0.22);
+  --shadow-raised: 0 1px 2px rgba(23, 48, 66, 0.06), 0 16px 36px -22px rgba(23, 48, 66, 0.3);
+
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 14px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+
+  --font-body:
+    system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans CJK SC', sans-serif;
+  --font-display:
+    'Iowan Old Style', 'Palatino Linotype', Palatino, 'Songti SC', 'STSong', 'Noto Serif CJK SC',
+    'Source Han Serif SC', Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-display: clamp(2rem, 4.2vw, 2.75rem);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #66ccff;
+    --color-primary-hover: #8ad8ff;
+    --color-primary-soft: #16344a;
+    --color-primary-tint: #1d4560;
+    --color-primary-strong: #8fdcff;
+    --color-on-primary: #0d2a3a;
+
+    --color-background: #0e1920;
+    --color-surface: #14232c;
+    --color-surface-muted: #1a2c36;
+    --color-paper: #172832;
+
+    --color-text: #e3eef3;
+    --color-text-secondary: #a3b7c1;
+    --color-text-faint: #7f95a0;
+    --color-border: #284049;
+    --color-border-strong: #5b7682;
+    --color-rule: #2f4a55;
+
+    --color-success: #4fb894;
+    --color-success-ink: #6fd0b0;
+    --color-warning: #e0ad5a;
+    --color-warning-ink: #f0c27a;
+    --color-danger: #e2737d;
+    --color-danger-ink: #ff9aa3;
+
+    --color-focus: #8fdcff;
+    --color-guilloche: rgba(143, 220, 255, 0.06);
+    --color-scrim: rgba(0, 0, 0, 0.55);
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -20px rgba(0, 0, 0, 0.6);
+    --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.35), 0 18px 40px -22px rgba(0, 0, 0, 0.7);
+  }
+}

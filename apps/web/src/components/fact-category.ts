@@ -15,7 +15,13 @@ export type FactCategory =
 export function factCategory(fact: SimEventFact): FactCategory {
   const type = fact.type;
   if (type === 'life.birth' || type === 'life.death') return 'life';
-  if (type.startsWith('family.') || type.startsWith('tier2.') || type.startsWith('identity.')) {
+  // M3-011：家人（Tier1 NPC）的事实都是 npc.* 类型，包括 npc.death；它们属于「家庭」，不是主角的生死。
+  if (
+    type.startsWith('family.') ||
+    type.startsWith('npc.') ||
+    type.startsWith('tier2.') ||
+    type.startsWith('identity.')
+  ) {
     return 'family';
   }
   if (type.startsWith('education.')) return 'education';

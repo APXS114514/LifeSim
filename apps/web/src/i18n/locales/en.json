@@ -3,7 +3,7 @@
     "title": "LifeSim",
     "tagline": "Live one whole life inside the real historical timeline",
     "language": "Interface language",
-    "stageNotice": "Playable test build (M3-lite): five regions, births from 1950 to 2026, real WPP mortality with M2 geography and currency. The birth family (two parents) exists, but parents do not have their own lives yet; marriage, children, migration and city weights are not included yet."
+    "stageNotice": "Playable test build: five regions, births 1950–2026, real WPP mortality and historical geography and currencies. Parents work, fall ill and die; marriage, children, moving and city weights are not modelled yet. The interface is being redesigned as a historical archive (M4-022)."
   },
   "creation": {
     "heading": "Birth settings",
@@ -33,7 +33,12 @@
     },
     "randomRule": "Random years are equally likely; the region is weighted by births in the five regions that year.",
     "start": "Start a life",
-    "startHint": "Runs on the real WPP life tables and a D-grade rules baseline; the test build will keep being rebalanced."
+    "startHint": "Runs on the real WPP life tables and a D-grade rules baseline; the test build will keep being rebalanced.",
+    "intro": {
+      "title": "Birth archive",
+      "lead": "Choose a birth region and year; the simulator registers a new life using the real birth statistics of that year."
+    },
+    "formNumber": "Form · 1950–2026"
   },
   "play": {
     "restored": "Restored the previous autosave.",
@@ -52,7 +57,41 @@
     "autoSave": "Autosaved in this browser; clearing site data loses it.",
     "timeline": "Life timeline",
     "noFacts": "No events to show yet.",
-    "error": "This run hit a problem:"
+    "error": "This run hit a problem:",
+    "identity": "Identity record",
+    "nameUnassigned": "Name not yet assigned",
+    "born": "Born",
+    "currency": "Currency",
+    "controls": "Settings",
+    "timelineCount": "{{count}} records",
+    "status": {
+      "heading": "Status",
+      "aside": "0–100",
+      "pendingNote": "Health, happiness, knowledge, relationships and economy will be derived from the underlying state by M4-016; until then no estimated numbers are shown.",
+      "indicators": {
+        "health": "Health",
+        "happiness": "Happiness",
+        "knowledge": "Knowledge",
+        "relationships": "Relationships",
+        "economy": "Economy"
+      },
+      "education": "Education",
+      "enrolled": "Enrolled: {{level}}",
+      "employment": {
+        "label": "Work",
+        "child": "Child",
+        "student": "In school",
+        "not-in-labor-force": "Not working",
+        "employed": "Employed",
+        "unemployed": "Unemployed",
+        "retired": "Retired"
+      },
+      "health": "Health",
+      "healthy": "No chronic illness",
+      "illTreated": "Chronic illness (treated)",
+      "illUntreated": "Chronic illness (untreated)",
+      "balance": "Savings"
+    }
   },
   "saveIssue": {
     "heading": "The previous save could not be loaded",
@@ -131,5 +170,36 @@
     "notGlobal": "Random births are drawn from the five launch regions only, not from the global birth distribution.",
     "offline": "By default it connects to no server and calls no AI model.",
     "licenses": "Open-source licences and third-party notices"
+  },
+  "ui": {
+    "pending": "Not yet available",
+    "sample": "Component sample"
+  },
+  "design": {
+    "heading": "Design system preview",
+    "lead": "Development only: M4-022 colour tokens, archive components and pixel samples. Not part of the production build.",
+    "tokens": "Colour tokens",
+    "type": "Type scale",
+    "controls": "Buttons and controls",
+    "archive": "Archive card",
+    "meters": "Status meters",
+    "pixel": "Pixel portraits (life stages)",
+    "scenes": "Pixel scenes",
+    "records": "Record rows",
+    "sampleValues": "Numbers and text on this page are component samples, not simulation results.",
+    "stages": {
+      "infant": "Infant",
+      "child": "Child",
+      "teen": "Teen",
+      "adult": "Adult",
+      "elder": "Elder"
+    },
+    "scene": {
+      "rural": "Rural home (sample)",
+      "urban": "Town housing (sample)"
+    },
+    "sampleName": "Sample Name",
+    "sampleRecord": "You took your first steps.",
+    "sampleMajor": "After secondary school, decided to apply to university."
   }
 }
