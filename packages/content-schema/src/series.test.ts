@@ -221,6 +221,6 @@ describe('M3 indicator units', () => {
       StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'share', 0.62))
         .success,
     ).toBe(false);
-    expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'percent', 135)).success).toBe(false);
+    expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'share', 0.135)).success).toBe(false);
   });
 });
