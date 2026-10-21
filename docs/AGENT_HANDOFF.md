@@ -2,7 +2,7 @@
 
 > 给接手开发的 Agent 与人类协作者。本文独立于任何聊天记录，只描述**仓库现在是什么样、怎么验证、哪里还没做**。
 > 规则以 [AGENTS.md](../AGENTS.md) 为准，产品边界以 [GDD.md](GDD.md) 为准；本文不复述它们。
-> 最后更新：2026-10-21（Claude Code 接手审计：M3-000…010、M3-031…033、M4-015 已推送待验收；`main` 的 CI 因性能退化变红，修复在 M3-035 任务分支待审查；审计见 [audits/M3-TAKEOVER-AUDIT.md](audits/M3-TAKEOVER-AUDIT.md)）
+> 最后更新：2026-10-21（Claude Code 接手审计：M3-000…010、M3-031…033、M4-015 已推送待验收；`713409d` 的 CI 因性能退化变红，M3-035 合并后 `188aecb` 的 CI 已恢复通过；审计见 [audits/M3-TAKEOVER-AUDIT.md](audits/M3-TAKEOVER-AUDIT.md)）
 
 ## 1. 一页概览
 
@@ -10,7 +10,7 @@
 - **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2 的 23 个任务已合入 `main`，里程碑待验收；**M3-lite 已实现**；完整 M3 已完成 M3-000…M3-010（M3-007 部分完成）与 M3-031…033（033 只有设计），全部已推送、**均未经维护者验收**；M4 只先做了 M4-015。逐任务状态见 [tasks/INDEX.md](tasks/INDEX.md)。
 - **能做什么**：浏览器里五地选出生、跑完整人生、处理重大决定、看死亡总结、切换中英、刷新续玩；按日期显示历史政体/地名与历史旗帜；苏联解体后在世角色的政治归属与国籍随之改变；出生时生成父母两位 Tier1 NPC（只有初始状态）；Node 里 `pnpm life:real` 跑真实国家包人生；`pnpm life` 仍跑合成地区。
 - **还不能做什么**：网页不能逐年推进（点开始就跳到下一个重大决定，见 [M3-034](tasks/M3-034.md)）；父母没有自己的人生进程（永远在世、在职，见 [M3-011](tasks/M3-011.md)）；婚育、收养、迁居、城市人口权重、各国特色事件都属于后续 M3；规则仍全部使用 ADR-0006 的 D 级公式（M3-009 只接好了真实数据的查询接口）；Worker、IndexedDB、PWA 属于 M4。
-- **下一步**：维护者审查合并 [M3-035](tasks/M3-035.md) 并批准推送，确认 CI 恢复绿灯；随后 [M3-036](tasks/M3-036.md)（Claude Code）、[M3-034](tasks/M3-034.md)（批准后交执行 Agent）、[M3-011](tasks/M3-011.md)（M3-035/036 合并后交执行 Agent）。仍待维护者决定：Q1/Q6/Q7、Q10 的提示形式、Q14（见 [M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 末节）。
+- **下一步**：[M3-035](tasks/M3-035.md) 已合并且 CI 通过（run 39545563112）；接下来 [M3-036](tasks/M3-036.md)（Claude Code）、[M3-034](tasks/M3-034.md)（批准后交执行 Agent）、[M3-011](tasks/M3-011.md)（M3-035/036 合并后交执行 Agent）。仍待维护者决定：Q1/Q6/Q7、Q10 的提示形式、Q14（见 [M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 末节）。
 
 ## 2. 开发环境
 
@@ -105,7 +105,7 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `DecisionSpec.options()` 必须是纯函数：只读状态，不抽随机数、不 `emit`、不 `schedule`（违反会抛 `impure-decision-options`）。
 - 确定性工具：`deriveStream`、`fingerprint`、`canonicalJson`、`expDet` / `lnDet` / `scaleAnnualProbability`、日历函数（`addYears`、`addDays`、`ageOn`、`toDayNumber`）。
 - 所有失败都是 `SimulationError`，消息里带 `seed=… event=… at=…`。
-- 提交前校验：事实、角色与账户的 schema，时间与生死约束，各系统不变量。M3-035（任务分支，待审查）起只对本事件新增或改动的角色与账户做 schema 解析；`relationships` 目前**不**逐事件校验（只在恢复快照时校验，见 M3-036）。
+- 提交前校验：事实、角色与账户的 schema，时间与生死约束，各系统不变量。M3-035（已合并）起只对本事件新增或改动的角色与账户做 schema 解析；`relationships` 目前**不**逐事件校验（只在恢复快照时校验，见 M3-036）。
 
 ### systems（人生规则）
 
@@ -157,7 +157,7 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 | `DATA_FINGERPRINTS`       | `country-packs/src/data-golden.ts` | 数据**有意**更新并经维护者审查后           | 数据指纹测试失败                        |
 | `GOLDEN_LIFE`             | `synthetic-world/src/golden.ts`    | 规则或合成数据**有意**变化，确认差异合理后 | 需要架构审查                            |
 
-当前值（2026-10-21）：`ENGINE_VERSION` 0.1.0、`SNAPSHOT_SCHEMA_VERSION` 1、`SYSTEMS_VERSION` 0.4.0、`GOLDEN_LIFE` 72 条事实 / `b4b67de5d12b1a4827e238ad2051d292`；`pnpm bench --lives 1000` 工作量指纹 `3f03ad12c6cea367315ed8825de0e431`，p50 4.35 ms/局（`main`）/ 2.72 ms/局（M3-035 分支，Apple M5）。
+当前值（2026-10-21）：`ENGINE_VERSION` 0.1.0、`SNAPSHOT_SCHEMA_VERSION` 1、`SYSTEMS_VERSION` 0.4.0、`GOLDEN_LIFE` 72 条事实 / `b4b67de5d12b1a4827e238ad2051d292`；`pnpm bench --lives 1000` 工作量指纹 `3f03ad12c6cea367315ed8825de0e431`，p50 2.72 ms/局（M3-035 合并后，Apple M5；合并前为 4.35 ms）。
 
 ## 7. 已完成与未完成
 
