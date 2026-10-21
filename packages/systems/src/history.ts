@@ -18,6 +18,10 @@ export function historyEvents(region: RegionModel): EventDefinition[] {
       const macro = readMacro(ctx.state);
       const evidence = [anchor.id, evidenceId(region, 'history')];
 
+      if (anchor.kind === 'polity-change') {
+        throw new Error(`Polity-change anchors are applied from M3 (ADR-0005): ${anchor.id}`);
+      }
+
       if (anchor.kind === 'economy-phase') {
         const factId = ctx.emit({
           type: 'history.anchor',

@@ -45,7 +45,8 @@ export function macroAtBirth(region: RegionModel, birthDate: ISODate): MacroStat
   for (const anchor of region.anchors) {
     if (anchor.at >= birthDate || !anchor.regionIds.includes(region.packId)) continue;
     if (anchor.kind === 'economy-phase') macro.economyPhase = anchor.phase;
-    else if (anchor.currencyCode === macro.currency.code) macro.currency.version = anchor.toVersion;
+    else if (anchor.kind === 'redenomination' && anchor.currencyCode === macro.currency.code)
+      macro.currency.version = anchor.toVersion;
   }
   return macro;
 }
