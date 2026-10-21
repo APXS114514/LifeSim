@@ -10,7 +10,9 @@ import {
   type SaveLoadResult,
 } from '../game/storage.ts';
 import { GameSession } from '../game/session.ts';
+import { loadPreferences, savePreferences, type Preferences } from '../game/prefs.ts';
 import { TimeControl, timerScheduler } from '../game/time-control.ts';
+import { baseYearMsForLifeLength, yearDurationMs } from '../game/year-pacing.ts';
 import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 import { PlayPage } from '../pages/PlayPage.tsx';
 import type { BirthRegionId, Locale } from '@lifesim/content-schema';
@@ -29,6 +31,7 @@ export function App() {
   const [restored, setRestored] = useState(boot.kind === 'loaded');
   const [error, setError] = useState<string | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [prefs, setPrefs] = useState(() => loadPreferences());
 
   useEffect(() => {
     document.title = t('app.title');
@@ -55,6 +58,14 @@ export function App() {
   }, [session]);
 
   useEffect(() => () => control?.dispose(), [control]);
+  useEffect(() => {
+    control?.setSpeed(yearDurationMs(prefs.pace, baseYearMsForLifeLength(prefs.lifeLengthMinutes)));
+  }, [control, prefs]);
+
+  function changePreferences(next: Preferences): void {
+    savePreferences(next);
+    setPrefs(next);
+  }
 
   function start(choice: { region: BirthRegionId | 'random'; year: number | 'random' }): void {
     if (issue) return;
@@ -199,6 +210,8 @@ export function App() {
             locale={locale}
             restored={restored}
             saveFailed={saveFailed}
+            prefs={prefs}
+            onPrefsChange={changePreferences}
             control={control}
             onNewLife={newLife}
           />

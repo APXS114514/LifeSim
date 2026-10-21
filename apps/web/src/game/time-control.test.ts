@@ -50,6 +50,40 @@ function setup(seed = 'ui-control') {
 }
 
 describe('TimeControl', () => {
+  it('supports fractional year durations without advancing or saving on a speed change', () => {
+    const { session } = setup('fixture-pacing-speed');
+    const scheduler = new FakeTimer();
+    let commits = 0;
+    const control = new TimeControl({
+      session,
+      scheduler,
+      speed: 22_500,
+      onChange: () => {
+        commits += 1;
+      },
+    });
+    const before = JSON.stringify(session.serialize());
+    control.setSpeed(1_406.25);
+    expect(commits).toBe(0);
+    expect(JSON.stringify(session.serialize())).toBe(before);
+    control.play();
+    expect(scheduler.lastDelay).toBe(1_406.25);
+    scheduler.tick();
+    expect(session.age).toBe(1);
+    expect(commits).toBe(1);
+  });
+
+  it('rejects non-finite or non-positive year durations without changing the previous speed', () => {
+    const { control, session } = setup('fixture-invalid-speed');
+    for (const speed of [0, -1, Infinity, NaN]) {
+      expect(() => control.setSpeed(speed)).toThrow(RangeError);
+      expect(control.speed).toBe(DEFAULT_SPEED);
+      expect(() => new TimeControl({ session, scheduler: new FakeTimer(), speed })).toThrow(
+        RangeError,
+      );
+    }
+  });
+
   it('starts paused on the birth day with no pending tick', () => {
     const { session, scheduler, control } = setup();
     expect(control.state).toBe('paused');

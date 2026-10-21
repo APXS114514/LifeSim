@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameSession } from '../game/session.ts';
-import { SPEED_LEVELS, type SpeedLevel, type TimeControl } from '../game/time-control.ts';
-
-/** i18n 的键是字面量联合类型，用查表而不是字符串拼接来保持类型安全。 */
-const SPEED_KEYS = {
-  2000: 'time.speeds.2000',
-  1000: 'time.speeds.1000',
-  500: 'time.speeds.500',
-  250: 'time.speeds.250',
-} as const;
+import type { TimeControl } from '../game/time-control.ts';
+import { LIFE_LENGTH_MINUTES, type LifeLengthMinutes, type Preferences } from '../game/prefs.ts';
+import { PACE_MULTIPLIERS, type PaceMultiplier } from '../game/year-pacing.ts';
+import type { YearRevealView } from '../game/year-reveal.ts';
+import { YearProgress } from './YearProgress.tsx';
 
 /**
  * 时间控制条（M3-034）：下一年、播放/暂停、速度、快进到下一个决定，
  * 以及与它们分开、样式更弱的「直接模拟至结局」（二次确认）。
  */
-export function TimeControls({ control, session }: { control: TimeControl; session: GameSession }) {
+export function TimeControls({
+  control,
+  session,
+  view,
+  prefs,
+  onPrefsChange,
+}: {
+  control: TimeControl;
+  session: GameSession;
+  view: YearRevealView;
+  prefs: Preferences;
+  onPrefsChange: (prefs: Preferences) => void;
+}) {
   const { t } = useTranslation();
   const [confirmingFinish, setConfirmingFinish] = useState(false);
   const state = control.state;
@@ -66,9 +74,7 @@ export function TimeControls({ control, session }: { control: TimeControl; sessi
     <section className="time-controls" aria-label={t('time.heading')}>
       <div className="time-head">
         <div className="time-clock">
-          <p className="time-date">
-            {session.isEnded ? (session.summary.deathDate ?? session.clock) : session.clock}
-          </p>
+          <p className="time-date">{view.date}</p>
           <p className="time-age">
             {t('time.ageValue', {
               age: session.isEnded ? (session.summary.ageAtDeath ?? session.age) : session.age,
@@ -103,17 +109,37 @@ export function TimeControls({ control, session }: { control: TimeControl; sessi
           {playing ? t('time.pause') : t('time.play')}
         </button>
         <label className="time-speed">
+          <span>{t('time.lifeLength')}</span>
+          <select
+            aria-label={t('time.lifeLength')}
+            value={prefs.lifeLengthMinutes}
+            onChange={(event) => {
+              onPrefsChange({
+                ...prefs,
+                lifeLengthMinutes: Number(event.target.value) as LifeLengthMinutes,
+              });
+            }}
+          >
+            {LIFE_LENGTH_MINUTES.map((minutes) => (
+              <option key={minutes} value={minutes}>
+                {t('time.lifeLengthOption', { minutes })}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="time-speed">
           <span>{t('time.speed')}</span>
           <select
-            value={control.speed}
+            aria-label={t('time.speed')}
+            value={prefs.pace}
             onChange={(event) => {
-              control.setSpeed(Number(event.target.value) as SpeedLevel);
+              onPrefsChange({ ...prefs, pace: Number(event.target.value) as PaceMultiplier });
             }}
             disabled={state === 'ended'}
           >
-            {SPEED_LEVELS.map((level) => (
+            {PACE_MULTIPLIERS.map((level) => (
               <option key={level} value={level}>
-                {t(SPEED_KEYS[level])}
+                {t(`time.pace.${level}`)}
               </option>
             ))}
           </select>
@@ -129,6 +155,8 @@ export function TimeControls({ control, session }: { control: TimeControl; sessi
           {t('time.fastForward')}
         </button>
       </div>
+
+      {!session.isEnded && <YearProgress view={view} total={session.facts.length} />}
 
       {state !== 'ended' && (
         <div className="time-finish">

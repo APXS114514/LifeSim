@@ -139,11 +139,15 @@
     "play": "播放",
     "pause": "暂停",
     "speed": "速度",
-    "speeds": {
-      "2000": "慢",
-      "1000": "常速",
-      "500": "快",
-      "250": "很快"
+    "lifeLength": "一生时长",
+    "lifeLengthOption": "约 {{minutes}} 分钟",
+    "progress": "年度进度",
+    "progressCount": "{{shown}} / {{total}} 条",
+    "pace": {
+      "1": "1×",
+      "2": "2×",
+      "4": "4×",
+      "16": "16×"
     },
     "fastForward": "跳转到下一个决定",
     "finish": "直接模拟至结局",

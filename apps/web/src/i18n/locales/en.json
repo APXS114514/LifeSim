@@ -139,11 +139,15 @@
     "play": "Play",
     "pause": "Pause",
     "speed": "Speed",
-    "speeds": {
-      "2000": "Slow",
-      "1000": "Normal",
-      "500": "Fast",
-      "250": "Fastest"
+    "lifeLength": "Life length",
+    "lifeLengthOption": "about {{minutes}} min",
+    "progress": "Year progress",
+    "progressCount": "{{shown}} / {{total}} facts",
+    "pace": {
+      "1": "1×",
+      "2": "2×",
+      "4": "4×",
+      "16": "16×"
     },
     "fastForward": "Skip to next decision",
     "finish": "Simulate to the end",

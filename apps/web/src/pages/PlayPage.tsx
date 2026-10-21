@@ -1,6 +1,6 @@
 import type { Locale } from '@lifesim/content-schema';
 import { describeCharacterLocations, formatRealMoney, joinNames } from '@lifesim/real-world';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ArchiveCard,
@@ -20,6 +20,21 @@ import { Timeline } from '../components/Timeline.tsx';
 import { archiveIndexLine, archiveNumber } from '../game/archive.ts';
 import type { GameSession } from '../game/session.ts';
 import type { TimeControl } from '../game/time-control.ts';
+import type { Preferences } from '../game/prefs.ts';
+import { useYearReveal } from '../game/use-year-reveal.ts';
+import { baseYearMsForLifeLength, yearDurationMs } from '../game/year-pacing.ts';
+
+function subscribeMotionPreference(listener: () => void): () => void {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  media.addEventListener('change', listener);
+  return () => {
+    media.removeEventListener('change', listener);
+  };
+}
+
+function allowsAnimation(): boolean {
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 /** 五项派生指标的位置先排好；数值等 M4-016（在此之前一律显示「待接入」）。 */
 const INDICATORS: readonly MeterTone[] = [
@@ -44,6 +59,8 @@ export function PlayPage({
   locale,
   restored,
   saveFailed,
+  prefs,
+  onPrefsChange,
   control,
   onNewLife,
 }: {
@@ -51,6 +68,8 @@ export function PlayPage({
   locale: Locale;
   restored: boolean;
   saveFailed: boolean;
+  prefs: Preferences;
+  onPrefsChange: (prefs: Preferences) => void;
   control: TimeControl;
   onNewLife: () => void;
 }) {
@@ -59,6 +78,13 @@ export function PlayPage({
   // 时间控制推进的是内核里的同一份会话；订阅它的变化来重绘时间线与时钟。
   const [, rerender] = useReducer((count: number) => count + 1, 0);
   useEffect(() => control.subscribe(rerender), [control]);
+  const allowAnimation = useSyncExternalStore(subscribeMotionPreference, allowsAnimation);
+  const view = useYearReveal({
+    control,
+    session,
+    yearMs: yearDurationMs(prefs.pace, baseYearMsForLifeLength(prefs.lifeLengthMinutes)),
+    allowAnimation,
+  });
 
   const summary = session.summary;
   const age = session.isEnded ? (summary.ageAtDeath ?? 0) : Math.max(0, session.age);
@@ -230,7 +256,13 @@ export function PlayPage({
             </>
           ) : (
             <>
-              <TimeControls control={control} session={session} />
+              <TimeControls
+                control={control}
+                session={session}
+                view={view}
+                prefs={prefs}
+                onPrefsChange={onPrefsChange}
+              />
               {session.pending && (
                 <DecisionCard
                   pending={session.pending}
@@ -242,7 +274,12 @@ export function PlayPage({
             </>
           )}
 
-          <Timeline session={session} locale={locale} showFinance={showFinance} />
+          <Timeline
+            session={session}
+            locale={locale}
+            showFinance={showFinance}
+            visibleCount={view.visibleCount}
+          />
         </div>
       </div>
     </div>

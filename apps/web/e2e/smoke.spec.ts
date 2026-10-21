@@ -195,7 +195,7 @@ test('starts paused on the birth day and steps one year at a time', async ({ pag
 
 test('plays at the fastest speed and keeps the age still while paused', async ({ page }) => {
   await startLife(page, '日本', '1978');
-  await page.getByLabel('速度').selectOption('250');
+  await page.getByLabel('速度').selectOption('16');
   await page.getByRole('button', { name: '播放' }).click();
   await expect(page.getByText('播放中')).toBeVisible();
   await page.waitForTimeout(1200);
@@ -238,7 +238,7 @@ test('simulating to the end asks for confirmation first', async ({ page }) => {
 
 test('restores paused after reloading during playback', async ({ page }) => {
   await startLife(page, '日本', '1978');
-  await page.getByLabel('速度').selectOption('250');
+  await page.getByLabel('速度').selectOption('16');
   await page.getByRole('button', { name: '播放' }).click();
   await page.waitForTimeout(900);
 

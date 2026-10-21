@@ -33,7 +33,7 @@ export interface TimerScheduler {
 export interface TimeControlOptions {
   session: SteppableSession;
   scheduler: TimerScheduler;
-  speed?: SpeedLevel;
+  speed?: number;
   /** 每次推进、选择或结束后调用；界面据此自动存档。 */
   onChange?: () => void;
   /** 推进失败时调用；控制状态退回到暂停，不留下半个状态。 */
@@ -62,7 +62,7 @@ export class TimeControl {
   readonly #onError: ((error: unknown) => void) | undefined;
   readonly #listeners = new Set<() => void>();
   #state: TimeControlState;
-  #speed: SpeedLevel;
+  #speed: number;
   #cancelTick: (() => void) | null = null;
   #resumeAfterDecision: 'playing' | 'paused' = 'paused';
 
@@ -72,6 +72,9 @@ export class TimeControl {
     this.#onChange = options.onChange;
     this.#onError = options.onError;
     this.#speed = options.speed ?? DEFAULT_SPEED;
+    if (!(this.#speed > 0) || !Number.isFinite(this.#speed)) {
+      throw new RangeError(`Invalid year duration ${this.#speed}`);
+    }
     // 新建与读档后一律暂停；若存档正好停在一个等待中的重大决定上，则直接等待决定，
     // 否则玩家会看到决定卡却无法选择。
     this.#state = options.session.isEnded
@@ -85,7 +88,7 @@ export class TimeControl {
     return this.#state;
   }
 
-  get speed(): SpeedLevel {
+  get speed(): number {
     return this.#speed;
   }
 
@@ -114,8 +117,9 @@ export class TimeControl {
   }
 
   /** 调整速度；播放中从下一次 tick 起生效。 */
-  setSpeed(speed: SpeedLevel): void {
-    if (!SPEED_LEVELS.includes(speed)) throw new RangeError(`Unknown speed ${speed}`);
+  setSpeed(speed: number): void {
+    if (!(speed > 0) || !Number.isFinite(speed))
+      throw new RangeError(`Invalid year duration ${speed}`);
     this.#speed = speed;
     this.#emit();
   }

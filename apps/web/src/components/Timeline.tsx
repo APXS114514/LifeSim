@@ -19,15 +19,18 @@ export function Timeline({
   session,
   locale,
   showFinance,
+  visibleCount,
 }: {
   session: GameSession;
   locale: Locale;
   showFinance: boolean;
+  visibleCount: number;
 }) {
   const { t } = useTranslation();
+  const revealed = session.facts.slice(0, visibleCount);
   const facts: SimEventFact[] = showFinance
-    ? session.facts
-    : session.facts.filter((fact) => fact.type !== 'finance.settlement');
+    ? revealed
+    : revealed.filter((fact) => fact.type !== 'finance.settlement');
   const groups = groupByYear(facts);
 
   return (
@@ -51,7 +54,7 @@ export function Timeline({
                   {items.map((fact) => {
                     const category = factCategory(fact);
                     return (
-                      <li className={'fact fact-' + category} key={fact.id}>
+                      <li className={'fact fact-' + category} key={fact.id} data-fact-id={fact.id}>
                         <span className="fact-icon" aria-hidden="true">
                           <FactIcon category={category} />
                         </span>
