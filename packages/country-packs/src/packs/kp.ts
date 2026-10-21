@@ -8,6 +8,9 @@ import educationEnrollment from '../../data/KP/wdi-education-enrollment.json' wi
 import employmentAgriculture from '../../data/KP/wdi-employment-agriculture.json' with { type: 'json' };
 import laborParticipation from '../../data/KP/wdi-labor-participation.json' with { type: 'json' };
 import qx from '../../data/KP/wpp2024-qx.json' with { type: 'json' };
+import qxFemale from '../../data/KP/wpp2024-qx-female.json' with { type: 'json' };
+import qxMale from '../../data/KP/wpp2024-qx-male.json' with { type: 'json' };
+import srb from '../../data/KP/wpp2024-srb.json' with { type: 'json' };
 import urbanShare from '../../data/KP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
@@ -170,5 +173,8 @@ export const KP_PACK: CountryPack = {
     StatSeriesSchema.parse(educationEnrollment),
     StatSeriesSchema.parse(laborParticipation),
     StatSeriesSchema.parse(employmentAgriculture),
+    StatSeriesSchema.parse(qxFemale),
+    StatSeriesSchema.parse(qxMale),
+    StatSeriesSchema.parse(srb),
   ],
 };

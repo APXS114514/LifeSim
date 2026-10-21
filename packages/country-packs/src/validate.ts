@@ -224,7 +224,8 @@ export function validateCountryPack(pack: unknown): string[] {
     if (series.geographyId !== value.geographyId && !placeIds.has(series.geographyId)) {
       problems.push(`序列 ${series.id} 引用了本包之外的地理单位：${series.geographyId}`);
     }
-    const key = `${series.indicator}|${series.geographyId}`;
+    // 同一指标在同一地理单位上可以按性别各有一条序列（ADR-0010 A3），所以键里要带性别。
+    const key = `${series.indicator}|${series.geographyId}|${series.sex}`;
     if (seenSeries.has(key)) {
       problems.push(`序列 ${series.id} 与另一条序列的（指标、地理）重复：${key}`);
     }

@@ -29,18 +29,20 @@ describe('country pack series', () => {
           'health-expenditure-per-capita',
         );
       }
+      // M3-047：分性别生命表与出生性别比追加在序列列表末尾。
+      expected.push('life-table-qx', 'life-table-qx', 'sex-ratio-at-birth');
       expect(pack.series.map((series) => series.indicator)).toEqual(expected);
     }
   });
 
-  it('locks every series with the 46 data fingerprints', () => {
+  it('locks every series with the 61 data fingerprints', () => {
     const actual: Record<string, string> = {};
     for (const pack of Object.values(PACKS)) {
       for (const series of pack.series) {
         actual[series.id] = fingerprint(canonicalJson(series));
       }
     }
-    expect(Object.keys(DATA_FINGERPRINTS)).toHaveLength(46);
+    expect(Object.keys(DATA_FINGERPRINTS)).toHaveLength(61);
     expect(actual).toEqual(DATA_FINGERPRINTS);
   });
 });
