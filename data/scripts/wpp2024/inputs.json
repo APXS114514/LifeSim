@@ -19,5 +19,33 @@
     "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Both_2024-2100.csv.gz",
     "sha256": "ca2977c727b77a27548673d82cf065fe10e87162a3e31af5eaa811ea507ce390",
     "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "life-table-female-1950-2023",
+    "file": "WPP2024_Life_Table_Complete_Medium_Female_1950-2023.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Female_1950-2023.csv.gz",
+    "sha256": "0e23ba8cc2daabd9aa40839b02e21917205f29ea45791c2b1a87bd42705b1458",
+    "retrievedAt": "2026-10-21"
+  },
+  {
+    "id": "life-table-female-2024-2100",
+    "file": "WPP2024_Life_Table_Complete_Medium_Female_2024-2100.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Female_2024-2100.csv.gz",
+    "sha256": "8ebd82988839c514556290364794daf7e8d29a39987f7c15c2cb04b4bf8845d1",
+    "retrievedAt": "2026-10-21"
+  },
+  {
+    "id": "life-table-male-1950-2023",
+    "file": "WPP2024_Life_Table_Complete_Medium_Male_1950-2023.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Male_1950-2023.csv.gz",
+    "sha256": "e304a776352e5899ff45a1e0c059bdbaa32e8a8249d36d8f4627b2afaf6358be",
+    "retrievedAt": "2026-10-21"
+  },
+  {
+    "id": "life-table-male-2024-2100",
+    "file": "WPP2024_Life_Table_Complete_Medium_Male_2024-2100.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Male_2024-2100.csv.gz",
+    "sha256": "0a7e3eceaef592a599ec2808dd43e5081b0b834e2a579a6fd886fcf6ede77a1b",
+    "retrievedAt": "2026-10-21"
   }
 ]
