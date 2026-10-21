@@ -1,6 +1,7 @@
 import {
   CharacterStateSchema,
   HouseholdAccountSchema,
+  RelationshipsSchema,
   SimulationSnapshotSchema,
   checkJournalInvariants,
   type SimulationSnapshot,
@@ -10,6 +11,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   FAR_FUTURE,
   TOY_ACTOR,
+  TOY_PARENT_RELATIONSHIP,
   companionAccountId,
   companionId,
   createToySimulation,
@@ -345,6 +347,52 @@ describe('guarantees added in the M1 audit', () => {
     } finally {
       actorParse.mockRestore();
       accountParse.mockRestore();
+    }
+  });
+
+  it('rejects an invalid relationship graph on the event that wrote it (M3-036)', () => {
+    for (const [kind, needle] of [
+      ['self-relationship', 'cannot link an actor to themselves'],
+      ['bond-out-of-range', 'relationships:'],
+      ['parent-cycle', 'must not form a cycle'],
+    ] as const) {
+      const simulation = createToySimulation('family', {
+        companions: 2,
+        family: true,
+        trap: { age: 3, kind },
+      });
+      simulation.advanceTo({ ...forever, targetDate: '1973-06-14' });
+      let error: unknown;
+      try {
+        simulation.advanceTo(forever);
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error, kind).toBeInstanceOf(SimulationError);
+      expect((error as SimulationError).code).toBe('invariant-violation');
+      expect((error as SimulationError).details.join('\n')).toContain(needle);
+      // 失败的事件没有提交：关系图仍是出生时那一条合法关系，重试得到同样的错误。
+      const snapshot = simulation.snapshot();
+      expect(snapshot.relationships.map((relationship) => relationship.id)).toEqual([
+        TOY_PARENT_RELATIONSHIP,
+      ]);
+      expect(snapshot.relationships[0]?.bonds[TOY_ACTOR]?.trust).toBe(0.6);
+      expect(() => simulation.advanceTo(forever)).toThrow(SimulationError);
+    }
+  });
+
+  it('parses the relationship graph only when an event changes it (M3-036)', () => {
+    const relationshipParse = vi.spyOn(RelationshipsSchema, 'safeParse');
+    try {
+      const simulation = createToySimulation('family', { companions: 2, family: true });
+      // 出生事件写入了关系，必须校验过一次。
+      expect(relationshipParse).toHaveBeenCalledTimes(1);
+      relationshipParse.mockClear();
+      simulation.advanceTo({ ...forever, targetDate: '1975-01-01' });
+      expect(simulation.facts.length).toBeGreaterThan(1);
+      expect(relationshipParse).not.toHaveBeenCalled();
+    } finally {
+      relationshipParse.mockRestore();
     }
   });
 

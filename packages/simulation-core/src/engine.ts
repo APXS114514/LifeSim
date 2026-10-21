@@ -1,6 +1,7 @@
 import {
   CharacterStateSchema,
   HouseholdAccountSchema,
+  RelationshipsSchema,
   SimEventFactSchema,
   SimulationSnapshotSchema,
   type CharacterState,
@@ -654,6 +655,7 @@ export class Simulation implements SimulationEngine {
    * 已提交的状态都校验过（创建时为空，恢复时整份快照经过 schema 解析），而 schema 校验只取决于值本身，
    * 所以与提交前逐字段相同的角色和账户不必再解析一遍；只解析本事件新增或改动的（M3-035）。
    * 这样每个事件的校验成本取决于它改了多少角色，而不是一局里有多少 NPC。
+   * 关系图有数组级规则（去重、亲子无环），所以只要本事件改了任何关系，就整体再校验一次（M3-036）。
    */
   #verify(occurrence: Occurrence, draft: SimState, facts: readonly SimEventFact[]): void {
     const violations: string[] = [];
@@ -680,6 +682,10 @@ export class Simulation implements SimulationEngine {
       if (before && jsonEqual(before, account)) continue;
       const parsed = HouseholdAccountSchema.safeParse(account);
       if (!parsed.success) violations.push(`account ${account.id}: ${parsed.error.message}`);
+    }
+    if (!jsonEqual(this.#state.relationships, draft.relationships)) {
+      const parsed = RelationshipsSchema.safeParse(draft.relationships);
+      if (!parsed.success) violations.push(`relationships: ${parsed.error.message}`);
     }
     for (const fact of facts) {
       for (const actorId of fact.actorIds) {

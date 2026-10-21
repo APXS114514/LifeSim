@@ -1,4 +1,4 @@
-import type { CharacterState, ISODate } from '@lifesim/content-schema';
+import type { CharacterState, ISODate, Relationship } from '@lifesim/content-schema';
 import { addDays, addYears } from '../calendar.ts';
 import { Simulation, type CreateSimulationOptions } from '../engine.ts';
 import type { EventDefinition, SimulationModule } from '../types.ts';
@@ -18,7 +18,10 @@ export type TrapKind =
   | 'invalid-state'
   | 'invariant'
   | 'invalid-companion'
-  | 'invalid-account';
+  | 'invalid-account'
+  | 'self-relationship'
+  | 'bond-out-of-range'
+  | 'parent-cycle';
 
 export interface ToyWorldOptions {
   trap?: { age: number; kind: TrapKind };
@@ -26,6 +29,32 @@ export interface ToyWorldOptions {
   impureDecision?: boolean;
   /** 出生时另建几个 Tier1 同伴（各有一个账户），之后的事件不再碰它们；用于验证增量校验。 */
   companions?: number;
+  /** 出生时让同伴 0 成为主角的家长（一条 parent-child 关系）；需要 companions ≥ 1。 */
+  family?: boolean;
+}
+
+export const TOY_PARENT_RELATIONSHIP = 'rel:toy-parent';
+
+function relationship(
+  id: string,
+  kind: Relationship['kind'],
+  fromId: string,
+  toId: string,
+  since: ISODate,
+): Relationship {
+  const bond = { trust: 0.6, intimacy: 0.6, conflict: 0.1 };
+  return {
+    id,
+    kind,
+    fromId,
+    toId,
+    since,
+    until: null,
+    biological: kind === 'parent-child',
+    legal: true,
+    coResident: true,
+    bonds: { [fromId]: { ...bond }, [toId]: { ...bond } },
+  };
 }
 
 export function companionId(index: number): string {
@@ -87,6 +116,11 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
           currency: { code: 'TOY', version: 1 },
           balanceMinor: 0,
         });
+      }
+      if (options.family) {
+        ctx.state.relationships.push(
+          relationship(TOY_PARENT_RELATIONSHIP, 'parent-child', companionId(0), TOY_ACTOR, ctx.at),
+        );
       }
       const born = ctx.emit({ type: 'toy.born', outcomeCode: 'born', actorIds: [TOY_ACTOR] });
       ctx.schedule({
@@ -256,6 +290,24 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
           if (account) account.balanceMinor = 0.5;
           return;
         }
+        case 'self-relationship':
+          ctx.state.relationships.push(
+            relationship('rel:toy-self', 'sibling', companionId(1), companionId(1), ctx.at),
+          );
+          return;
+        case 'bond-out-of-range': {
+          const parent = ctx.state.relationships.find(
+            (candidate) => candidate.id === TOY_PARENT_RELATIONSHIP,
+          );
+          const bond = parent?.bonds[TOY_ACTOR];
+          if (bond) bond.trust = 1.5;
+          return;
+        }
+        case 'parent-cycle':
+          ctx.state.relationships.push(
+            relationship('rel:toy-cycle', 'parent-child', TOY_ACTOR, companionId(0), ctx.at),
+          );
+          return;
         default:
           return;
       }
