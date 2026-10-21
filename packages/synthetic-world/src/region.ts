@@ -7,6 +7,7 @@ import type {
   Indicator,
   Locale,
 } from '@lifesim/content-schema';
+import { syntheticFamilyName, syntheticGivenName } from './names.ts';
 import { expDet, lnDet } from '@lifesim/simulation-core';
 import type {
   DataValue,
@@ -190,6 +191,16 @@ export const syntheticRegion: RegionModel = {
   initialMacro: { economyPhase: 'normal', currency: { code: 'SYN', version: 1 } },
   tables: SYNTHETIC_TABLES,
   queries: SYNTHETIC_QUERIES,
+  sexRatioAtBirth: () => 100, // D 级合成基线，独立于真实地区。
+  names: {
+    scheme: 'zh', // 仅借用姓在前的排序；音节与表引用均标明 synthetic。
+    select(part, request, random) {
+      const text =
+        part === 'family' ? syntheticFamilyName(random) : syntheticGivenName(request.sex, random);
+      return { table: `synthetic-${part}`, id: text.toLowerCase() };
+    },
+    patronymic: () => null,
+  },
   rules: {
     primaryStartAge: 6,
     primaryYears: 6,

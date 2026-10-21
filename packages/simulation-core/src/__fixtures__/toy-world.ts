@@ -80,6 +80,11 @@ export function makeActor(id: string, birthDate: ISODate): CharacterState {
   return {
     id,
     tier: 'protagonist',
+    sex: 'female',
+    name: { scheme: 'zh', family: null, given: null, patronymic: null },
+    wellbeing: { stress: 0.3 },
+    social: { ties: 0.5 },
+    skills: [],
     birthDate,
     birthPlaceId: 'place:toy',
     currentResidenceId: 'place:toy',
@@ -119,6 +124,11 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
         ctx.state.actors.push({
           ...makeActor(id, ctx.at),
           tier: 'tier1',
+          sex: 'female',
+          name: { scheme: 'zh', family: null, given: null, patronymic: null },
+          wellbeing: { stress: 0.3 },
+          social: { ties: 0.5 },
+          skills: [],
           finance: { accountId: companionAccountId(index), lastSettlementFactId: null },
         });
         ctx.state.householdAccounts.push({

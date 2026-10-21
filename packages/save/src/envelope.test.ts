@@ -29,6 +29,11 @@ const payload: SavePayload = {
       {
         id: 'char:protagonist',
         tier: 'protagonist',
+        sex: 'female',
+        name: { scheme: 'zh', family: null, given: null, patronymic: null },
+        wellbeing: { stress: 0.3 },
+        social: { ties: 0.5 },
+        skills: [],
         birthDate: '1978-05-04',
         birthPlaceId: 'place:synthetic-city',
         currentResidenceId: 'place:synthetic-city',

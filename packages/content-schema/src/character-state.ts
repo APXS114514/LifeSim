@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PersonNameSchema } from './names.ts';
 import { EntityIdSchema, ISODateSchema, compareISODate } from './primitives.ts';
 
 /**
@@ -115,10 +116,24 @@ export const FinanceStateSchema = z.strictObject({
  *
  * 技能、职业资格、关系与婚育等字段在 M3 按 GDD §6.1、§8 补充。
  */
+export const CharacterSexSchema = z.enum(['female', 'male']);
+export type CharacterSex = z.infer<typeof CharacterSexSchema>;
+export const SkillSchema = z.strictObject({
+  id: z.string().regex(/^(?:interest|skill):[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  level: weight,
+  since: ISODateSchema,
+});
+export type Skill = z.infer<typeof SkillSchema>;
+
 export const CharacterStateSchema = z
   .strictObject({
     id: EntityIdSchema,
     tier: z.enum(['protagonist', 'tier1', 'tier2']),
+    sex: CharacterSexSchema,
+    name: PersonNameSchema,
+    wellbeing: z.strictObject({ stress: weight }),
+    social: z.strictObject({ ties: weight }),
+    skills: z.array(SkillSchema).max(12),
     birthDate: ISODateSchema,
     birthPlaceId: EntityIdSchema,
     currentResidenceId: EntityIdSchema,
@@ -135,6 +150,22 @@ export const CharacterStateSchema = z
   })
   .superRefine((character, ctx) => {
     const { vitalStatus, education, employment } = character;
+    const skillIds = new Set<string>();
+    character.skills.forEach((skill, index) => {
+      if (skillIds.has(skill.id))
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Duplicate skill id',
+          path: ['skills', index, 'id'],
+        });
+      skillIds.add(skill.id);
+      if (compareISODate(skill.since, character.birthDate) < 0)
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Skill cannot precede birth',
+          path: ['skills', index, 'since'],
+        });
+    });
     if (
       vitalStatus.kind === 'deceased' &&
       compareISODate(vitalStatus.deathDate, character.birthDate) < 0

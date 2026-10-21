@@ -1,5 +1,5 @@
 import type { Locale } from '@lifesim/content-schema';
-import { describeCharacterLocations, joinNames } from '@lifesim/real-world';
+import { characterName, describeCharacterLocations, joinNames } from '@lifesim/real-world';
 import {
   useEffect,
   useLayoutEffect,
@@ -139,7 +139,9 @@ export function PlayPage({
                 variantKey={`${session.request.seed}|${actor.id}`}
               />
               <div className="character-identity">
-                <p className="character-name">{t('play.nameUnassigned')}</p>
+                <p className="character-name">
+                  {characterName(actor, locale) ?? t('play.nameUnassigned')}
+                </p>
                 <p className="eyebrow">
                   {t('play.character')} · {packName}
                 </p>
@@ -153,6 +155,7 @@ export function PlayPage({
             </div>
 
             <FieldGrid compact>
+              <Field label={t('play.sex')}>{t(`creation.sex.${actor.sex}`)}</Field>
               <Field label={t('play.born')}>
                 {session.birth.birthDate} · {settlement}
               </Field>

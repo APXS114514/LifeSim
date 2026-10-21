@@ -4,6 +4,7 @@ import {
   type ISODate,
   type LifePrinciples,
   type SimulationSnapshot,
+  type CharacterSex,
 } from '@lifesim/content-schema';
 import {
   Simulation,
@@ -17,6 +18,7 @@ import { educationEvents } from './education.ts';
 import { financeEvents } from './finance.ts';
 import { healthEvents } from './health.ts';
 import { historyEvents } from './history.ts';
+import { identityEvents } from './identity.ts';
 import { lifeEvents } from './life.ts';
 import { npcEvents } from './npc.ts';
 import { MacroStateSchema, type RegionModel } from './region.ts';
@@ -111,6 +113,7 @@ export function lifeModule(region: RegionModel): SimulationModule {
     id: 'life',
     events: [
       ...lifeEvents(region),
+      ...identityEvents(region),
       ...historyEvents(region),
       ...npcEvents(region),
       ...educationEvents(region),
@@ -132,6 +135,7 @@ export interface CreateLifeOptions {
   /** 1950—2026 年之间（GDD §2 决定 05）。 */
   birthDate: ISODate;
   settlement?: 'urban' | 'rural';
+  sex?: CharacterSex;
   principles?: LifePrinciples;
   /** 预先给出的玩家选择（决策事件幂等键 → 选项）。 */
   decisions?: Readonly<Record<string, string>>;
@@ -150,6 +154,7 @@ export function createLifeSimulation(options: CreateLifeOptions): Simulation {
       entityId: PROTAGONIST_ID,
       payload: {
         settlement: options.settlement ?? null,
+        sex: options.sex ?? null,
         principles: options.principles ?? null,
       },
     },

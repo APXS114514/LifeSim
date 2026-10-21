@@ -3,13 +3,14 @@ import { ageOn, type EventContext, type SimState } from '@lifesim/simulation-cor
 import type { RegionModel } from './region.ts';
 
 /** 系统规则版本：规则行为变化时提升，写入快照的 `dataPackVersions.systems`。 */
-export const SYSTEMS_VERSION = '0.5.0';
+export const SYSTEMS_VERSION = '0.6.0';
 
 export const PROTAGONIST_ID = 'char:protagonist';
 
 /** 事件类型。 */
 export const EVENT = {
   birth: 'life.birth',
+  name: 'identity.name',
   birthday: 'life.birthday',
   death: 'life.death',
   anchor: 'history.anchor',
@@ -39,6 +40,7 @@ export const PRIORITY = {
   birth: 0,
   anchor: 1,
   death: 2,
+  name: 5,
   birthday: 10,
   npcBirthday: 11,
   settle: 20,

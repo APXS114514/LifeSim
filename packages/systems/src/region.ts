@@ -9,8 +9,11 @@ import {
   type HistoricalAnchor,
   type Indicator,
   type Origin,
+  type CharacterSex,
+  type NameScheme,
+  type NameRef,
 } from '@lifesim/content-schema';
-import type { SimState } from '@lifesim/simulation-core';
+import type { RandomStream, SimState } from '@lifesim/simulation-core';
 import { z } from 'zod';
 
 /** 数据质量与回退方式；与 DataRegistry 的 LookupMethod 对应（ADR-0007）。 */
@@ -73,6 +76,16 @@ export interface RegionQueries {
  *
  * 概率都是年度概率；金额都是给定币制版本下的整数最小单位。
  */
+export interface RegionNames {
+  readonly scheme: NameScheme;
+  select(
+    part: 'family' | 'given',
+    request: { birthYear: number; sex: CharacterSex; settlement: Origin['settlement'] },
+    random: RandomStream,
+  ): NameRef | null;
+  patronymic(given: NameRef | null): NameRef | null;
+}
+
 export interface RegionModel {
   readonly packId: string;
   readonly dataVersion: string;
@@ -87,6 +100,7 @@ export interface RegionModel {
   /** M3-009：低层表与领域查询；规则不直接读国家包。 */
   readonly tables: RegionTables;
   readonly queries: RegionQueries;
+  readonly names: RegionNames;
 
   placeId(settlement: Origin['settlement']): string;
   urbanBirthShare(year: number): number;
@@ -96,7 +110,8 @@ export interface RegionModel {
   ): readonly (readonly [Origin['familyResources'], number])[];
 
   /** 生命表基线：该日历年、该年龄的年度死亡概率（已包含所有死因）。 */
-  mortalityQ(year: number, age: number): number;
+  sexRatioAtBirth(year: number): number;
+  mortalityQ(year: number, age: number, sex?: CharacterSex | 'both'): number;
   illnessOnsetP(year: number, age: number): number;
   primaryEnrollmentP(year: number, settlement: Origin['settlement']): number;
   secondaryContinuationP(year: number, origin: Origin): number;

@@ -4,6 +4,7 @@ import {
   BIRTH_YEAR_MIN,
   isSelectableBirthYear,
   type BirthRegionId,
+  type CharacterSex,
 } from '@lifesim/content-schema';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,11 +70,12 @@ export function CharacterCreationPage({
   busy = false,
 }: {
   busy?: boolean;
-  onStart: (choice: { region: RegionChoice; year: number | 'random' }) => void;
+  onStart: (choice: { region: RegionChoice; year: number | 'random'; sex?: CharacterSex }) => void;
 }) {
   const { t } = useTranslation();
   const ids = { regionHint: useId(), yearHint: useId(), yearError: useId(), start: useId() };
 
+  const [sex, setSex] = useState<CharacterSex | 'random'>('random');
   const [region, setRegion] = useState<RegionChoice>('random');
   const [yearMode, setYearMode] = useState<YearMode>('random');
   const [yearText, setYearText] = useState('1978');
@@ -125,7 +127,11 @@ export function CharacterCreationPage({
         onSubmit={(event) => {
           event.preventDefault();
           if (yearMode === 'specific' && !yearValid) return;
-          onStart({ region, year: yearMode === 'random' ? 'random' : Number(yearText) });
+          onStart({
+            region,
+            year: yearMode === 'random' ? 'random' : Number(yearText),
+            ...(sex === 'random' ? {} : { sex }),
+          });
         }}
       >
         <div className="archive-bar">
@@ -224,6 +230,25 @@ export function CharacterCreationPage({
                 {t('creation.year.rangeError', yearRange)}
               </p>
             )}
+          </fieldset>
+
+          <fieldset>
+            <legend>{t('creation.sex.legend')}</legend>
+            <div className="choices">
+              {(['random', 'female', 'male'] as const).map((value) => (
+                <label className="choice" key={value}>
+                  <input
+                    type="radio"
+                    name="sex"
+                    value={value}
+                    checked={sex === value}
+                    onChange={() => setSex(value)}
+                  />
+                  <span>{t(`creation.sex.${value}`)}</span>
+                </label>
+              ))}
+            </div>
+            <p className="hint">{t('creation.sex.hint')}</p>
           </fieldset>
 
           <div className="summary" aria-live="polite">

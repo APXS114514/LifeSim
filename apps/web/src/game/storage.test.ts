@@ -94,6 +94,27 @@ describe('save storage', () => {
     expect(store.getItem(PRESERVED_KEY)).toBe(changed);
   });
 
+  it('preserves a pre-identity snapshot byte for byte and refuses to overwrite it', () => {
+    const legacy = JSON.parse(JSON.stringify(newSession().serialize())) as {
+      snapshot: { schemaVersion: number; actors: Record<string, unknown>[] };
+    };
+    legacy.snapshot.schemaVersion = 1;
+    for (const actor of legacy.snapshot.actors) {
+      for (const field of ['sex', 'name', 'wellbeing', 'social', 'skills']) delete actor[field];
+    }
+    const raw = JSON.stringify(legacy);
+    store.setItem(SAVE_KEY, raw);
+    const loaded = loadGame();
+    expect(loaded.kind).toBe('failed');
+    if (loaded.kind !== 'failed') throw new Error('Expected an incompatible save');
+    expect(loaded.reason).toBe('incompatible');
+    expect(loaded.raw).toBe(raw);
+    expect(store.getItem(SAVE_KEY)).toBe(raw);
+    expect(store.getItem(PRESERVED_KEY)).toBe(raw);
+    expect(saveGame(newSession())).toBe(false);
+    expect(store.getItem(SAVE_KEY)).toBe(raw);
+  });
+
   it('keeps a corrupt save and reports it as unreadable', () => {
     store.setItem(SAVE_KEY, '{not json');
     const result = loadGame();

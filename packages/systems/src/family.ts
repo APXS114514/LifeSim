@@ -102,6 +102,11 @@ function createParent(
   const actor: CharacterState = {
     id,
     tier: 'tier1',
+    sex: role === 'mother' ? 'female' : 'male',
+    name: { scheme: region.names.scheme, family: null, given: null, patronymic: null },
+    wellbeing: { stress: 0.3 },
+    social: { ties: 0.5 },
+    skills: [],
     birthDate,
     birthPlaceId: protagonist.birthPlaceId,
     currentResidenceId: protagonist.currentResidenceId,
@@ -155,20 +160,22 @@ function relationshipFor(
   };
 }
 
-/** 在 life.birth 中调用；bornFactId 必须已经存在。 */
+/** 保留所有原有出生抽样顺序，再调用 emitBirth；亲子事实仍排在出生事实之后。 */
 export function createBirthFamily(
   ctx: EventContext,
   region: RegionModel,
   protagonist: CharacterState,
-  bornFactId: string,
-): void {
+  emitBirth: () => string,
+): string {
   const macro = readMacro(ctx.state);
   const parents = [
     createParent(ctx, region, protagonist, 'mother'),
     createParent(ctx, region, protagonist, 'father'),
   ];
 
-  for (const parent of parents) {
+  const relationships = parents.map((parent) => relationshipFor(ctx, protagonist, parent));
+  const bornFactId = emitBirth();
+  for (const [index, parent] of parents.entries()) {
     const { actor } = parent;
     ctx.state.actors.push(actor);
     ctx.state.householdAccounts.push({
@@ -177,7 +184,7 @@ export function createBirthFamily(
       currency: macro.currency,
       balanceMinor: 0,
     });
-    ctx.state.relationships.push(relationshipFor(ctx, protagonist, parent));
+    ctx.state.relationships.push(relationships[index]!);
     ctx.emit({
       type: 'family.parent',
       outcomeCode: parent.role,
@@ -192,4 +199,5 @@ export function createBirthFamily(
       },
     });
   }
+  return bornFactId;
 }

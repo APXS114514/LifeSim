@@ -157,6 +157,11 @@ function actor(id: string) {
   return {
     id,
     tier: 'tier1',
+    sex: 'female',
+    name: { scheme: 'zh', family: null, given: null, patronymic: null },
+    wellbeing: { stress: 0.3 },
+    social: { ties: 0.5 },
+    skills: [],
     birthDate: '1950-01-01',
     birthPlaceId: 'place:x',
     currentResidenceId: 'place:x',

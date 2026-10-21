@@ -20,6 +20,10 @@ export const KNOWLEDGE_BASE: Readonly<Record<EducationLevel, number>> = {
 };
 export const KNOWLEDGE_ENROLLMENT_WEIGHT = 0.15;
 export const KNOWLEDGE_APTITUDE_WEIGHT = 0.2;
+export const KNOWLEDGE_SKILL_WEIGHT = 0.05;
+export const KNOWLEDGE_SKILL_CAP = 0.15;
+export const SOCIAL_TIES_WEIGHT = 0.2;
+export const STRESS_WEIGHT = 0.2;
 export const HAPPINESS_WEIGHTS = {
   health: 0.3,
   economy: 0.25,
@@ -128,7 +132,11 @@ export function deriveIndicators(
   const knowledge = clamp01(
     KNOWLEDGE_BASE[protagonist.education.completed] +
       (protagonist.education.enrolledIn === null ? 0 : KNOWLEDGE_ENROLLMENT_WEIGHT) +
-      KNOWLEDGE_APTITUDE_WEIGHT * protagonist.traits.aptitude,
+      KNOWLEDGE_APTITUDE_WEIGHT * protagonist.traits.aptitude +
+      Math.min(
+        KNOWLEDGE_SKILL_CAP,
+        KNOWLEDGE_SKILL_WEIGHT * protagonist.skills.reduce((sum, skill) => sum + skill.level, 0),
+      ),
   );
   let qualitySum = 0;
   let relationshipCount = 0;
@@ -143,7 +151,11 @@ export function deriveIndicators(
     qualitySum += (bond.trust + bond.intimacy + (1 - bond.conflict)) / 3;
     relationshipCount += 1;
   }
-  const relationships = relationshipCount === 0 ? 0 : qualitySum / relationshipCount;
+  // Center fine-state effects on their approved birth defaults, preserving the previous initial view.
+  const relationships = clamp01(
+    (relationshipCount === 0 ? 0 : qualitySum / relationshipCount) +
+      SOCIAL_TIES_WEIGHT * (protagonist.social.ties - 0.5),
+  );
   const recentStart = addDays(snapshot.at, -RECENT_EVENT_DAYS);
   let eventBalance = 0;
   for (const fact of facts) {
@@ -165,7 +177,8 @@ export function deriveIndicators(
       HAPPINESS_WEIGHTS.economy * economy +
       HAPPINESS_WEIGHTS.relationships * relationships +
       HAPPINESS_WEIGHTS.knowledge * knowledge +
-      delta,
+      delta -
+      STRESS_WEIGHT * (protagonist.wellbeing.stress - 0.3),
   );
   return { health, happiness, knowledge, relationships, economy };
 }

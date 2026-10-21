@@ -1,5 +1,6 @@
 import {
   LifePrinciplesSchema,
+  CharacterSexSchema,
   type CharacterState,
   type ISODate,
   type LifePrinciples,
@@ -31,6 +32,7 @@ export const DEFAULT_PRINCIPLES: LifePrinciples = {
 
 export const BirthPayloadSchema = z.strictObject({
   settlement: z.enum(['urban', 'rural']).nullable(),
+  sex: CharacterSexSchema.nullable(),
   principles: LifePrinciplesSchema.nullable(),
 });
 
@@ -81,6 +83,11 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
       const actor: CharacterState = {
         id,
         tier: 'protagonist',
+        sex: 'female',
+        name: { scheme: region.names.scheme, family: null, given: null, patronymic: null },
+        wellbeing: { stress: 0.3 },
+        social: { ties: 0.5 },
+        skills: [],
         birthDate: ctx.at,
         birthPlaceId: placeId,
         currentResidenceId: placeId,
@@ -104,14 +111,23 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
       });
       writeMacro(ctx.state, macro);
 
-      const born = ctx.emit({
-        type: 'life.birth',
-        outcomeCode: 'born',
-        actorIds: [id],
-        evidenceIds: [evidenceId(region, 'population')],
-        details: { place: placeId, settlement, familyResources },
+      const born = createBirthFamily(ctx, region, actor, () => {
+        // 新抽样追加在旧家庭随机流之后；指定性别仍消费一次，隔离其余出生属性。
+        const ratio = region.sexRatioAtBirth(year);
+        if (!Number.isFinite(ratio) || ratio <= 0) throw new RangeError('Invalid birth sex ratio');
+        const sampledSex = ctx.random.chance(100 / (100 + ratio)) ? 'female' : 'male';
+        actor.sex = payload.sex ?? sampledSex;
+        return ctx.emit({
+          type: 'life.birth',
+          outcomeCode: 'born',
+          actorIds: [id],
+          evidenceIds: [evidenceId(region, 'population')],
+          details: { place: placeId, settlement, familyResources, sex: actor.sex },
+        });
       });
-      createBirthFamily(ctx, region, actor, born);
+      // 命名使用每个角色独立的事件随机流，不消耗出生或生命周期随机流。
+      for (const member of ctx.state.actors)
+        ctx.schedule({ type: EVENT.name, at: ctx.at, entityId: member.id, period: 'initial' });
       // M3-011：出生家庭里的 Tier1 NPC 从下一个生日开始推进自己的生命周期。
       for (const npc of ctx.state.actors) {
         if (npc.tier !== 'tier1') continue;

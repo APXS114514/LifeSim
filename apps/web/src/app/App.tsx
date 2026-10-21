@@ -20,7 +20,7 @@ import { TimeControl, timerScheduler } from '../game/time-control.ts';
 import { baseYearMsForLifeLength, yearDurationMs } from '../game/year-pacing.ts';
 import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 import { PlayPage } from '../pages/PlayPage.tsx';
-import type { BirthRegionId, Locale } from '@lifesim/content-schema';
+import type { BirthRegionId, CharacterSex, Locale } from '@lifesim/content-schema';
 
 type GameState = { session: GameSession; revision: number };
 type SaveIssue = Extract<SaveLoadResult, { kind: 'failed' }>;
@@ -156,7 +156,11 @@ export function App() {
     setPrefs(next);
   }
 
-  function start(choice: { region: BirthRegionId | 'random'; year: number | 'random' }): void {
+  function start(choice: {
+    region: BirthRegionId | 'random';
+    year: number | 'random';
+    sex?: CharacterSex;
+  }): void {
     if (issue || busy || packError) return;
     const seed = createSessionSeed();
     void startRequest({ seed, ...choice });

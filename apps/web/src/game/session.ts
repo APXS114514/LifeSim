@@ -15,6 +15,8 @@ import {
   type RealNarrator,
 } from '@lifesim/real-world';
 import {
+  SNAPSHOT_SCHEMA_VERSION,
+  SimulationError,
   addYears,
   ageOn,
   type AdvanceResult,
@@ -305,6 +307,17 @@ export function parseGameSave(raw: unknown): GameSaveData {
   if (value['version'] !== 1) throw new Error('Unsupported save version');
   if (typeof value['request'] !== 'object' || value['request'] === null) {
     throw new Error('Save has no request');
+  }
+  const snapshot = value['snapshot'];
+  if (
+    typeof snapshot === 'object' &&
+    snapshot !== null &&
+    'schemaVersion' in snapshot &&
+    snapshot.schemaVersion !== SNAPSHOT_SCHEMA_VERSION
+  ) {
+    throw new SimulationError('incompatible-snapshot', 'Unsupported snapshot schema version', {
+      seed: 'save-load',
+    });
   }
   return {
     version: 1,

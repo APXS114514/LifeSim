@@ -69,7 +69,7 @@ export function healthEvents(region: RegionModel): EventDefinition[] {
         illnessFactor *
         (poor ? effects.mortality.poverty : 1) *
         (actor.education.completed === 'tertiary' ? effects.mortality.tertiaryEducation : 1);
-      const p = scaleAnnualProbability(region.mortalityQ(year, age), multiplier);
+      const p = scaleAnnualProbability(region.mortalityQ(year, age, actor.sex), multiplier);
 
       // 三次抽样总是全部发生，随机流的消耗与结果无关。
       const dies = ctx.random.chance(p);

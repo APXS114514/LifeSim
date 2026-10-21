@@ -11,6 +11,7 @@ import {
   type ISODate,
   type LifePrinciples,
   type Origin,
+  type CharacterSex,
 } from '@lifesim/content-schema';
 import {
   PACKS,
@@ -32,6 +33,7 @@ import {
   type RegionRules,
   type RegionTables,
 } from '@lifesim/systems';
+import { realRegionNames } from './names.ts';
 import type { Simulation } from '@lifesim/simulation-core';
 
 /** 可玩切片的规则基线（ADR-0006）。M3 接入真实数据后替换。 */
@@ -142,7 +144,7 @@ function tableEvidence(pack: CountryPack): Record<keyof RegionModel['evidence'],
     modelVersion: 'm3-lite-0.1',
     geographyId,
     yearRange: [1950, 2100],
-    methodId: 'wpp2024-life-table-both',
+    methodId: 'wpp2024-life-table-sex-specific',
   };
   return {
     population,
@@ -310,6 +312,17 @@ export function createRealRegion(
     effects: REAL_EFFECTS,
     tables,
     queries,
+    names: realRegionNames(packId),
+    sexRatioAtBirth(year) {
+      const result = data.lookup({
+        indicator: 'sex-ratio-at-birth',
+        geographyId: pack.geographyId,
+        year,
+      });
+      if (result.status === 'missing')
+        throw new Error('No birth sex ratio for ' + packId + ' in ' + year);
+      return result.value;
+    },
     placeId(settlement) {
       return settlement === 'urban' ? urbanPlace : ruralPlace;
     },
@@ -331,12 +344,13 @@ export function createRealRegion(
         ['high', 0.2],
       ] as const;
     },
-    mortalityQ(year, age) {
+    mortalityQ(year, age, sex = 'both') {
       if (!Number.isInteger(age) || age < 0) throw new RangeError('Invalid age ' + age);
       if (age >= 100) return 1;
       const result = data.lookup(
         {
           indicator: 'life-table-qx',
+          sex,
           geographyId: pack.geographyId,
           year,
           age,
@@ -389,6 +403,7 @@ export interface RealLifeRequest {
   year: number | 'random';
   birthDate?: ISODate;
   principles?: LifePrinciples;
+  sex?: CharacterSex;
   decisions?: Readonly<Record<string, string>>;
 }
 
@@ -423,6 +438,7 @@ export function createRealLifeSimulation(request: RealLifeRequest): RealLifeSess
     region,
     birthDate: birth.birthDate,
     settlement: birth.settlement,
+    ...(request.sex === undefined ? {} : { sex: request.sex }),
     ...(request.principles === undefined ? {} : { principles: request.principles }),
     ...(request.decisions === undefined ? {} : { decisions: request.decisions }),
   });

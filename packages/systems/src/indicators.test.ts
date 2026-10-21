@@ -21,6 +21,11 @@ function fixture(): SimulationSnapshot {
   const actor = {
     id: 'char:protagonist',
     tier: 'protagonist',
+    sex: 'female',
+    name: { scheme: 'zh', family: null, given: null, patronymic: null },
+    wellbeing: { stress: 0.3 },
+    social: { ties: 0.5 },
+    skills: [],
     birthDate: '1970-06-15',
     birthPlaceId: 'place:fixture',
     currentResidenceId: 'place:fixture',
@@ -372,4 +377,36 @@ describe('indicator properties', () => {
       { numRuns: 50 },
     );
   });
+});
+
+it('derives fine-state effects monotonically without modifying the snapshot', () => {
+  fc.assert(
+    fc.property(
+      fc.double({ min: 0, max: 1, noNaN: true }),
+      fc.double({ min: 0, max: 1, noNaN: true }),
+      (a, b) => {
+        const low = Math.min(a, b),
+          high = Math.max(a, b);
+        const base = fixture();
+        const higher = fixture();
+        base.actors[0]!.wellbeing.stress = low;
+        higher.actors[0]!.wellbeing.stress = high;
+        expect(deriveIndicators(higher, []).happiness).toBeLessThanOrEqual(
+          deriveIndicators(base, []).happiness,
+        );
+        base.actors[0]!.social.ties = low;
+        higher.actors[0]!.social.ties = high;
+        expect(deriveIndicators(higher, []).relationships).toBeGreaterThanOrEqual(
+          deriveIndicators(base, []).relationships,
+        );
+        base.actors[0]!.skills = [{ id: 'skill:fixture', level: low, since: base.at }];
+        higher.actors[0]!.skills = [{ id: 'skill:fixture', level: high, since: higher.at }];
+        const before = canonicalJson(higher);
+        expect(deriveIndicators(higher, []).knowledge).toBeGreaterThanOrEqual(
+          deriveIndicators(base, []).knowledge,
+        );
+        expect(canonicalJson(higher)).toBe(before);
+      },
+    ),
+  );
 });

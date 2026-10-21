@@ -30,6 +30,8 @@ const METADATA: EvidenceMeta = {
  */
 const FIXTURE_REGION: RegionModel = {
   packId: 'ZZ-FIX',
+  sexRatioAtBirth: () => 100,
+  names: { scheme: 'zh', select: () => null, patronymic: () => null },
   dataVersion: 'fixture-1',
   polityId: 'polity:fixture',
   evidence: {

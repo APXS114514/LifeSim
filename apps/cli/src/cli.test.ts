@@ -244,9 +244,14 @@ describe('protagonist projection (M3-011)', () => {
         const own = fact.actorIds.length === 1 && fact.actorIds[0] === 'char:protagonist';
         const empty = fact.actorIds.length === 0;
         if (!own && !(options.includeEmptyActorFacts && empty)) continue;
-        parts.push(
-          [fact.at, fact.type, fact.outcomeCode, canonicalJson(fact.details ?? {})].join('|'),
-        );
+        // M3-043 deliberately adds sex; validate it separately while retaining every legacy field.
+        // The original projection hashes and entry counts remain unchanged.
+        const details = { ...fact.details };
+        if (fact.type === 'life.birth') {
+          expect(['female', 'male']).toContain(details['sex']);
+          delete details['sex'];
+        }
+        parts.push([fact.at, fact.type, fact.outcomeCode, canonicalJson(details)].join('|'));
       }
     }
     return {

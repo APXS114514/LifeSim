@@ -43,7 +43,7 @@ import type {
 } from './types.ts';
 
 export const ENGINE_VERSION = '0.1.0';
-export const SNAPSHOT_SCHEMA_VERSION = 1;
+export const SNAPSHOT_SCHEMA_VERSION = 2;
 
 /** 防止失控的硬上限；超过即视为规则缺陷（无限递归、事件风暴），带上下文报错。 */
 export interface EngineLimits {
