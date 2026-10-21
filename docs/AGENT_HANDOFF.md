@@ -7,10 +7,10 @@
 ## 1. 一页概览
 
 - **项目**：LifeSim，真实历史统计约束下的单人人生模拟（中国大陆、日本、朝鲜、韩国、俄罗斯，1950—2026 出生；中英双语；离线；MIT）。
-- **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2 的 23 个任务已实现并合入 `main`（状态已按代码核对，里程碑仍待验收）；**M3-lite 已实现**；完整 M3（30 个任务）与 M4（14 个任务）已拆分为任务文件，M3 从 [M3-001](tasks/M3-001.md) 开始。
+- **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2 的 23 个任务已实现并合入 `main`（状态已按代码核对，里程碑仍待验收）；**M3-lite 已实现**；完整 M3（31 个任务）与 M4（14 个任务）已拆分为任务文件，M3 从 [M3-000](tasks/M3-000.md) 开始。
 - **能做什么**：浏览器里五地选出生、跑完整人生、处理重大决定、看死亡总结、切换中英、刷新续玩；Node 里 `pnpm life:real` 跑真实国家包人生；`pnpm life` 仍跑合成地区。
 - **还不能做什么**：家庭、NPC、婚育、收养、迁居、城市人口权重、各国特色事件、政体更替作用到在世角色都属于完整 M3；Worker、IndexedDB、PWA 与完整可玩 Alpha 属于 M4/M5。
-- **下一步**：执行 [M3-001 政体更替作用于在世角色](tasks/M3-001.md)；同时请维护者答复 [M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 中阻塞 M3-008…016 的问题（Q3、Q4、Q5、Q2）。
+- **下一步**：先完成 [M3-000 旧存档保护](tasks/M3-000.md)，再执行 [M3-001 政体更替作用于在世角色](tasks/M3-001.md)；[M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 中 Q2/Q3/Q4/Q5/Q9/Q12/Q13 已确认，仍待确认的是 Q1/Q6/Q7/Q8/Q10/Q11。
 
 ## 2. 开发环境
 
@@ -38,7 +38,7 @@ TypeScript 源码不经构建，由 Node 24 的类型剥离直接运行；因此
 | `pnpm bench --lives 1000`                    | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时   |
 | `pnpm check:commits <base>..<head>`          | 提交信息里没有 AI 工具署名                                                                                       | 提交后             |
 
-CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、`pnpm life:real`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。**直接 `git push` 不会触发 Guardrails**；高风险改动按第 8/10 节先推任务分支并请维护者确认。
+CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、`pnpm life:real`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。**直接 `git push` 不会触发 Guardrails**；高风险改动按第 8/10 节在任务分支上本地提交并请维护者审查，每次推送前还需人类操作员当次批准。
 
 ## 4. 仓库地图
 
@@ -162,7 +162,7 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 | 里程碑 | 内容                                                                                                                       | 状态                                                                         |
 | ------ | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | **已实现，待维护者验收**，见 [tasks/INDEX.md](tasks/INDEX.md)                |
-| M3     | 家庭与 Tier1 NPC、教育/职业/经济、疾病与死亡、迁移、五国特色事件、事件目录                                                 | **已拆分为 M3-001…029**，M3-lite 已实现；见 [tasks/INDEX.md](tasks/INDEX.md) |
+| M3     | 家庭与 Tier1 NPC、教育/职业/经济、疾病与死亡、迁移、五国特色事件、事件目录                                                 | **已拆分为 M3-000…030**，M3-lite 已实现；见 [tasks/INDEX.md](tasks/INDEX.md) |
 | M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | **已拆分为 M4-001…014**，待 M3 验收后开始                                    |
 | M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                                                       |
 
@@ -184,10 +184,10 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 **高风险路径**（清单以 `scripts/check-guardrails.mjs` 为准）：模拟内核、公共契约、`systems` 的 `region.ts` / `shared.ts` / `module.ts`、黄金指纹、数据与数据脚本（`data/scripts/lib/` 除外）、国家包数据、测试基线、门禁脚本、CI、提交钩子、Agent 配置、工具链配置、GDD / ADR / Agent 提示词与 `AGENTS.md`。删除测试文件也算。
 
 - 走 PR：改动高风险路径的 PR 必须由维护者审查后加上 `arch-approved` 标签，Guardrails 才会通过。
-- 走本地 Git：高风险改动先推 `task/*` 分支，Agent 在报告里列出高风险点并请维护者确认；维护者本地审查后用 `git merge --ff-only` 合并。直接推送不会触发 Guardrails，所以不能把“CI 通过”当成架构审查。
+- 走本地 Git：高风险改动在 `task/*` 分支上完成并本地提交，Agent 在报告里列出高风险点并请维护者审查；维护者本地审查后合并。**Agent 的每一次远程推送都必须先获得人类操作员批准**（见 [AGENTS.md](../AGENTS.md)「分支、工作树与推送」）；直接推送不会触发 Guardrails，所以不能把“CI 通过”当成架构审查。
 - 执行任务的 Agent **不得自己加这个标签，也不得声称已完成架构审查**。
 
-**建议维护者决定**：如果希望所有改动强制走 PR/Guardrails，就在 GitHub 开启“要求 PR”的 `main` 分支保护（此时直接推送会被拒绝，Agent 必须推任务分支）；如果希望用本地 Git 直接推送，则不要开启该保护，或允许维护者绕过。无论哪种方式，都建议开启禁止强制推送与私密漏洞报告。
+**推送纪律**：Agent 只做本地提交；每次推送前必须向人类操作员报告提交内容、commit SHA、目标远程/分支、测试结果与风险，并获得当次明确批准。若希望所有改动强制走 PR/Guardrails，就在 GitHub 开启“要求 PR”的 `main` 分支保护；无论哪种方式，都建议开启禁止强制推送与私密漏洞报告。
 
 ## 9. 已知风险
 
@@ -205,10 +205,10 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 ## 10. 如何接手一个任务
 
 1. 读 [docs/FLASH_AGENT_PROMPT.md](FLASH_AGENT_PROMPT.md)（统一执行规程）。
-2. M2 的 23 个任务已完成，等待维护者验收；M3（30 个）与 M4（14 个）的任务文件已就绪。执行单个任务时，在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并；M3 从 [M3-001](tasks/M3-001.md) 开始。
+2. M2 的 23 个任务已完成，等待维护者验收；M3（31 个）与 M4（14 个）的任务文件已就绪。执行单个任务时，在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并；M3 从 [M3-000](tasks/M3-000.md) 开始，随后是 [M3-001](tasks/M3-001.md)。
 3. 只读这个任务文件和它列出的源码，按规程执行，完成后停止并提交报告。
 4. 改动数据或国家包时，依次运行 `pnpm data:sources`、`pnpm data:coverage`，再运行 `pnpm verify`；有意更新数据时同步维护 `DATA_FINGERPRINTS` 并说明原因。
-5. 默认用本地 Git 上交，不需要开 PR：
+5. 默认用本地 Git 提交，不需要开 PR；**推送前必须获得人类操作员的当次批准**：
 
    ```sh
    git status -sb                 # 确认没有别人的未提交修改
@@ -217,8 +217,9 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
    git add <允许修改的文件>
    git commit -m "feat(scope): TASK_ID 简述"
    pnpm check:commits origin/main..HEAD
-   git push origin HEAD           # main 上就是推 main；任务分支则推该分支
+   # 到此为止：报告提交内容、SHA、目标分支、测试结果与风险，等待人类批准后再推送
+   git push origin HEAD           # 仅在获得当次批准后执行
    ```
 
-6. 高风险改动或维护者要求审查时：推 `task/<任务编号>-<短名>` 分支，在报告里列出高风险点；维护者本地审查后 `git merge --ff-only` 再推送。不要 force push、rebase 已推送分支或 amend 已推送提交。
+6. 高风险改动或维护者要求审查时：在 `task/<任务编号>-<短名>` 分支上本地提交，在报告里列出高风险点；推送同样需要人类逐次批准，合并由维护者执行。不要 force push、rebase 已推送分支或 amend 已推送提交。
 7. 分支合并进 `main` 后，确认 `git branch --merged main`，再删除本地/远程任务分支；用 `git fetch --prune` 清理远程引用。

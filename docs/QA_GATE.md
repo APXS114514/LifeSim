@@ -26,7 +26,7 @@ P0 与 P1 的定义以 GDD §14.1 为准：存在任何 P0，或者存在影响�
 
 `pnpm verify` 依次运行格式、lint、依赖边界、许可证、数据/覆盖率、类型、单元测试（JSON 报告）、测试基线与构建，与 CI 的 checks 任务的主体一致。多 Agent 协作的审查流程见 [AGENT_HANDOFF.md](AGENT_HANDOFF.md) 第 8 节。
 
-**关于本地 Git 推送**：默认用本地 Git 提交并 `git push origin HEAD`，不要求 PR。直接推送不会触发 Guardrails；因此高风险改动必须先在完成报告里列出风险点，推 `task/*` 分支，由维护者本地 `git merge --ff-only` 审查合并。若 GitHub 开启了“必须走 PR”的 `main` 分支保护，则直接推送会被拒绝，按 PR 流程处理。
+**关于本地 Git 与推送**：默认用本地 Git 提交，不要求 PR；**远程推送必须逐次获得人类操作员批准**（见 [AGENTS.md](../AGENTS.md)「分支、工作树与推送」）。直接推送不会触发 Guardrails；因此高风险改动必须先在完成报告里列出风险点，在 `task/*` 分支上本地提交，由维护者审查后合并。若 GitHub 开启了“必须走 PR”的 `main` 分支保护，则直接推送会被拒绝，按 PR 流程处理。
 
 ### M1 确定性与人生不变量（`pnpm test` 中）
 

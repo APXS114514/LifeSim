@@ -16,15 +16,15 @@
 
 ## 提交流程
 
-1. 外部贡献者从 `main` 拉分支，一个 PR 只做一件事；维护者与本机 Agent 也可以按下面的“本地 Git 推送”流程直接提交。
+1. 外部贡献者从 `main` 拉分支，一个 PR 只做一件事；维护者与本机 Agent 也可以按下面的“本地 Git 提交”流程直接提交。
 2. 行为改动要带测试；随机相关的缺陷，测试里要固定种子，失败时输出种子、事件 ID 和日期。
 3. 提交前运行 `pnpm verify`；改了界面还要运行 `pnpm test:e2e`，并在 PR 或完成报告里附截图。
 4. 新的工程决定写成 ADR（[docs/adr/](docs/adr/)）。
 5. 外部 PR 在 CI 全部通过、经过审查后合并。
 
-### 维护者与本机 Agent：本地 Git 推送
+### 维护者与本机 Agent：本地 Git 提交与推送
 
-本项目**不要求必须走 Pull Request**。维护者或本机 Agent 可以直接用本地 Git 提交并推送：
+本项目**不要求必须走 Pull Request**。维护者可以直接用本地 Git 提交并推送；**AI Agent 只能本地提交，远程推送必须逐次获得人类操作员批准**（见 [AGENTS.md](AGENTS.md)「分支、工作树与推送」）：
 
 ```sh
 git status -sb
@@ -33,11 +33,14 @@ pnpm verify
 git add <files>
 git commit -m "feat(scope): 简述"
 pnpm check:commits origin/main..HEAD
+# Agent 到此停止：报告提交内容、SHA、目标分支、测试结果与风险，等待人类批准
+# 只有获得当次明确批准后，才执行下一步
 git push origin HEAD
 ```
 
-- 在 `main` 上工作就推送 `main`；在任务分支上工作就推送该分支。不需要 PR。
-- 高风险改动（内核、契约、数据、门禁、CI、Agent 配置等）先推 `task/*` 分支，在完成报告里列出风险点，由维护者本地审查后 `git merge --ff-only` 合并。
+- 在 `main` 上工作就提交到 `main`；在任务分支上工作就提交到该分支。不需要 PR。
+- **推送授权逐次有效**：此前批准过推送，不代表下一次可以自动推送；「继续」「执行下一个任务」等指令不构成推送授权。
+- 高风险改动（内核、契约、数据、门禁、CI、Agent 配置等）在 `task/*` 分支上本地提交，在完成报告里列出风险点，由维护者本地审查后合并；推送同样需要当次批准。
 - 不要 force push、rebase 已推送的公共分支、amend 已推送的提交，或覆盖别人未提交的修改。
 - 如果 GitHub 的 `main` 分支保护要求必须走 PR，直接推送会被拒绝；此时推任务分支，由维护者本地合并，或按维护者要求开 PR。
 - 合并后的任务分支先确认 `git branch --merged main`，再删除；用 `git fetch --prune` 清理远程引用。
