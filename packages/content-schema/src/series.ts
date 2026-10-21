@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { EvidenceMetaSchema } from './evidence.ts';
 import { EntityIdSchema } from './primitives.ts';
 
-/** 统计指标（M2 三项 + M3 教育与劳动力、价格与卫生；ADR-0005 §3、M3-003）。新增指标需要架构审查。 */
+/** 统计指标（M2 三项 + M3 教育与劳动力、价格与卫生 + 出生性别比；ADR-0005 §3、M3-003、ADR-0010 A3）。新增指标需要架构审查。 */
 export const INDICATORS = [
   'births',
   'life-table-qx',
@@ -14,9 +14,15 @@ export const INDICATORS = [
   'cpi-index',
   'health-out-of-pocket-share',
   'health-expenditure-per-capita',
+  'sex-ratio-at-birth',
 ] as const;
 export const IndicatorSchema = z.enum(INDICATORS);
 export type Indicator = z.infer<typeof IndicatorSchema>;
+
+/** 序列的性别口径（ADR-0010 A3）：「both」是两性合计，不是「女性与男性之和以外的未知」。 */
+export const SERIES_SEXES = ['both', 'female', 'male'] as const;
+export const SexSchema = z.enum(SERIES_SEXES);
+export type Sex = z.infer<typeof SexSchema>;
 
 export const SERIES_UNITS = [
   'thousand-persons',
@@ -26,6 +32,8 @@ export const SERIES_UNITS = [
   'percent-gross',
   'index',
   'usd-per-capita',
+  // 每 100 名女婴对应的男婴数（WPP 出生性别比的口径，ADR-0010 A1）。
+  'males-per-100-females',
 ] as const;
 export type SeriesUnit = (typeof SERIES_UNITS)[number];
 export const AGE_BASES = ['none', 'single-year'] as const;
@@ -44,6 +52,7 @@ export const INDICATOR_SPEC: Record<Indicator, { unit: SeriesUnit; ageBasis: Age
   'cpi-index': { unit: 'index', ageBasis: 'none' },
   'health-out-of-pocket-share': { unit: 'share', ageBasis: 'none' },
   'health-expenditure-per-capita': { unit: 'usd-per-capita', ageBasis: 'none' },
+  'sex-ratio-at-birth': { unit: 'males-per-100-females', ageBasis: 'none' },
 };
 
 const pointBase = {
@@ -72,7 +81,7 @@ export const StatSeriesSchema = z
     geographyId: EntityIdSchema,
     unit: z.enum(SERIES_UNITS),
     ageBasis: z.enum(AGE_BASES),
-    sex: z.literal('both'),
+    sex: SexSchema,
     evidence: EvidenceMetaSchema,
     points: z.array(SeriesPointSchema).min(1),
   })
@@ -160,28 +169,32 @@ export const StatSeriesSchema = z
       if (point.value !== null) {
         const value = point.value;
         const outOfRange =
-          (spec.unit === 'thousand-persons' || spec.unit === 'usd-per-capita') && value < 0
+          spec.unit === 'males-per-100-females' && (value < 90 || value > 130)
             ? true
-            : (spec.unit === 'probability' || spec.unit === 'share') && (value < 0 || value > 1)
+            : (spec.unit === 'thousand-persons' || spec.unit === 'usd-per-capita') && value < 0
               ? true
-              : spec.unit === 'percent' && (value < 0 || value > 100)
+              : (spec.unit === 'probability' || spec.unit === 'share') && (value < 0 || value > 1)
                 ? true
-                : spec.unit === 'percent-gross' && (value < 0 || value > 200)
+                : spec.unit === 'percent' && (value < 0 || value > 100)
                   ? true
-                  : spec.unit === 'index' && value <= 0;
+                  : spec.unit === 'percent-gross' && (value < 0 || value > 200)
+                    ? true
+                    : spec.unit === 'index' && value <= 0;
         if (outOfRange) {
           ctx.addIssue({
             code: 'custom',
             message:
-              spec.unit === 'percent'
-                ? 'percent values must be within [0, 100]'
-                : spec.unit === 'percent-gross'
-                  ? 'percent-gross values must be within [0, 200]'
-                  : spec.unit === 'index'
-                    ? 'index values must be greater than zero'
-                    : spec.unit === 'usd-per-capita' || spec.unit === 'thousand-persons'
-                      ? 'values must be non-negative'
-                      : 'probability and share values must be within [0, 1]',
+              spec.unit === 'males-per-100-females'
+                ? 'males-per-100-females values must be within [90, 130]'
+                : spec.unit === 'percent'
+                  ? 'percent values must be within [0, 100]'
+                  : spec.unit === 'percent-gross'
+                    ? 'percent-gross values must be within [0, 200]'
+                    : spec.unit === 'index'
+                      ? 'index values must be greater than zero'
+                      : spec.unit === 'usd-per-capita' || spec.unit === 'thousand-persons'
+                        ? 'values must be non-negative'
+                        : 'probability and share values must be within [0, 1]',
             path: ['points', index, 'value'],
           });
         }

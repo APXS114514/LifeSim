@@ -3,6 +3,7 @@ import {
   StatSeriesSchema,
   type EvidenceMeta,
   type Indicator,
+  type Sex,
   type StatSeries,
 } from '@lifesim/content-schema';
 import { BreakpointSchema, type Breakpoint } from './breakpoint.ts';
@@ -13,6 +14,8 @@ export interface LookupQuery {
   year: number;
   /** 单岁年龄；ageBasis 为 'none' 的指标必须省略或为 null。 */
   age?: number | null;
+  /** 性别口径，缺省 'both'（合计）。查询分性别序列时不跨性别回退（ADR-0010 A3）。 */
+  sex?: Sex;
 }
 
 export type LookupMethod =
@@ -51,8 +54,8 @@ function pointKey(year: number, age: number | null): string {
   return `${year}:${age === null ? 'null' : String(age)}`;
 }
 
-function seriesKey(indicator: Indicator, geographyId: string): string {
-  return `${indicator}|${geographyId}`;
+function seriesKey(indicator: Indicator, geographyId: string, sex: Sex): string {
+  return `${indicator}|${geographyId}|${sex}`;
 }
 
 function copyEvidence(evidence: EvidenceMeta): EvidenceMeta {
@@ -118,11 +121,11 @@ export class DataRegistry {
         );
       }
 
-      const key = seriesKey(parsed.indicator, parsed.geographyId);
+      const key = seriesKey(parsed.indicator, parsed.geographyId, parsed.sex);
       const existing = this.#index.get(key);
       if (existing) {
         throw new Error(
-          `Duplicate series for ${parsed.indicator} at ${parsed.geographyId}: ${existing.series.id} and ${parsed.id}`,
+          `Duplicate series for ${parsed.indicator} (${parsed.sex}) at ${parsed.geographyId}: ${existing.series.id} and ${parsed.id}`,
         );
       }
 
@@ -152,8 +155,11 @@ export class DataRegistry {
     }
     const age = singleYear ? (query.age as number) : null;
     const ageSuffix = singleYear ? ` at age ${String(age)}` : '';
+    const sex = query.sex ?? 'both';
+    // 取合计时保持 M2-006 的既有文本；分性别查询在回退原因里写明性别，避免被读成「完全没有数据」。
+    const sexNote = sex === 'both' ? '' : ` (sex ${sex})`;
 
-    const entry = this.#index.get(seriesKey(query.indicator, query.geographyId));
+    const entry = this.#index.get(seriesKey(query.indicator, query.geographyId, sex));
     const failures: string[] = [];
     let exactMissingReason: string | undefined;
     let lastObserved: StatSeries['points'][number] | undefined;
@@ -182,9 +188,9 @@ export class DataRegistry {
           };
         }
         exactMissingReason = point.missingReason;
-        failures.push(`${query.year}${ageSuffix} is missing: ${point.missingReason}`);
+        failures.push(`${query.year}${ageSuffix}${sexNote} is missing: ${point.missingReason}`);
       } else {
-        failures.push(`no exact value for ${query.year}${ageSuffix}`);
+        failures.push(`no exact value for ${query.year}${ageSuffix}${sexNote}`);
       }
 
       let best: { point: StatSeries['points'][number]; distance: number } | undefined;
@@ -226,12 +232,12 @@ export class DataRegistry {
       }
       failures.push('no non-null neighbor within 2 years (breakpoint-aware)');
     } else {
-      failures.push(`no ${query.indicator} series for ${query.geographyId}`);
+      failures.push(`no ${query.indicator}${sexNote} series for ${query.geographyId}`);
     }
 
     const parent = this.#parents[query.geographyId];
     if (parent !== undefined) {
-      const parentEntry = this.#index.get(seriesKey(query.indicator, parent));
+      const parentEntry = this.#index.get(seriesKey(query.indicator, parent, sex));
       const parentPoint = parentEntry?.points.get(pointKey(query.year, age));
       if (parentEntry !== undefined && parentPoint?.value !== null && parentPoint !== undefined) {
         return {
@@ -245,7 +251,7 @@ export class DataRegistry {
           evidence: downgradeEvidence(parentEntry.series.evidence, 'fallback-parent-geography'),
         };
       }
-      failures.push(`parent ${parent} has no exact value for ${query.year}${ageSuffix}`);
+      failures.push(`parent ${parent} has no exact value for ${query.year}${ageSuffix}${sexNote}`);
     } else {
       failures.push('no parent geography registered');
     }
@@ -311,13 +317,13 @@ export class DataRegistry {
     if (!entry && parent === undefined) {
       return {
         status: 'missing',
-        reason: `no ${query.indicator} series for ${query.geographyId}`,
+        reason: `no ${query.indicator}${sexNote} series for ${query.geographyId}`,
       };
     }
 
     return {
       status: 'missing',
-      reason: `${query.indicator} ${query.geographyId} ${query.year}${ageSuffix}: ${failures.join('; ')}`,
+      reason: `${query.indicator}${sexNote} ${query.geographyId} ${query.year}${ageSuffix}: ${failures.join('; ')}`,
     };
   }
 

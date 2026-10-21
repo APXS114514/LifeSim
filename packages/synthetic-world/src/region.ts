@@ -122,6 +122,7 @@ const TABLE_FOR: Record<Indicator, RegionTable> = {
   'cpi-index': 'prices',
   'health-out-of-pocket-share': 'illness',
   'health-expenditure-per-capita': 'illness',
+  'sex-ratio-at-birth': 'population',
 };
 
 /** 合成地区的 D 级查询值；全部是设计假设，不是统计。 */
