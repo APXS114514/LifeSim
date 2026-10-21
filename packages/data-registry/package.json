@@ -1,0 +1,19 @@
+{
+  "name": "@lifesim/data-registry",
+  "version": "0.0.0",
+  "private": true,
+  "description": "按指标、地理、年份与年龄查询统计序列；缺失永远返回显式缺失，绝不当 0",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lifesim/content-schema": "workspace:*",
+    "zod": "4.6.7"
+  }
+}
