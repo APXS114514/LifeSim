@@ -5,7 +5,7 @@
 
 > 本文件由 `pnpm data:sources` 根据 `data/sources.json` 生成，请勿手改。
 
-**目前仓库里还没有任何外部数据。** M1 只使用标注为 D 类的合成数据；真实来源从 M2 开始登记。
-
 | ID | 标题 | 发布者 | URL | 版本 | 许可证（SPDX） | 再分发 | 核验日期 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| un-wpp:2024 | World Population Prospects 2024 | United Nations, Department of Economic and Social Affairs, Population Division | https://population.un.org/wpp/ | 2024 | CC-BY-3.0-IGO | allowed | 2026-10-20 | Attribution: United Nations, DESA, Population Division (2024), World Population Prospects 2024, Online Edition; link the CC BY 3.0 IGO license and indicate that values were extracted and converted to StatSeries. |
+| worldbank-wdi:SP.URB.TOTL.IN.ZS | Urban population (% of total population) — World Development Indicators | World Bank | https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS | 2026-10-08 | CC-BY-4.0 | allowed | 2026-10-20 | Attribution: World Bank, World Development Indicators, indicator SP.URB.TOTL.IN.ZS, CC BY 4.0; changes: percent values converted to shares (÷100), not-reported values kept as explicit null. |

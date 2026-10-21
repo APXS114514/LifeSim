@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "id": "un-wpp:2024",
+    "title": "World Population Prospects 2024",
+    "publisher": "United Nations, Department of Economic and Social Affairs, Population Division",
+    "url": "https://population.un.org/wpp/",
+    "version": "2024",
+    "license": "CC-BY-3.0-IGO",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: United Nations, DESA, Population Division (2024), World Population Prospects 2024, Online Edition; link the CC BY 3.0 IGO license and indicate that values were extracted and converted to StatSeries."
+  },
+  {
+    "id": "worldbank-wdi:SP.URB.TOTL.IN.ZS",
+    "title": "Urban population (% of total population) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SP.URB.TOTL.IN.ZS, CC BY 4.0; changes: percent values converted to shares (÷100), not-reported values kept as explicit null."
+  }
+]
