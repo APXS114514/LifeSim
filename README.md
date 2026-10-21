@@ -4,7 +4,7 @@
 
 可溯源的历史统计和可解释的概率模型构成现实约束；个人选择、NPC 的自主意愿和家庭因果改变个人命运，但不改写已经发生的宏观历史。
 
-> **当前状态：M1（确定性模拟内核）。** 内核与最小人生因果链已经可以在 Node 里用一个**虚构的合成地区**从出生跑到死亡（`pnpm life`），但还没有真实国家数据和可玩界面，**网页端还不能游玩**。进度见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+> **当前状态：M2（五国数据包与证据登记）已实现，待维护者验收。** 五地 1950—2026 的出生数、单岁生命表与城镇比例、地理/币制/政体锚点、数据查询回退与出生选择器都已入库；真实地区仍不能接入人生规则（M3），**网页端还不能游玩**。进度见 [docs/ROADMAP.md](docs/ROADMAP.md)。
 
 ## v0.1 目标（公开 Alpha）
 
@@ -33,10 +33,12 @@
 ```bash
 pnpm install
 pnpm dev          # 本地开发服务器
-pnpm verify       # 格式、lint、依赖边界、许可证、类型检查、单元测试、构建
+pnpm verify       # 格式、lint、依赖边界、许可证、数据/覆盖率、类型检查、单元测试、构建
 pnpm test:e2e     # Playwright 冒烟测试（桌面 + 手机视口）
 pnpm life         # 用合成地区在 Node 里跑一个完整人生（加 --locale en 看英文）
 pnpm bench        # 可复现的性能基准（JSON 报告）
+pnpm check:data   # 来源登记、可再分发许可与孤立数据文件
+pnpm check:coverage # 数据覆盖率矩阵是否与数据同步
 ```
 
 | 命令                    | 作用                                                         |
@@ -46,6 +48,8 @@ pnpm bench        # 可复现的性能基准（JSON 报告）
 | `pnpm check:boundaries` | 包依赖方向与源码导入检查                                     |
 | `pnpm check:licenses`   | 生产依赖许可证白名单，以及 `THIRD_PARTY_NOTICES.md` 是否同步 |
 | `pnpm notices`          | 重新生成 `THIRD_PARTY_NOTICES.md`                            |
+| `pnpm data:sources`     | 由 `data/sources.json` 重新生成 `data/SOURCES.md`            |
+| `pnpm data:coverage`    | 由国家包重新生成 `docs/data/COVERAGE.md`                     |
 
 ## 仓库结构
 
@@ -58,8 +62,10 @@ packages/systems/          人生规则（教育、就业、财务、健康、�
 packages/synthetic-world/  虚构的合成地区（D 类假设，只供测试与 headless 运行）
 packages/save/             存档仓库接口与导入导出校验
 packages/narrative/        双语叙事渲染契约与文本一致性检查
+packages/data-registry/    统计序列查询、回退规则、断点、预测与情景标记
+packages/country-packs/    五国数据包、按日期解析、出生选择器与数据指纹
 docs/                      设计基线、架构、数据政策、质量门禁、ADR
-data/                      外部数据来源登记（目前没有外部数据）
+data/                      来源登记、许可审计与数据转换脚本（原始下载在 data/cache/，不进仓库）
 ```
 
 ## 文档
@@ -90,6 +96,6 @@ data/                      外部数据来源登记（目前没有外部数据�
 
 LifeSim is a single-player life simulation set inside real history. Births can be chosen in Mainland China, Japan, North Korea, South Korea or Russia (including the Soviet era) between 1950 and 2026. Macro history stays fixed, while your life and family are shaped by choices, other people's own decisions and calibrated probabilities. When the protagonist dies, the run ends.
 
-**Status: stage M1 (deterministic simulation kernel).** A whole life can be simulated headlessly in Node with a **fictional synthetic region** (`pnpm life`), but there is no real country data or playable UI yet, so it is **not playable in the browser**.
+**Status: stage M2 (five country data packs and evidence registry) implemented, awaiting maintainer acceptance.** Birth counts, single-age life tables and urban shares for 1950—2026, geography/currency/polity anchors, lookup fallbacks and the birth selector are in the repository. Real regions are not yet wired into the life rules (M3), so it is **not playable in the browser**.
 
 Original code is released under the [MIT License](LICENSE). Third-party data and assets keep their own licenses.

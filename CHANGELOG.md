@@ -4,6 +4,15 @@
 
 ## [未发布]
 
+### 新增：M2 五国数据包与证据登记
+
+- 契约：`StatSeries`（指标、单位、年龄口径、预测标记与 8 条交叉规则）、地理（政治实体、行政单位、地点、地点归属与半开区间工具）与 `polity-change` 历史锚点。
+- `data-registry`：精确查询、相邻年份 / 上级地理 / `hold-first-observed` 回退、统计断点、`projected` 与显式 `scenario-hold-last`；缺失永远返回 `status: 'missing'`，绝不写 0。
+- 数据管线：机器可读的 `data/sources.json`、`check:data` 许可门禁（含国家包引用、可再分发与孤立文件）、WPP 2024 出生数与单岁生命表（男女合计）、世界银行 WDI 城镇比例转换脚本（SHA-256、可重复生成）与 `data/LICENSE_AUDIT.md`（WPP CC BY 3.0 IGO、WDI CC BY 4.0）。
+- `country-packs`：五国（CN/JP/KP/KR/RU）地理、币制、政体更替与统计序列；13 条校验规则、按日期解析、`createPackRegistry()`、15 条 `DATA_FINGERPRINTS`、出生选择器（GDD §4.3）与五地 1950—2026 实例化验收。
+- 数据覆盖率矩阵 `docs/data/COVERAGE.md` 与 `check:coverage`；CI / `verify` 加入 `check:data`、`check:coverage`。
+- 文档：`ROADMAP`、`README`、`AGENT_HANDOFF` 更新到 M2；国家包与来源在 [data/SOURCES.md](data/SOURCES.md)、[data/LICENSE_AUDIT.md](data/LICENSE_AUDIT.md)。
+
 ### 新增：M1 审计与多 Agent 交接
 
 - M1 架构审计（`docs/audits/M1-AUDIT.md`）；修复：决策选项强制为纯函数、提交的事实冻结、出生时宏观状态按锚点地区过滤；补充队列、JSON、人生原则执行器与模板全覆盖测试。

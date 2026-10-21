@@ -2,15 +2,15 @@
 
 > 给接手开发的 Agent 与人类协作者。本文独立于任何聊天记录，只描述**仓库现在是什么样、怎么验证、哪里还没做**。
 > 规则以 [AGENTS.md](../AGENTS.md) 为准，产品边界以 [GDD.md](GDD.md) 为准；本文不复述它们。
-> 最后更新：2026-10-20（M1 完成并审计，M2 已拆分为任务队列）
+> 最后更新：2026-10-20（M2 已实现，含 23 个任务；等待维护者验收）
 
 ## 1. 一页概览
 
 - **项目**：LifeSim，真实历史统计约束下的单人人生模拟（中国大陆、日本、朝鲜、韩国、俄罗斯，1950—2026 出生；中英双语；离线；MIT）。
-- **当前阶段**：M0 已验收；M1（确定性模拟内核 + 合成地区上的最小人生因果链）已完成并审计，等待维护者验收；M2 尚未开始，任务已拆分。
-- **能做什么**：在 Node 里用一个**虚构的合成地区**跑完整人生（`pnpm life`），结果确定、可复现、可存档恢复。
-- **还不能做什么**：没有任何真实国家数据；网页只有角色创建页草图，不能游玩；没有 NPC、家庭、迁居。
-- **下一步**：按 [docs/tasks/INDEX.md](tasks/INDEX.md) 的顺序执行 M2 任务，一次一个。
+- **当前阶段**：M0 已验收；M1（确定性模拟内核 + 合成地区上的最小人生因果链）完成并审计，等待维护者验收；M2（五国数据包与证据登记）的 23 个任务已实现，等待维护者验收。
+- **能做什么**：在 Node 里用一个**虚构的合成地区**跑完整人生（`pnpm life`）；用真实 WPP/WDI 数据建立五国数据包、按日期解析地理/币制/政体，并按 GDD §4.3 选择出生。
+- **还不能做什么**：真实地区的 `RegionModel` 适配器、把出生上下文接入人生模拟、NPC/家庭/迁居都属于 M3；网页只有角色创建页草图，不能游玩。
+- **下一步**：维护者验收 M2（CI、Guardrails、来源复核），然后按 M3 拆分任务。
 
 ## 2. 开发环境
 
@@ -26,13 +26,16 @@ TypeScript 源码不经构建，由 Node 24 的类型剥离直接运行；因此
 
 ## 3. 验证命令
 
-| 命令                                       | 内容                                                                             | 何时必须跑         |
-| ------------------------------------------ | -------------------------------------------------------------------------------- | ------------------ |
-| `pnpm verify`                              | 格式、lint、依赖边界、许可证、类型检查、单元测试（含 JSON 报告）、测试基线、构建 | 每次提交前         |
-| `pnpm test:e2e`                            | Playwright 冒烟（桌面 + 手机）                                                   | 改了 `apps/web` 时 |
-| `pnpm life --seed demo --birth 1978-05-04` | 合成人生（加 `--locale en`、`--choose start-work`、`--json`、`--save <文件>`）   | 改了规则时看效果   |
-| `pnpm bench --lives 1000`                  | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）             | 改了内核或规则时   |
-| `pnpm check:commits <base>..<head>`        | 提交信息里没有 AI 工具署名                                                       | 提交后             |
+| 命令                                         | 内容                                                                                                             | 何时必须跑         |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `pnpm verify`                                | 格式、lint、依赖边界、许可证、`check:data`、`check:coverage`、类型检查、单元测试（含 JSON 报告）、测试基线、构建 | 每次提交前         |
+| `pnpm test:e2e`                              | Playwright 冒烟（桌面 + 手机）                                                                                   | 改了 `apps/web` 时 |
+| `pnpm check:data`                            | 来源登记、排序、可再分发许可、国家包引用与孤立数据文件                                                           | 改了来源或国家包时 |
+| `pnpm data:sources`                          | 由 `data/sources.json` 重新生成 `data/SOURCES.md`                                                                | 改了来源时         |
+| `pnpm check:coverage` / `pnpm data:coverage` | 数据覆盖率矩阵检查 / 重新生成 `docs/data/COVERAGE.md`                                                            | 改了序列或国家包时 |
+| `pnpm life --seed demo --birth 1978-05-04`   | 合成人生（加 `--locale en`、`--choose start-work`、`--json`、`--save <文件>`）                                   | 改了规则时看效果   |
+| `pnpm bench --lives 1000`                    | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时   |
+| `pnpm check:commits <base>..<head>`          | 提交信息里没有 AI 工具署名                                                                                       | 提交后             |
 
 CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。
 
@@ -45,10 +48,12 @@ packages/systems/          人生规则、RegionModel 接口、双语叙事模�
 packages/synthetic-world/  虚构地区 ZZ-SYN（D 类数据，只供测试与 headless）；golden.ts 黄金指纹——高风险
 packages/narrative/        叙事渲染与双语一致性检查
 packages/save/             存档仓库接口与导入导出信封
+packages/data-registry/    统计序列查询、回退规则、断点、预测与情景标记
+packages/country-packs/    五国数据包（src/packs）、按日期解析、出生选择器、数据指纹与 data/
 apps/cli/                  headless 入口：run-life.ts、bench.ts
 apps/web/                  React + Vite 网页（角色创建页草图）
-docs/                      GDD（冻结）、ADR、架构、数据政策、质量门禁、路线图、审计、任务
-data/                      来源登记；M2 起有数据脚本（data/scripts/）与本机缓存（data/cache/，不进仓库）
+docs/                      GDD（冻结）、ADR、架构、数据政策、质量门禁、路线图、审计、任务、数据覆盖率
+data/                      来源登记、许可审计、数据转换脚本（data/scripts/）与本机缓存（data/cache/，不进仓库）
 scripts/                   质量门禁脚本（check-*）——高风险
 qa/                        测试基线——高风险
 ```
@@ -59,7 +64,7 @@ qa/                        测试基线——高风险
 apps/cli ─► synthetic-world ─► systems ─► simulation-core ─► content-schema
 apps/cli ─► save、narrative ─────────────────────────────► content-schema
 apps/web ─► narrative、content-schema（不能依赖 synthetic-world）
-M2 计划：data-registry ─► content-schema；country-packs ─► data-registry、simulation-core、content-schema
+M2 已落地：data-registry ─► content-schema；country-packs ─► data-registry、simulation-core、content-schema
 ```
 
 ## 5. 模块职责与主要接口
@@ -73,8 +78,10 @@ M2 计划：data-registry ─► content-schema；country-packs ─► data-regi
 | `primitives.ts`      | `ISODate`、`isISODate`、`compareISODate`、`EntityIdSchema`、`RelativePathSchema`、`SUPPORTED_LOCALES`      |
 | `product-scope.ts`   | `BIRTH_REGION_IDS`（CN/JP/KP/KR/RU）、`BIRTH_YEAR_MIN/MAX`（1950/2026）                                    |
 | `evidence.ts`        | `EvidenceMetaSchema`（A/B/C/D）、`DataPointSchema`（缺失必须 `null` + 原因）、`SourceRecordSchema`         |
+| `series.ts`          | `StatSeriesSchema`、`INDICATOR_SPEC`（births / life-table-qx / urban-share）与 8 条交叉规则                |
+| `geography.ts`       | 政治实体、行政单位、地点/名称、地点归属；`isValidOn`、`resolveOn`、`findOverlaps`、`findGaps`（半开区间）  |
 | `money.ts`           | `CurrencyVersionSchema`、`HouseholdAccountSchema`、`addMinor`、`scaleMinor`、`redenominateMinor`（BigInt） |
-| `anchor.ts`          | `HistoricalAnchorSchema`（`redenomination`、`economy-phase`）                                              |
+| `anchor.ts`          | `HistoricalAnchorSchema`（`redenomination`、`economy-phase`、`polity-change`）                             |
 | `event-fact.ts`      | `SimEventFactSchema`（含 `sequence`、`details`）、`checkJournalInvariants`                                 |
 | `character-state.ts` | `CharacterStateSchema`（身份、地理、生死、人生原则、出身、特质、教育、就业、健康、财务指针，含跨字段规则） |
 | `snapshot.ts`        | `SimulationSnapshotSchema`（含 `world` 宏观状态）                                                          |
@@ -103,6 +110,20 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `createLifeSimulation({ seed, region, birthDate, settlement?, principles?, decisions? })`、`restoreLifeSimulation(snapshot, region)`、`afterSecondaryDecisionKey()`。
 - `LIFE_NARRATIVE`：中英模板（键 = 事实的 `templateId`）与枚举文字；`summarizeLife(snapshot, facts)`。
 
+### data-registry（数据查询）
+
+- `DataRegistry`：构造时校验 `StatSeries` 与 `Breakpoint`，按（指标、地理）建索引。
+- `lookup({ indicator, geographyId, year, age? })` 依次尝试：精确值 → 相邻年份（±2 年、不跨断点、同距取早，降为 C）→ 上级地理（只做精确，降为 C）→ `urban-share` 的首个观测值前延（10 年，降为 D）→ 缺失；显式 `allowScenario` 才用 `scenario-hold-last`（末年值，D 级、`projected: true`）。
+- 缺失永远返回 `status: 'missing'` 与原因，绝不返回 0；结果里的证据是副本。
+
+### country-packs（国家包）
+
+- `CountryPackSchema`、`validateCountryPack`（13 条跨字段规则）：清单、地理、货币、锚点、断点、序列。
+- `resolve.ts`：`assignmentAt`、`politicalEntityAt`、`adminUnitAt`、`placeNameAt`、`currencyAt`、`poolPlace`；日期早于 1950-01-01 抛 `RangeError`。
+- `packs/{cn,jp,kp,kr,ru}.ts`：五国数据包；`PACKS` 为完整 `Record<BirthRegionId, CountryPack>`。
+- `createPackRegistry()`：汇总序列、断点与「地点 → 国家」父级关系；`DATA_FINGERPRINTS`（15 条）锁定数据。
+- `selectBirth({ seed, region, year, birthDate? })`：年份等概率、地区按出生数加权、城乡按 urban-share、日期年内等概率；抽样顺序固定，指定项也照常抽样。缺失数据抛错，不跳过、不当 0。
+
 ### 其他
 
 - `synthetic-world`：`syntheticRegion`（实现 `RegionModel`）、`syntheticManifest`、`SYNTHETIC_LABELS`；`golden.ts` 的 `GOLDEN_LIFE`。
@@ -111,27 +132,28 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 
 ## 6. 版本号与何时提升
 
-| 常量                      | 位置                            | 何时提升                                   | 影响                                    |
-| ------------------------- | ------------------------------- | ------------------------------------------ | --------------------------------------- |
-| `RNG_ALGORITHM`           | `simulation-core/src/random.ts` | 散列或生成器任何变化（原则上不允许）       | 所有存档的后续结果改变                  |
-| `ENGINE_VERSION`          | `simulation-core/src/engine.ts` | 内核语义变化                               | 旧快照拒绝恢复                          |
-| `SNAPSHOT_SCHEMA_VERSION` | 同上                            | 快照结构变化（需要迁移器）                 | 旧快照拒绝恢复                          |
-| `SYSTEMS_VERSION`         | `systems/src/shared.ts`         | 规则行为变化                               | 写入 `dataPackVersions`，旧快照拒绝恢复 |
-| 数据包 `dataVersion`      | 各地区包                        | 数据变化                                   | 同上                                    |
-| `GOLDEN_LIFE`             | `synthetic-world/src/golden.ts` | 规则或合成数据**有意**变化，确认差异合理后 | 需要架构审查                            |
+| 常量                      | 位置                               | 何时提升                                   | 影响                                    |
+| ------------------------- | ---------------------------------- | ------------------------------------------ | --------------------------------------- |
+| `RNG_ALGORITHM`           | `simulation-core/src/random.ts`    | 散列或生成器任何变化（原则上不允许）       | 所有存档的后续结果改变                  |
+| `ENGINE_VERSION`          | `simulation-core/src/engine.ts`    | 内核语义变化                               | 旧快照拒绝恢复                          |
+| `SNAPSHOT_SCHEMA_VERSION` | 同上                               | 快照结构变化（需要迁移器）                 | 旧快照拒绝恢复                          |
+| `SYSTEMS_VERSION`         | `systems/src/shared.ts`            | 规则行为变化                               | 写入 `dataPackVersions`，旧快照拒绝恢复 |
+| 数据包 `dataVersion`      | 各地区包                           | 数据变化                                   | 同上                                    |
+| `DATA_FINGERPRINTS`       | `country-packs/src/data-golden.ts` | 数据**有意**更新并经维护者审查后           | 数据指纹测试失败                        |
+| `GOLDEN_LIFE`             | `synthetic-world/src/golden.ts`    | 规则或合成数据**有意**变化，确认差异合理后 | 需要架构审查                            |
 
 ## 7. 已完成与未完成
 
-**已完成（M0、M1）**：仓库地基与全部质量门禁；契约；确定性内核；合成地区上的教育 → 就业 → 收支 → 健康 → 死亡因果链；重大决定暂停与玩家选择；币制重定值与经济周期锚点；快照与存档往返；双语叙事；headless CLI 与基准；多 Agent 护栏。详见 [ROADMAP.md](ROADMAP.md) 与 [audits/M1-AUDIT.md](audits/M1-AUDIT.md)。
+**已完成（M0、M1、M2）**：仓库地基与全部质量门禁；契约；确定性内核；合成地区上的教育 → 就业 → 收支 → 健康 → 死亡因果链；重大决定暂停与玩家选择；币制重定值与经济周期锚点；快照与存档往返；双语叙事；headless CLI 与基准；多 Agent 护栏。M2 另含：`StatSeries`/地理/政体更替契约、DataRegistry（回退/断点/预测/情景）、WPP 2024 出生数与单岁生命表、WDI 城镇比例、五国国家包与出生选择器、数据指纹、许可门禁与覆盖率矩阵。详见 [ROADMAP.md](ROADMAP.md)、[audits/M1-AUDIT.md](audits/M1-AUDIT.md) 与 [data/LICENSE_AUDIT.md](../data/LICENSE_AUDIT.md)。
 
 **未完成（按里程碑）**：
 
-| 里程碑 | 内容                                                                                                                       | 状态                                        |
-| ------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | 已拆分，见 [tasks/INDEX.md](tasks/INDEX.md) |
-| M3     | 真实地区的 RegionModel 适配器、家庭与 NPC 分层、婚育、迁居、政体更替作用到在世角色、城市人口权重、各国特色事件             | 未拆分                                      |
-| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | 未拆分                                      |
-| M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                      |
+| 里程碑 | 内容                                                                                                                       | 状态                                                          |
+| ------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | **已实现，待维护者验收**，见 [tasks/INDEX.md](tasks/INDEX.md) |
+| M3     | 真实地区的 RegionModel 适配器、家庭与 NPC 分层、婚育、迁居、政体更替作用到在世角色、城市人口权重、各国特色事件             | 未拆分                                                        |
+| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | 未拆分                                                        |
+| M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                                        |
 
 **待维护者决定的产品问题**：角色是否有性别（GDD 未规定；M2 先用男女合计生命表，见 ADR-0005）。
 
@@ -156,15 +178,18 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 
 ## 9. 已知风险
 
-- 只有合成数据；真实数据的许可尚未核验（M2 第一道门禁）。
-- `RegionModel` 面向合成公式，M3 接入真实数据时预计要重塑（届时写 ADR）。
+- M2 的真实数据许可已核验并登记（WPP CC BY 3.0 IGO、WDI CC BY 4.0），但**结论仍需维护者确认**；史实来源（东京都、大阪府、韩国、中国、俄罗斯）多为 `redistribution: unknown`，只引用事实、不再分发。
+- 朝鲜的币制改革细节来自韩国官方教育/研究机构（非朝鲜官方来源）；中国重庆 1997 年采用 6 月 18 日正式挂牌日（全国人大批准日为 3 月 14 日）；苏联解体采用 1991-12-26 宣言（12 月 25 日为戈尔巴乔夫辞职/降旗）。这些取舍需维护者复核。
+- WPP Demographic Indicators 文件包含 2101 年行（`Births` 为空），转换脚本按项目范围忽略；重新下载后若列名/方案名变化，脚本会报错而不是猜。
+- `RegionModel` 面向合成公式，M3 接入真实数据时预计要重塑（届时写 ADR）；M2 的 `country-packs` 尚未接入 `systems`。
 - 每个事件深拷贝全部状态并校验全部角色；加入 NPC 后需重新测量性能。
 - 快照里的已处理事件键随一生增长，NPC 增多后需评估体积。
 - 跨浏览器逐位一致只在 V8 上实测过。
-- 联合国 WPP 网站由 JavaScript 渲染，命令行取不到许可条款原文；许可核验需要用浏览器完成并逐字记录。
+- 五国数据文件约 7.5 MB JSON；浏览器构建若引入 `country-packs` 需评估包体积与按需加载。
 
 ## 10. 如何接手一个任务
 
 1. 读 [docs/FLASH_AGENT_PROMPT.md](FLASH_AGENT_PROMPT.md)（统一执行规程）。
-2. 在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认任务的前置依赖都已合并。
+2. M2 的 23 个任务已完成，等待维护者验收；验收后再为 M3 拆分任务。执行单个任务时，在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并。
 3. 只读这个任务文件和它列出的源码，按规程执行，完成后停止并提交报告。
+4. 改动数据或国家包时，依次运行 `pnpm data:sources`、`pnpm data:coverage`，再运行 `pnpm verify`；有意更新数据时同步维护 `DATA_FINGERPRINTS` 并说明原因。
