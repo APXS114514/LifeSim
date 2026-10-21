@@ -1,6 +1,7 @@
 import {
   SimEventFactSchema,
   SimulationSnapshotSchema,
+  type ISODate,
   type Locale,
   type SimEventFact,
   type SimulationSnapshot,
@@ -13,7 +14,13 @@ import {
   type RealLifeRequest,
   type RealNarrator,
 } from '@lifesim/real-world';
-import type { PendingDecision, Simulation } from '@lifesim/simulation-core';
+import {
+  addYears,
+  ageOn,
+  type AdvanceStopReason,
+  type PendingDecision,
+  type Simulation,
+} from '@lifesim/simulation-core';
 import {
   restoreLifeSimulation,
   summarizeLife,
@@ -38,11 +45,27 @@ export interface GameSessionOptions {
   narrator: RealNarrator;
 }
 
+/** 一次推进的结果：停在哪里、追加了哪些事实、权威当前日期（M3-034）。 */
+export interface StepResult {
+  stopReason: AdvanceStopReason;
+  newFacts: SimEventFact[];
+  clock: ISODate;
+}
+
+/** 「直接模拟至结局」的目标日期；主角在此之前必然去世。 */
+const FOREVER: ISODate = '2200-01-01';
+const MAX_ROUNDS = 10_000;
+const MAX_WORK_PER_ROUND = 100_000;
+
 /**
  * 网页可玩切片的一局人生。
  *
  * 事实与快照由 deterministic kernel 产生；本类只负责推进、决策与渲染，
  * 不重新抽样，也不把 React state 当作权威状态。
+ *
+ * 时间语义（M3-034）：当前日期一律取内核的权威时钟 `simulation.clock`，
+ * 不再用「最后一条事实的日期」推算——有的年份没有任何新事实。
+ * 逐年、快进与单事件推进共用 `advanceTo`，所以三种玩法产生逐字节相同的结果。
  */
 export class GameSession {
   readonly request: RealLifeRequest;
@@ -82,6 +105,20 @@ export class GameSession {
     const base = createRealLifeSimulation(data.request);
     const snapshot = SimulationSnapshotSchema.parse(data.snapshot);
     const facts = SimEventFactSchema.array().parse(data.facts);
+    // 事实日志必须与快照的 `lastJournalSequence` 对得上，否则存档内部已经矛盾：
+    // 继续推进会在错误的序号上追加事实（M3-034）。交给 storage 的非破坏性路径处理。
+    if (snapshot.lastJournalSequence + 1 !== facts.length) {
+      throw new Error(
+        `Save journal has ${facts.length} fact(s) but the snapshot expects ${snapshot.lastJournalSequence + 1}`,
+      );
+    }
+    for (const [index, fact] of facts.entries()) {
+      if (fact.sequence !== index) {
+        throw new Error(
+          `Save journal fact ${fact.id} has sequence ${fact.sequence}, expected ${index}`,
+        );
+      }
+    }
     const simulation = restoreLifeSimulation(snapshot, base.region);
     return new GameSession({
       request: data.request,
@@ -98,51 +135,79 @@ export class GameSession {
     return this.simulation.ended;
   }
 
-  get currentDate(): string {
-    return this.facts[this.facts.length - 1]?.at ?? this.birth.birthDate;
+  /** 内核的权威当前日期；写入快照并在恢复后保持不变。 */
+  get clock(): ISODate {
+    return this.simulation.clock;
+  }
+
+  /** 界面显示的当前日期。与 {@link clock} 相同，保留旧名字以免调用方到处改名。 */
+  get currentDate(): ISODate {
+    return this.simulation.clock;
+  }
+
+  /** 当前周岁（按规范日历；2 月 29 日出生者在平年取 2 月 28 日）。 */
+  get age(): number {
+    return Math.max(0, ageOn(this.birth.birthDate, this.clock));
+  }
+
+  /** 下一个生日；「下一年」推进到这一天（含当天事件）。 */
+  nextAnniversary(): ISODate {
+    return addYears(this.birth.birthDate, this.age + 1);
   }
 
   get summary(): LifeSummary {
     return summarizeLife(this.simulation.snapshot(), this.facts);
   }
 
-  /** 推进到下一个重大决定、死亡或目标年份；可安全地重复调用。 */
-  advance(): void {
-    if (this.isEnded) return;
-    for (let round = 0; round < 10_000; round += 1) {
-      const result = this.simulation.advanceTo({
-        targetDate: '2200-01-01',
-        stopAtMajorDecision: true,
-        maxWorkUnits: 100_000,
-      });
-      this.facts = [...this.facts, ...result.newFacts];
-      if (result.stopReason === 'major-decision' && result.pendingDecision) {
-        this.pending = result.pendingDecision;
-        return;
-      }
-      this.pending = null;
-      if (result.stopReason === 'work-budget-exhausted') continue;
-      return;
+  /** 把出生当天的其余事件结算完（0 岁生日的排程等）。创建会话后由调用方调用一次。 */
+  settleBirthDay(): StepResult {
+    return this.#advance(this.clock);
+  }
+
+  /** 推进到下一个生日（含当天事件）；遇到重大决定或死亡提前停。 */
+  stepYear(): StepResult {
+    if (this.isEnded) {
+      return { stopReason: 'protagonist-died', newFacts: [], clock: this.clock };
+    }
+    if (this.pending) {
+      return { stopReason: 'major-decision', newFacts: [], clock: this.clock };
+    }
+    return this.#advance(this.nextAnniversary());
+  }
+
+  /** 快进到下一个重大决定（或死亡）；这就是 M3-034 之前 `advance()` 的行为。 */
+  advanceToNextDecision(): void {
+    if (this.isEnded || this.pending) return;
+    for (let round = 0; round < MAX_ROUNDS; round += 1) {
+      const result = this.#advance(FOREVER);
+      if (result.stopReason === 'target-reached') return;
+      if (this.isEnded || this.pending) return;
     }
     throw new Error('Life did not reach a stable stop');
   }
 
+  /** 旧名字：快进到下一个重大决定。 */
+  advance(): void {
+    this.advanceToNextDecision();
+  }
+
+  /** 作出重大决定；选择后只结算当天，不再自动推进到下一个决定。 */
   choose(optionId: string): void {
     const pending = this.pending;
     if (!pending) throw new Error('No pending decision');
     this.simulation.decide(pending.key, optionId);
     this.pending = null;
-    this.advance();
+    this.#advance(this.simulation.clock);
   }
 
-  /** 自动按人生原则选完所有重大决定，直到死亡；用于“直接看结局”。 */
+  /** 自动按人生原则选完所有重大决定，直到死亡；用于“直接模拟至结局”。 */
   finish(): void {
-    for (let round = 0; round < 10_000 && !this.isEnded; round += 1) {
+    for (let round = 0; round < MAX_ROUNDS && !this.isEnded; round += 1) {
       if (this.pending) {
         this.simulation.decide(this.pending.key, this.pending.recommended.optionId);
         this.pending = null;
       }
-      this.advance();
+      this.advanceToNextDecision();
     }
   }
 
@@ -165,6 +230,30 @@ export class GameSession {
       snapshot: this.simulation.snapshot(),
       facts: this.facts,
     };
+  }
+
+  /** 推进到 `targetDate`；事实只来自 `advanceTo` 的 `newFacts`，按序号追加。 */
+  #advance(targetDate: ISODate): StepResult {
+    const newFacts: SimEventFact[] = [];
+    for (let round = 0; round < MAX_ROUNDS; round += 1) {
+      const result = this.simulation.advanceTo({
+        targetDate,
+        stopAtMajorDecision: true,
+        maxWorkUnits: MAX_WORK_PER_ROUND,
+      });
+      if (result.newFacts.length > 0) {
+        newFacts.push(...result.newFacts);
+        this.facts = [...this.facts, ...result.newFacts];
+      }
+      if (result.stopReason === 'work-budget-exhausted') continue;
+      if (result.stopReason === 'major-decision') {
+        this.pending = result.pendingDecision;
+      } else {
+        this.pending = this.simulation.pendingDecision();
+      }
+      return { stopReason: result.stopReason, newFacts, clock: this.simulation.clock };
+    }
+    throw new Error('Life did not reach a stable stop');
   }
 }
 

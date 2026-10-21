@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
 import { SaveIssuePanel } from '../components/SaveIssuePanel.tsx';
@@ -10,6 +10,7 @@ import {
   type SaveLoadResult,
 } from '../game/storage.ts';
 import { GameSession } from '../game/session.ts';
+import { TimeControl, timerScheduler } from '../game/time-control.ts';
 import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 import { PlayPage } from '../pages/PlayPage.tsx';
 import type { BirthRegionId, Locale } from '@lifesim/content-schema';
@@ -32,17 +33,27 @@ export function App() {
     document.title = t('app.title');
   }, [t]);
 
-  function run(action: (session: GameSession) => void): void {
-    if (!game) return;
-    try {
-      action(game.session);
-      saveGame(game.session);
-      setGame({ session: game.session, revision: game.revision + 1 });
-      setError(null);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : String(caught));
-    }
-  }
+  const session = game?.session ?? null;
+
+  // 时间控制与当前会话一一对应：每次推进都自动存档并触发重绘。
+  const control = useMemo(() => {
+    if (!session) return null;
+    return new TimeControl({
+      session,
+      scheduler: timerScheduler(),
+      onChange: () => {
+        saveGame(session);
+        setGame((current) =>
+          current ? { session: current.session, revision: current.revision + 1 } : current,
+        );
+      },
+      onError: (caught) => {
+        setError(caught instanceof Error ? caught.message : String(caught));
+      },
+    });
+  }, [session]);
+
+  useEffect(() => () => control?.dispose(), [control]);
 
   function start(choice: { region: BirthRegionId | 'random'; year: number | 'random' }): void {
     if (issue) return;
@@ -51,14 +62,15 @@ export function App() {
         typeof crypto !== 'undefined' && 'randomUUID' in crypto
           ? crypto.randomUUID()
           : String(Math.random());
-      const session = GameSession.create({
+      const created = GameSession.create({
         seed,
         region: choice.region,
         year: choice.year,
       });
-      session.advance();
-      saveGame(session);
-      setGame({ session, revision: 0 });
+      // 只结算出生当天，然后停在出生日等玩家自己开始推进（M3-034）。
+      created.settleBirthDay();
+      saveGame(created);
+      setGame({ session: created, revision: 0 });
       setRestored(false);
       setError(null);
     } catch (caught) {
@@ -150,20 +162,12 @@ export function App() {
       )}
 
       <main>
-        {issue ? null : game ? (
+        {issue ? null : game && control ? (
           <PlayPage
             session={game.session}
             locale={locale}
             restored={restored}
-            onAdvance={() => {
-              run((session) => session.advance());
-            }}
-            onChoose={(optionId) => {
-              run((session) => session.choose(optionId));
-            }}
-            onFinish={() => {
-              run((session) => session.finish());
-            }}
+            control={control}
             onNewLife={newLife}
           />
         ) : (

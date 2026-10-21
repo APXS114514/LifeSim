@@ -3,7 +3,7 @@
     "title": "人生模拟器",
     "tagline": "在真实的历史时间线里，过完一个人的一生",
     "language": "界面语言",
-    "stageNotice": "可玩测试版（M3-lite）：五个地区、1950—2026 年出生，真实 WPP 死亡率与 M2 地理/币制。暂无家庭、NPC、迁居与城市权重。"
+    "stageNotice": "可玩测试版（M3-lite）：五个地区、1950—2026 年出生，真实 WPP 死亡率与 M2 地理/币制。已有出生家庭（父母），但父母还没有独立的人生进程；暂无婚育、迁居与城市权重。"
   },
   "creation": {
     "heading": "出生设置",
@@ -47,8 +47,6 @@
 
     "age": "年龄",
     "died": "享年",
-    "continue": "继续",
-    "finish": "自动到死亡",
     "newLife": "开始新人生",
     "showFinance": "显示年度收支",
     "hideFinance": "隐藏年度收支",
@@ -85,6 +83,29 @@
       "unaffordable": "负担不起",
       "not-yet-available": "这个年代还不能获得治疗"
     }
+  },
+  "time": {
+    "heading": "时间控制",
+    "paused": "已暂停",
+    "playing": "播放中",
+    "awaiting": "等待你的决定",
+    "ended": "已结束",
+    "ageValue": "{{age}} 岁",
+    "nextYear": "下一年",
+    "play": "播放",
+    "pause": "暂停",
+    "speed": "速度",
+    "speeds": {
+      "2000": "慢",
+      "1000": "常速",
+      "500": "快",
+      "250": "很快"
+    },
+    "fastForward": "跳转到下一个决定",
+    "finish": "直接模拟至结局",
+    "finishHint": "剩余的重大决定将按人生原则自动选择。",
+    "finishConfirm": "确认直接模拟至结局",
+    "cancel": "取消"
   },
   "summary": {
     "eyebrow": "本局结束",

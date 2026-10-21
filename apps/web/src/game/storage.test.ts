@@ -133,4 +133,19 @@ describe('save storage', () => {
   it('reports that a download is not possible outside a browser', () => {
     expect(downloadSaveBackup('{}')).toBe(false);
   });
+
+  it('keeps a save whose journal does not match the snapshot', () => {
+    const session = newSession();
+    const mutated = JSON.parse(JSON.stringify(session.serialize())) as { facts: unknown[] };
+    mutated.facts = mutated.facts.slice(0, -1);
+    const changed = JSON.stringify(mutated);
+    store.setItem(SAVE_KEY, changed);
+
+    const result = loadGame();
+    expect(result.kind).toBe('failed');
+    if (result.kind !== 'failed') throw new Error('expected a failed load');
+    expect(result.reason).toBe('unreadable');
+    expect(store.getItem(SAVE_KEY)).toBe(changed);
+    expect(store.getItem(PRESERVED_KEY)).toBe(changed);
+  });
 });

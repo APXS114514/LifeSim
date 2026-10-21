@@ -3,7 +3,7 @@
     "title": "LifeSim",
     "tagline": "Live one whole life inside the real historical timeline",
     "language": "Interface language",
-    "stageNotice": "Playable test build (M3-lite): five regions, births from 1950 to 2026, real WPP mortality with M2 geography and currency. Family, NPCs, migration and city weights are not included yet."
+    "stageNotice": "Playable test build (M3-lite): five regions, births from 1950 to 2026, real WPP mortality with M2 geography and currency. The birth family (two parents) exists, but parents do not have their own lives yet; marriage, children, migration and city weights are not included yet."
   },
   "creation": {
     "heading": "Birth settings",
@@ -47,8 +47,6 @@
 
     "age": "Age",
     "died": "Died at",
-    "continue": "Continue",
-    "finish": "Auto-run to death",
     "newLife": "Start a new life",
     "showFinance": "Show yearly finances",
     "hideFinance": "Hide yearly finances",
@@ -85,6 +83,29 @@
       "unaffordable": "Unaffordable",
       "not-yet-available": "Treatment is not available in this era"
     }
+  },
+  "time": {
+    "heading": "Time controls",
+    "paused": "Paused",
+    "playing": "Playing",
+    "awaiting": "Awaiting your decision",
+    "ended": "Ended",
+    "ageValue": "age {{age}}",
+    "nextYear": "Next year",
+    "play": "Play",
+    "pause": "Pause",
+    "speed": "Speed",
+    "speeds": {
+      "2000": "Slow",
+      "1000": "Normal",
+      "500": "Fast",
+      "250": "Fastest"
+    },
+    "fastForward": "Skip to next decision",
+    "finish": "Simulate to the end",
+    "finishHint": "The remaining major decisions will be made by life principles.",
+    "finishConfirm": "Confirm simulate to the end",
+    "cancel": "Cancel"
   },
   "summary": {
     "eyebrow": "Run complete",

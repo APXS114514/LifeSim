@@ -1,37 +1,36 @@
 import type { Locale } from '@lifesim/content-schema';
-import { ageOn } from '@lifesim/simulation-core';
 import { describeCharacterLocations, joinNames } from '@lifesim/real-world';
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DecisionCard } from '../components/DecisionCard.tsx';
 import { PlacePolityLabel } from '../components/PlacePolityLabel.tsx';
 import { PolityFlag } from '../components/PolityFlag.tsx';
 import { SummaryCard } from '../components/SummaryCard.tsx';
+import { TimeControls } from '../components/TimeControls.tsx';
 import { Timeline } from '../components/Timeline.tsx';
 import type { GameSession } from '../game/session.ts';
+import type { TimeControl } from '../game/time-control.ts';
 
 export function PlayPage({
   session,
   locale,
   restored,
-  onAdvance,
-  onChoose,
-  onFinish,
+  control,
   onNewLife,
 }: {
   session: GameSession;
   locale: Locale;
   restored: boolean;
-  onAdvance: () => void;
-  onChoose: (optionId: string) => void;
-  onFinish: () => void;
+  control: TimeControl;
   onNewLife: () => void;
 }) {
   const { t } = useTranslation();
   const [showFinance, setShowFinance] = useState(false);
-  const age = session.isEnded
-    ? session.summary.ageAtDeath
-    : Math.max(0, ageOn(session.birth.birthDate, session.currentDate));
+  // 时间控制推进的是内核里的同一份会话；订阅它的变化来重绘时间线与时钟。
+  const [, rerender] = useReducer((count: number) => count + 1, 0);
+  useEffect(() => control.subscribe(rerender), [control]);
+
+  const age = session.isEnded ? (session.summary.ageAtDeath ?? 0) : Math.max(0, session.age);
   const packName = session.pack.names[locale];
   const settlement = session.label('settlement', session.birth.settlement, locale);
   const currency = session.currencyName(
@@ -41,7 +40,7 @@ export function PlayPage({
   const snapshot = session.simulation.snapshot();
   const actor = snapshot.actors.find((candidate) => candidate.id === snapshot.activeCharacterId);
   if (!actor) throw new Error('Snapshot has no active character');
-  const locations = describeCharacterLocations(session.pack, actor, session.currentDate, locale);
+  const locations = describeCharacterLocations(session.pack, actor, session.clock, locale);
   const sameResidence =
     locations.birth.place === locations.residence.place &&
     locations.birth.polity === locations.residence.polity;
@@ -59,7 +58,7 @@ export function PlayPage({
           <section className="character-card" aria-labelledby="character-heading">
             <div className="character-head">
               <span className="region-flag" aria-hidden="true">
-                <PolityFlag polityId={actor.politicalEntityId} date={session.currentDate} />
+                <PolityFlag polityId={actor.politicalEntityId} date={session.clock} />
               </span>
               <span className="region-mark" aria-hidden="true">
                 {session.birth.packId}
@@ -110,7 +109,7 @@ export function PlayPage({
               {t('play.seed')} {session.request.seed}
             </p>
             <div className="age-badge" aria-label={t('play.age')}>
-              <span className="age-number">{age ?? '—'}</span>
+              <span className="age-number">{age}</span>
               <span className="age-label">{session.isEnded ? t('play.died') : t('play.age')}</span>
             </div>
           </section>
@@ -145,17 +144,18 @@ export function PlayPage({
                 </button>
               </div>
             </>
-          ) : session.pending ? (
-            <DecisionCard pending={session.pending} onChoose={onChoose} />
           ) : (
-            <div className="toolbar action-bar">
-              <button type="button" className="primary" onClick={onAdvance}>
-                {t('play.continue')}
-              </button>
-              <button type="button" className="secondary" onClick={onFinish}>
-                {t('play.finish')}
-              </button>
-            </div>
+            <>
+              <TimeControls control={control} session={session} />
+              {session.pending && (
+                <DecisionCard
+                  pending={session.pending}
+                  onChoose={(optionId) => {
+                    control.choose(optionId);
+                  }}
+                />
+              )}
+            </>
           )}
 
           <Timeline session={session} locale={locale} showFinance={showFinance} />
