@@ -146,7 +146,7 @@ describe('StatSeriesSchema', () => {
 
 /** M3 新增指标的测试夹具，数值虚构，只为覆盖 schema 规则。 */
 const m3Indicators = [
-  ['education-enrollment-secondary', 'percent', 62],
+  ['education-enrollment-secondary', 'percent-gross', 101.7],
   ['education-completion-upper-secondary', 'share', 0.42],
   ['labor-force-participation', 'share', 0.61],
   ['employment-agriculture-share', 'share', 0.35],
@@ -188,17 +188,18 @@ describe('M3 indicator units', () => {
     }
   });
 
-  it('checks percent, index and usd-per-capita ranges', () => {
+  it('checks percent-gross, index and usd-per-capita ranges', () => {
     expect(
-      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', 100))
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent-gross', 150))
         .success,
     ).toBe(true);
     expect(
-      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', 100.1))
-        .success,
+      StatSeriesSchema.safeParse(
+        m3Fixture('education-enrollment-secondary', 'percent-gross', 200.1),
+      ).success,
     ).toBe(false);
     expect(
-      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent', -1))
+      StatSeriesSchema.safeParse(m3Fixture('education-enrollment-secondary', 'percent-gross', -1))
         .success,
     ).toBe(false);
 

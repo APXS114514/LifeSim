@@ -23,6 +23,7 @@ export const SERIES_UNITS = [
   'probability',
   'share',
   'percent',
+  'percent-gross',
   'index',
   'usd-per-capita',
 ] as const;
@@ -35,7 +36,8 @@ export const INDICATOR_SPEC: Record<Indicator, { unit: SeriesUnit; ageBasis: Age
   births: { unit: 'thousand-persons', ageBasis: 'none' },
   'life-table-qx': { unit: 'probability', ageBasis: 'single-year' },
   'urban-share': { unit: 'share', ageBasis: 'none' },
-  'education-enrollment-secondary': { unit: 'percent', ageBasis: 'none' },
+  // 毛入学率（gross enrolment ratio）按定义可以超过 100%，因此单独用 percent-gross。
+  'education-enrollment-secondary': { unit: 'percent-gross', ageBasis: 'none' },
   'education-completion-upper-secondary': { unit: 'share', ageBasis: 'none' },
   'labor-force-participation': { unit: 'share', ageBasis: 'none' },
   'employment-agriculture-share': { unit: 'share', ageBasis: 'none' },
@@ -164,18 +166,22 @@ export const StatSeriesSchema = z
               ? true
               : spec.unit === 'percent' && (value < 0 || value > 100)
                 ? true
-                : spec.unit === 'index' && value <= 0;
+                : spec.unit === 'percent-gross' && (value < 0 || value > 200)
+                  ? true
+                  : spec.unit === 'index' && value <= 0;
         if (outOfRange) {
           ctx.addIssue({
             code: 'custom',
             message:
               spec.unit === 'percent'
                 ? 'percent values must be within [0, 100]'
-                : spec.unit === 'index'
-                  ? 'index values must be greater than zero'
-                  : spec.unit === 'usd-per-capita' || spec.unit === 'thousand-persons'
-                    ? 'values must be non-negative'
-                    : 'probability and share values must be within [0, 1]',
+                : spec.unit === 'percent-gross'
+                  ? 'percent-gross values must be within [0, 200]'
+                  : spec.unit === 'index'
+                    ? 'index values must be greater than zero'
+                    : spec.unit === 'usd-per-capita' || spec.unit === 'thousand-persons'
+                      ? 'values must be non-negative'
+                      : 'probability and share values must be within [0, 1]',
             path: ['points', index, 'value'],
           });
         }
