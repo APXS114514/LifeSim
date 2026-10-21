@@ -4,6 +4,7 @@ import type {
   HouseholdAccount,
   ISODate,
   LifePrincipleKey,
+  Relationships,
 } from '@lifesim/content-schema';
 import type { JsonValue } from './json.ts';
 import type { RandomStream } from './random.ts';
@@ -13,7 +14,7 @@ import type { Occurrence } from './scheduler.ts';
 export interface SimState {
   actors: CharacterState[];
   householdAccounts: HouseholdAccount[];
-  relationships: JsonValue;
+  relationships: Relationships;
   world: JsonValue;
 }
 

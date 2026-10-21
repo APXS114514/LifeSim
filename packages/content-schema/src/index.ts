@@ -9,3 +9,4 @@ export * from './country-pack.ts';
 export * from './event-fact.ts';
 export * from './character-state.ts';
 export * from './snapshot.ts';
+export * from './relationships.ts';

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { CharacterStateSchema } from './character-state.ts';
 import { HouseholdAccountSchema } from './money.ts';
+import { RelationshipsSchema } from './relationships.ts';
 import { EntityIdSchema, ISODateSchema } from './primitives.ts';
 
 /**
@@ -8,7 +9,7 @@ import { EntityIdSchema, ISODateSchema } from './primitives.ts';
  *
  * `rngState` 与 `schedulerState` 必须是 JSON 值且不可缺省：恢复时需要知道随机数算法版本
  * 与事件队列的完整状态，否则结果会漂移。两者的内部结构由模拟内核定义并在恢复时校验。
- * `relationships` 同理，M3 再收紧为具体 schema。
+ * `relationships` 由 M3 的关系契约定义（zod schema），恢复时校验两端角色存在。
  *
  * `world` 是宏观状态（当前币制版本、经济周期等），由历史锚点改变；
  * 它的结构由系统层定义并在读取时校验。
@@ -25,7 +26,7 @@ export const SimulationSnapshotSchema = z
     activeCharacterId: EntityIdSchema,
     actors: z.array(CharacterStateSchema).min(1),
     world: z.json(),
-    relationships: z.json(),
+    relationships: RelationshipsSchema,
     householdAccounts: z.array(HouseholdAccountSchema),
     lastJournalSequence: z.number().int().nonnegative(),
   })
@@ -45,6 +46,17 @@ export const SimulationSnapshotSchema = z
           message: `Account ${account.id} has an owner who is not an actor`,
           path: ['householdAccounts', index, 'ownerIds'],
         });
+      }
+    });
+    snapshot.relationships.forEach((relationship, index) => {
+      for (const side of ['fromId', 'toId'] as const) {
+        if (!actorIds.has(relationship[side])) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `Relationship ${relationship.id} references an unknown actor`,
+            path: ['relationships', index, side],
+          });
+        }
       }
     });
   });
