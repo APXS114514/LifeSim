@@ -7,7 +7,7 @@ import {
 import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import { z } from 'zod';
 import { createBirthFamily } from './family.ts';
-import { npcBirthdayRequest, npcRoleOf } from './npc.ts';
+import { npcBirthdayRequest, npcFactType, npcRoleOf } from './npc.ts';
 import { writeMacro, type MacroState, type RegionModel } from './region.ts';
 import {
   EVENT,
@@ -205,12 +205,14 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const { cause } = DeathPayloadSchema.parse(ctx.occurrence.payload);
       const age = ageAt(actor, ctx);
-      // 主角沿用 life.death；NPC 用 npc.death 并写明是谁（关系称谓），时间线上才看得出人。
+      // 主角沿用 life.death；NPC 的类型与模板都用 npc.death 并写明是谁（关系称谓）。
+      // 与其他 NPC 事实一致：类型前缀 life.* 只属于主角，下游按类型统计时不会把父母的死亡算成主角的。
       const npc = actor.tier !== 'protagonist';
+      const type = npc ? npcFactType('life.death') : 'life.death';
       const factId = ctx.emit({
-        type: 'life.death',
+        type,
         outcomeCode: cause,
-        templateId: npc ? 'npc.death' : 'life.death',
+        templateId: type,
         actorIds: [actor.id],
         evidenceIds: [evidenceId(region, 'mortality')],
         details: npc ? { age, cause, role: npcRoleOf(actor.id) } : { age, cause },

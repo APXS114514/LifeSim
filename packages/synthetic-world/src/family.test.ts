@@ -11,7 +11,12 @@ import {
   toDayNumber,
   type Simulation,
 } from '@lifesim/simulation-core';
-import { createLifeSimulation, lifeInvariants, restoreLifeSimulation } from '@lifesim/systems';
+import {
+  createLifeSimulation,
+  lifeInvariants,
+  restoreLifeSimulation,
+  summarizeLife,
+} from '@lifesim/systems';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { syntheticRegion } from './region.ts';
@@ -187,7 +192,7 @@ describe('Tier1 NPC lifecycles (M3-011)', () => {
     const simulation = wholeLife('npc-86');
     const fatherId = 'char:protagonist:father';
     const own = factsOf(simulation.facts, fatherId);
-    const death = own.find((fact) => fact.type === 'life.death');
+    const death = own.find((fact) => fact.type === 'npc.death');
     if (!death) throw new Error('seed npc-86 no longer loses the father early');
     expect(death.at <= addYears(TIER1_BIRTH, 3)).toBe(true);
     expect(death.templateId).toBe('npc.death');
@@ -280,5 +285,32 @@ describe('Tier1 NPC lifecycles (M3-011)', () => {
     expect(canonicalJson([...interrupted.facts, ...resumed.facts])).toBe(
       canonicalJson(first.facts),
     );
+  });
+
+  it('keeps life.* facts and the life summary on the protagonist when a parent dies first', () => {
+    // 类型前缀 life.* 只属于主角；父母的死亡是 npc.death。summarizeLife 必须报主角本人的享年与死因。
+    let parentDiedFirst = 0;
+    for (let index = 0; index < 40; index += 1) {
+      const year = 1950 + ((index * 7) % 60);
+      const simulation = wholeLife(`npc-summary-${index}`, `${year}-0${1 + (index % 9)}-15`);
+      const facts = simulation.facts;
+      for (const fact of facts) {
+        if (fact.type.startsWith('life.')) expect(fact.actorIds).toEqual(['char:protagonist']);
+        if (fact.type === 'npc.death') {
+          expect(fact.actorIds).toHaveLength(1);
+          expect(isParent(fact.actorIds[0])).toBe(true);
+        }
+      }
+      const own = facts.filter((fact) => fact.type === 'life.death');
+      expect(own).toHaveLength(1);
+      const summary = summarizeLife(simulation.snapshot(), facts);
+      if (summary.deathDate === null) throw new Error(`npc-summary-${index} did not end`);
+      expect(summary.deathDate).toBe(own[0]?.at);
+      expect(summary.ageAtDeath).toBe(ageOn(summary.birthDate, summary.deathDate));
+      expect(summary.causeOfDeath).toBe(own[0]?.outcomeCode);
+      if (facts.some((fact) => fact.type === 'npc.death')) parentDiedFirst += 1;
+    }
+    // 至少有一部分人生是「父母先去世」的情形，否则这条测试证明不了什么。
+    expect(parentDiedFirst).toBeGreaterThan(10);
   });
 });

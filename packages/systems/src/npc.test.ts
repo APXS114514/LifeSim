@@ -211,7 +211,7 @@ describe('a Tier1 NPC lives its own life (M3-011)', () => {
     // 父母各自有死亡事实；死亡之后不再有任何以他/她为 actor 的事实。
     for (const parentId of [MOTHER, FATHER]) {
       const own = factsOf(facts, parentId);
-      const death = own.find((fact) => fact.type === 'life.death');
+      const death = own.find((fact) => fact.type === 'npc.death');
       expect(death).toBeDefined();
       expect(death?.templateId).toBe('npc.death');
       const after = own.filter((fact) => death && fact.at > death.at);

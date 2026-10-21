@@ -33,7 +33,10 @@ export function summarizeLife(
     (entry) => entry.id === protagonist.finance.accountId,
   );
   const macro = MacroStateSchema.parse(snapshot.world);
-  const death = facts.find((fact) => fact.type === 'life.death');
+  // 按主角自己记下的死亡事实 ID 定位：M3-011 起 NPC 也会去世，不能按类型取第一条。
+  const deathFactId =
+    protagonist.vitalStatus.kind === 'deceased' ? protagonist.vitalStatus.deathFactId : null;
+  const death = deathFactId === null ? undefined : facts.find((fact) => fact.id === deathFactId);
   const settlements = facts.filter((fact) => fact.type === 'finance.settlement');
   return {
     birthDate: protagonist.birthDate,

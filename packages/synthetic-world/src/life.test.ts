@@ -356,4 +356,17 @@ describe('life summary', () => {
     expect(summary.factCount).toBe(facts.length);
     expect(summary.currency).toBe('SYN-2');
   });
+
+  it('reports the protagonist’s own death even when the parents died first (M3-011)', () => {
+    // golden-1：父亲 1993 年 73 岁、母亲 2017 年先去世；主角 2024-06-01 在 64 岁因慢性病去世。
+    // 回归：summarizeLife 曾按类型取第一条死亡事实，把父亲的 73 岁当成主角的享年。
+    const { facts, snapshot } = wholeLife('golden-1', '1960-03-15');
+    const parentDeaths = facts.filter((fact) => fact.type === 'npc.death');
+    expect(parentDeaths.map((fact) => fact.at)).toEqual(['1993-12-22', '2017-08-16']);
+    expect(summarizeLife(snapshot, facts)).toMatchObject({
+      deathDate: '2024-06-01',
+      ageAtDeath: 64,
+      causeOfDeath: 'illness',
+    });
+  });
 });
