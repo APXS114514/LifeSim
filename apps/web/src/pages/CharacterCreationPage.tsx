@@ -14,10 +14,13 @@ type YearMode = 'random' | 'specific';
 const yearRange = { min: BIRTH_YEAR_MIN, max: BIRTH_YEAR_MAX };
 
 /**
- * M0 草图：只收集出生设置并展示约束说明，不做任何抽样或模拟。
- * 随机规则的实现属于 M2 的出生选择器（GDD §4.3），这里不写一套界面专用的假规则。
+ * 出生设置：把选择交给真实的出生选择器（M2）；界面不重新实现抽样规则。
  */
-export function CharacterCreationPage() {
+export function CharacterCreationPage({
+  onStart,
+}: {
+  onStart: (choice: { region: RegionChoice; year: number | 'random' }) => void;
+}) {
   const { t } = useTranslation();
   const ids = { regionHint: useId(), yearHint: useId(), yearError: useId(), start: useId() };
 
@@ -43,6 +46,8 @@ export function CharacterCreationPage() {
       aria-labelledby="creation-heading"
       onSubmit={(event) => {
         event.preventDefault();
+        if (yearMode === 'specific' && !yearValid) return;
+        onStart({ region, year: yearMode === 'random' ? 'random' : Number(yearText) });
       }}
     >
       <h2 id="creation-heading">{t('creation.heading')}</h2>
@@ -148,11 +153,16 @@ export function CharacterCreationPage() {
       </div>
 
       <div className="actions">
-        <button type="submit" className="primary" disabled aria-describedby={ids.start}>
+        <button
+          type="submit"
+          className="primary"
+          disabled={yearMode === 'specific' && !yearValid}
+          aria-describedby={ids.start}
+        >
           {t('creation.start')}
         </button>
         <p className="hint" id={ids.start}>
-          {t('creation.startUnavailable')}
+          {t('creation.startHint')}
         </p>
       </div>
     </form>

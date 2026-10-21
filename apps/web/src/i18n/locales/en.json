@@ -3,7 +3,7 @@
     "title": "LifeSim",
     "tagline": "Live one whole life inside the real historical timeline",
     "language": "Interface language",
-    "stageNotice": "Development stage M0: this is a sketch of the character creation screen. The simulation core is not built yet, so a life cannot be started."
+    "stageNotice": "Playable test build (M3-lite): five regions, births from 1950 to 2026, real WPP mortality with M2 geography and currency. Family, NPCs, migration and city weights are not included yet."
   },
   "creation": {
     "heading": "Birth settings",
@@ -33,7 +33,58 @@
     },
     "randomRule": "Random years are equally likely; the region is weighted by births in the five regions that year.",
     "start": "Start a life",
-    "startUnavailable": "Needs the M1 simulation core; not available yet."
+    "startHint": "Runs on the real WPP life tables and a D-grade rules baseline; the test build will keep being rebalanced."
+  },
+  "play": {
+    "restored": "Restored the previous autosave.",
+    "character": "This life",
+    "seed": "Seed",
+    "age": "Age",
+    "died": "Died at",
+    "continue": "Continue",
+    "finish": "Auto-run to death",
+    "newLife": "Start a new life",
+    "showFinance": "Show yearly finances",
+    "hideFinance": "Hide yearly finances",
+    "autoSave": "Autosaved in this browser; clearing site data loses it.",
+    "timeline": "Life timeline",
+    "noFacts": "No events to show yet.",
+    "error": "This run hit a problem:"
+  },
+  "decision": {
+    "eyebrow": "Major decision",
+    "heading": "What will you choose?",
+    "recommended": "Life principles recommend: {{option}}",
+    "types": {
+      "choice.after-secondary": "After secondary school",
+      "choice.treatment": "Whether to seek treatment"
+    },
+    "options": {
+      "apply-university": "Apply to university",
+      "start-work": "Start working",
+      "treat": "Seek treatment",
+      "forgo": "Go without treatment"
+    },
+    "ineligible": {
+      "unaffordable": "Unaffordable",
+      "not-yet-available": "Treatment is not available in this era"
+    }
+  },
+  "summary": {
+    "eyebrow": "Run complete",
+    "heading": "Life summary",
+    "age": "Lifespan",
+    "ageValue": "{{age}} years",
+    "alive": "Still alive",
+    "education": "Education",
+    "work": "Work",
+    "years": "{{years}} years",
+    "balance": "Final balance",
+    "cause": "Cause of death",
+    "unknownCause": "Unknown",
+    "facts": "Events",
+    "decisions": "Major decisions",
+    "decisionLine": "{{decision}}: {{option}}"
   },
   "about": {
     "heading": "About this simulation",

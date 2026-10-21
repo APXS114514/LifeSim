@@ -56,6 +56,9 @@ importers:
       '@lifesim/narrative':
         specifier: workspace:*
         version: link:../../packages/narrative
+      '@lifesim/real-world':
+        specifier: workspace:*
+        version: link:../../packages/real-world
       '@lifesim/save':
         specifier: workspace:*
         version: link:../../packages/save
@@ -74,9 +77,21 @@ importers:
       '@lifesim/content-schema':
         specifier: workspace:*
         version: link:../../packages/content-schema
+      '@lifesim/country-packs':
+        specifier: workspace:*
+        version: link:../../packages/country-packs
       '@lifesim/narrative':
         specifier: workspace:*
         version: link:../../packages/narrative
+      '@lifesim/real-world':
+        specifier: workspace:*
+        version: link:../../packages/real-world
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../../packages/simulation-core
+      '@lifesim/systems':
+        specifier: workspace:*
+        version: link:../../packages/systems
       i18next:
         specifier: 26.4.4
         version: 26.4.4(typescript@6.0.3)
@@ -141,6 +156,27 @@ importers:
       '@lifesim/content-schema':
         specifier: workspace:*
         version: link:../content-schema
+
+  packages/real-world:
+    dependencies:
+      '@lifesim/content-schema':
+        specifier: workspace:*
+        version: link:../content-schema
+      '@lifesim/country-packs':
+        specifier: workspace:*
+        version: link:../country-packs
+      '@lifesim/data-registry':
+        specifier: workspace:*
+        version: link:../data-registry
+      '@lifesim/narrative':
+        specifier: workspace:*
+        version: link:../narrative
+      '@lifesim/simulation-core':
+        specifier: workspace:*
+        version: link:../simulation-core
+      '@lifesim/systems':
+        specifier: workspace:*
+        version: link:../systems
 
   packages/save:
     dependencies:

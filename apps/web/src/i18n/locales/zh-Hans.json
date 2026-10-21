@@ -3,7 +3,7 @@
     "title": "人生模拟器",
     "tagline": "在真实的历史时间线里，过完一个人的一生",
     "language": "界面语言",
-    "stageNotice": "开发阶段 M0：这是角色创建页的界面草图。模拟内核尚未实现，暂时还不能开始人生。"
+    "stageNotice": "可玩测试版（M3-lite）：五个地区、1950—2026 年出生，真实 WPP 死亡率与 M2 地理/币制。暂无家庭、NPC、迁居与城市权重。"
   },
   "creation": {
     "heading": "出生设置",
@@ -33,7 +33,58 @@
     },
     "randomRule": "随机年份等概率；国家按该年五地出生人数加权。",
     "start": "开始人生",
-    "startUnavailable": "需要 M1 模拟内核，目前不可用。"
+    "startHint": "用真实 WPP 生命表与 D 级规则基线运行；测试版会继续调整平衡。"
+  },
+  "play": {
+    "restored": "已恢复上次自动存档。",
+    "character": "这一生",
+    "seed": "种子",
+    "age": "年龄",
+    "died": "享年",
+    "continue": "继续",
+    "finish": "自动到死亡",
+    "newLife": "开始新人生",
+    "showFinance": "显示年度收支",
+    "hideFinance": "隐藏年度收支",
+    "autoSave": "自动保存在本机浏览器；清理站点数据会丢失。",
+    "timeline": "人生时间线",
+    "noFacts": "还没有可显示的事件。",
+    "error": "这一局遇到了问题："
+  },
+  "decision": {
+    "eyebrow": "重大决定",
+    "heading": "现在怎么选？",
+    "recommended": "按人生原则建议：{{option}}",
+    "types": {
+      "choice.after-secondary": "中学毕业后的选择",
+      "choice.treatment": "是否治疗"
+    },
+    "options": {
+      "apply-university": "报考大学",
+      "start-work": "直接工作",
+      "treat": "接受治疗",
+      "forgo": "不接受治疗"
+    },
+    "ineligible": {
+      "unaffordable": "负担不起",
+      "not-yet-available": "这个年代还不能获得治疗"
+    }
+  },
+  "summary": {
+    "eyebrow": "本局结束",
+    "heading": "一生总结",
+    "age": "寿命",
+    "ageValue": "{{age}} 岁",
+    "alive": "尚在世",
+    "education": "学历",
+    "work": "工作",
+    "years": "{{years}} 年",
+    "balance": "最终余额",
+    "cause": "死因",
+    "unknownCause": "未知",
+    "facts": "事件数",
+    "decisions": "重大决定",
+    "decisionLine": "{{decision}}：{{option}}"
   },
   "about": {
     "heading": "关于这个模拟",

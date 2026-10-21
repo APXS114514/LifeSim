@@ -14,7 +14,11 @@
   },
   "dependencies": {
     "@lifesim/content-schema": "workspace:*",
+    "@lifesim/country-packs": "workspace:*",
     "@lifesim/narrative": "workspace:*",
+    "@lifesim/real-world": "workspace:*",
+    "@lifesim/simulation-core": "workspace:*",
+    "@lifesim/systems": "workspace:*",
     "i18next": "26.4.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",

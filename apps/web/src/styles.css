@@ -262,3 +262,265 @@ legend {
   margin: 0;
   padding-left: 1.2em;
 }
+
+/* ---------- 可玩切片 ---------- */
+
+.test-notice,
+.restored-notice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--notice);
+  color: var(--notice-ink);
+  font-size: 0.92rem;
+}
+
+.restored-notice {
+  background: var(--surface);
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.character-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.character-card h2 {
+  margin: 0 0 6px;
+}
+
+.character-line {
+  margin: 2px 0;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
+.age-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.age-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.age-label {
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.secondary {
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.decision-card,
+.summary-card {
+  margin: 18px 0;
+  padding: 20px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.decision-card h2,
+.summary-card h2 {
+  margin-bottom: 8px;
+}
+
+.decision-context {
+  margin: 0 0 4px;
+  color: var(--ink-muted);
+}
+
+.decision-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.decision-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+
+.decision-option .hint {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.summary-grid dt {
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.summary-grid dd {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.summary-decisions h3 {
+  margin: 18px 0 6px;
+  font-size: 1rem;
+}
+
+.summary-decisions ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.timeline-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 24px 0 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.timeline-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.seed-line {
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.toggle input {
+  accent-color: var(--accent);
+}
+
+.timeline h2 {
+  margin-bottom: 10px;
+}
+
+.timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: 7.5em 1fr;
+  gap: 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--line);
+  background: var(--surface);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.fact-date {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.88rem;
+}
+
+.fact-text {
+  margin: 0;
+}
+
+.error-panel {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--error);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--error);
+}
+
+.error-panel pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 560px) {
+  .timeline-actions {
+    align-items: flex-start;
+  }
+
+  .character-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .age-badge {
+    flex-direction: row;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .fact {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
