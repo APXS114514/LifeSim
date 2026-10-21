@@ -141,7 +141,7 @@ export class DataRegistry {
     );
   }
 
-  lookup(query: LookupQuery): LookupResult {
+  lookup(query: LookupQuery, options: { allowScenario?: boolean } = {}): LookupResult {
     const spec = INDICATOR_SPEC[query.indicator];
     const singleYear = spec.ageBasis === 'single-year';
     if (singleYear && (query.age === undefined || query.age === null)) {
@@ -156,6 +156,15 @@ export class DataRegistry {
     const entry = this.#index.get(seriesKey(query.indicator, query.geographyId));
     const failures: string[] = [];
     let exactMissingReason: string | undefined;
+    let lastObserved: StatSeries['points'][number] | undefined;
+    if (entry) {
+      for (const candidate of entry.series.points) {
+        if (candidate.age !== age || candidate.value === null) continue;
+        if (lastObserved === undefined || candidate.year > lastObserved.year) {
+          lastObserved = candidate;
+        }
+      }
+    }
 
     if (entry) {
       const point = entry.points.get(pointKey(query.year, age));
@@ -275,6 +284,22 @@ export class DataRegistry {
       } else {
         failures.push('no observed urban-share value to hold');
       }
+    }
+
+    if (entry && lastObserved !== undefined && query.year > lastObserved.year) {
+      if (options.allowScenario === true) {
+        return {
+          status: 'found',
+          value: lastObserved.value as number,
+          method: 'scenario-hold-last',
+          seriesId: entry.series.id,
+          sourceYear: lastObserved.year,
+          sourceGeographyId: query.geographyId,
+          projected: true,
+          evidence: downgradeEvidence(entry.series.evidence, 'scenario-hold-last', true),
+        };
+      }
+      failures.push(`beyond the series end (${lastObserved.year}); scenario not allowed`);
     }
 
     // M2-006 的既有契约：显式缺失点在没有可回退的上级时返回该点自己的原因。
