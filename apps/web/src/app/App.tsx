@@ -100,9 +100,25 @@ export function App() {
   return (
     <div className="shell">
       <header className="masthead">
-        <div>
-          <h1>{t('app.title')}</h1>
-          <p className="tagline">{t('app.tagline')}</p>
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" width="40" height="40" fill="none" focusable="false">
+              <circle cx="20" cy="20" r="18.5" stroke="currentColor" strokeOpacity="0.35" />
+              <path
+                d="M9 27c4.5 0 5.5-12 11-12s6 9 11 9"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              <circle cx="9" cy="27" r="2.1" fill="currentColor" />
+              <circle cx="20" cy="15" r="2.1" fill="currentColor" />
+              <circle cx="31" cy="24" r="2.1" fill="currentColor" />
+            </svg>
+          </span>
+          <div>
+            <h1>{t('app.title')}</h1>
+            <p className="tagline">{t('app.tagline')}</p>
+          </div>
         </div>
         <LanguageSwitch />
       </header>
