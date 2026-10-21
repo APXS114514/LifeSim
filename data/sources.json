@@ -1,5 +1,25 @@
 [
   {
+    "id": "bok:currency-1953",
+    "title": "Currency Timeline 1953~1962（Bank of Korea）",
+    "publisher": "Bank of Korea",
+    "url": "https://www.bok.or.kr/eng/main/contents.do?menuNo=400117",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：the Currency Reform was carried out on February 15, 1953, on a 100-won to one hwan basis；同页写 second currency reform implemented (put into effect on February 17)。访问日期 2026-10-20。"
+  },
+  {
+    "id": "bok:currency-1962",
+    "title": "Currency Timeline 1962~1970（Bank of Korea）",
+    "publisher": "Bank of Korea",
+    "url": "https://www.bok.or.kr/eng/main/contents.do?menuNo=400118",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：Another Currency Reform was carried out on June 10, 1962 ... New won-denominated currency, which had a face value ten times higher than that of the hwan-denominated currency。访问日期 2026-10-20。"
+  },
+  {
     "id": "e-gov:local-autonomy-act",
     "title": "地方自治法（昭和二十二年法律第六十七号）",
     "publisher": "日本国 政府（e-Gov 法令検索）",
@@ -8,6 +28,36 @@
     "redistribution": "unknown",
     "verifiedAt": "2026-10-20",
     "notes": "只引用法律事实，不再分发文本。第一条の三：普通地方公共団体は、都道府県及び市町村とする。第二条：都道府県は、市町村を包括する広域の地方公共団体。访问日期 2026-10-20。"
+  },
+  {
+    "id": "kr-archives:busan-1963",
+    "title": "오늘의 기록：부산시, 직할시로 승격（国家记录院）",
+    "publisher": "National Archives of Korea",
+    "url": "https://theme.archives.go.kr/next/daily/viewMain.do?selectDay=20140101",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：1963년 1월 1일 대한민국 제2의 도시 부산시가 직할시(현 광역시)로 승격되었다。访问日期 2026-10-20。"
+  },
+  {
+    "id": "kr-history:rok-1948",
+    "title": "광복 후 대한민국 정부 수립（国史编纂委员会  우리역사넷）",
+    "publisher": "National Institute of Korean History",
+    "url": "https://contents.history.go.kr/mobile/eh/view.do?levelId=eh_r0382_0010&code=ganada",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：1948년 8월 15일, 대한민국 정부 수립을 국내외에 선포하였어요。访问日期 2026-10-20。"
+  },
+  {
+    "id": "kr-law:local-autonomy",
+    "title": "지방자치법 제2조（地方自治法 第2条，国家法令信息中心）",
+    "publisher": "법제처 국가법령정보센터（韩国法制处）",
+    "url": "https://www.law.go.kr/LSW//lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1000915639&lsId=001656&print=print",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用法律事实，不再分发文本。第2条：지방자치단체는 ... 1. 특별시, 통합특별시, 광역시, 특별자치시, 도, 특별자치도 2. 시, 군, 구。访问日期 2026-10-20。"
   },
   {
     "id": "osaka-pref:statistical-yearbook",
