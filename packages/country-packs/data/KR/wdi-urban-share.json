@@ -1,0 +1,419 @@
+{
+  "id": "wdi/KR/urban-share",
+  "indicator": "urban-share",
+  "geographyId": "country:KR",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SP.URB.TOTL.IN.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-20",
+    "geographyId": "country:KR",
+    "yearRange": [
+      1960,
+      2025
+    ],
+    "methodId": "wdi-urban-share-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 1960,
+      "age": null,
+      "projected": false,
+      "value": 0.276858239622977
+    },
+    {
+      "year": 1961,
+      "age": null,
+      "projected": false,
+      "value": 0.28448716510725697
+    },
+    {
+      "year": 1962,
+      "age": null,
+      "projected": false,
+      "value": 0.292335073020446
+    },
+    {
+      "year": 1963,
+      "age": null,
+      "projected": false,
+      "value": 0.300578676824386
+    },
+    {
+      "year": 1964,
+      "age": null,
+      "projected": false,
+      "value": 0.309563602392687
+    },
+    {
+      "year": 1965,
+      "age": null,
+      "projected": false,
+      "value": 0.319635475598961
+    },
+    {
+      "year": 1966,
+      "age": null,
+      "projected": false,
+      "value": 0.331034551656567
+    },
+    {
+      "year": 1967,
+      "age": null,
+      "projected": false,
+      "value": 0.345588302969076
+    },
+    {
+      "year": 1968,
+      "age": null,
+      "projected": false,
+      "value": 0.365332576645622
+    },
+    {
+      "year": 1969,
+      "age": null,
+      "projected": false,
+      "value": 0.387099888112837
+    },
+    {
+      "year": 1970,
+      "age": null,
+      "projected": false,
+      "value": 0.407085270995502
+    },
+    {
+      "year": 1971,
+      "age": null,
+      "projected": false,
+      "value": 0.423477332957849
+    },
+    {
+      "year": 1972,
+      "age": null,
+      "projected": false,
+      "value": 0.43789337212399604
+    },
+    {
+      "year": 1973,
+      "age": null,
+      "projected": false,
+      "value": 0.45147373575920197
+    },
+    {
+      "year": 1974,
+      "age": null,
+      "projected": false,
+      "value": 0.465094025449477
+    },
+    {
+      "year": 1975,
+      "age": null,
+      "projected": false,
+      "value": 0.479673969434303
+    },
+    {
+      "year": 1976,
+      "age": null,
+      "projected": false,
+      "value": 0.49573655612616396
+    },
+    {
+      "year": 1977,
+      "age": null,
+      "projected": false,
+      "value": 0.513027034426193
+    },
+    {
+      "year": 1978,
+      "age": null,
+      "projected": false,
+      "value": 0.530955799830981
+    },
+    {
+      "year": 1979,
+      "age": null,
+      "projected": false,
+      "value": 0.548987778188484
+    },
+    {
+      "year": 1980,
+      "age": null,
+      "projected": false,
+      "value": 0.566554425515705
+    },
+    {
+      "year": 1981,
+      "age": null,
+      "projected": false,
+      "value": 0.583339941411302
+    },
+    {
+      "year": 1982,
+      "age": null,
+      "projected": false,
+      "value": 0.5995056686524299
+    },
+    {
+      "year": 1983,
+      "age": null,
+      "projected": false,
+      "value": 0.615442686216481
+    },
+    {
+      "year": 1984,
+      "age": null,
+      "projected": false,
+      "value": 0.63149438472478
+    },
+    {
+      "year": 1985,
+      "age": null,
+      "projected": false,
+      "value": 0.647952808591987
+    },
+    {
+      "year": 1986,
+      "age": null,
+      "projected": false,
+      "value": 0.665771098057876
+    },
+    {
+      "year": 1987,
+      "age": null,
+      "projected": false,
+      "value": 0.685628466782553
+    },
+    {
+      "year": 1988,
+      "age": null,
+      "projected": false,
+      "value": 0.705877839860655
+    },
+    {
+      "year": 1989,
+      "age": null,
+      "projected": false,
+      "value": 0.7246603696495449
+    },
+    {
+      "year": 1990,
+      "age": null,
+      "projected": false,
+      "value": 0.739851161168568
+    },
+    {
+      "year": 1991,
+      "age": null,
+      "projected": false,
+      "value": 0.751606018983188
+    },
+    {
+      "year": 1992,
+      "age": null,
+      "projected": false,
+      "value": 0.761960694185519
+    },
+    {
+      "year": 1993,
+      "age": null,
+      "projected": false,
+      "value": 0.7710828572817949
+    },
+    {
+      "year": 1994,
+      "age": null,
+      "projected": false,
+      "value": 0.7785856492281469
+    },
+    {
+      "year": 1995,
+      "age": null,
+      "projected": false,
+      "value": 0.7840043718791201
+    },
+    {
+      "year": 1996,
+      "age": null,
+      "projected": false,
+      "value": 0.7875081479194419
+    },
+    {
+      "year": 1997,
+      "age": null,
+      "projected": false,
+      "value": 0.7899180250948029
+    },
+    {
+      "year": 1998,
+      "age": null,
+      "projected": false,
+      "value": 0.791812369650495
+    },
+    {
+      "year": 1999,
+      "age": null,
+      "projected": false,
+      "value": 0.793623394908518
+    },
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 0.79579960745642
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 0.798787704357425
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 0.802766294544335
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 0.80707793508044
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 0.81104386778171
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 0.813901352283669
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 0.8156646211051201
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 0.81712125801927
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 0.818350833138518
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 0.8192450450840021
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.819685075986486
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 0.8196154080863759
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 0.819087898200378
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 0.818269383502703
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 0.817315682816954
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 0.8163948986067799
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 0.815559241797057
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 0.8147103042998399
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 0.813823523035196
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 0.812901063535619
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.811759595622913
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 0.811616526507785
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 0.8116249416268729
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 0.811645551720421
+    },
+    {
+      "year": 2024,
+      "age": null,
+      "projected": false,
+      "value": 0.811682528469686
+    },
+    {
+      "year": 2025,
+      "age": null,
+      "projected": false,
+      "value": 0.811740263306674
+    }
+  ]
+}

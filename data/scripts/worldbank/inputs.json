@@ -1,0 +1,9 @@
+[
+  {
+    "id": "urban-share",
+    "file": "urban-share.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=20000",
+    "sha256": "7c3d3bd5a7163336628949879198396ad32b4454dea1bf8c609cbe10588f822b",
+    "retrievedAt": "2026-10-20"
+  }
+]
