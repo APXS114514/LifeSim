@@ -3,7 +3,7 @@
     "title": "人生模拟器",
     "tagline": "在真实的历史时间线里，过完一个人的一生",
     "language": "界面语言",
-    "stageNotice": "可玩测试版（M3-lite）：五个地区、1950—2026 年出生，真实 WPP 死亡率与 M2 地理/币制。已有出生家庭（父母），但父母还没有独立的人生进程；暂无婚育、迁居与城市权重。"
+    "stageNotice": "可玩测试版：五个地区、1950—2026 年出生，真实 WPP 死亡率与历史地理/币制。父母会工作、生病与去世；暂无婚育、迁居与城市权重。界面正在按「历史档案」风格改版（M4-022）。"
   },
   "creation": {
     "heading": "出生设置",
@@ -33,7 +33,12 @@
     },
     "randomRule": "随机年份等概率；国家按该年五地出生人数加权。",
     "start": "开始人生",
-    "startHint": "用真实 WPP 生命表与 D 级规则基线运行；测试版会继续调整平衡。"
+    "startHint": "用真实 WPP 生命表与 D 级规则基线运行；测试版会继续调整平衡。",
+    "intro": {
+      "title": "出生档案馆",
+      "lead": "选择出生地区与年份，模拟器会按当年的真实出生统计登记一个新生命。"
+    },
+    "formNumber": "登记表 · 1950—2026"
   },
   "play": {
     "restored": "已恢复上次自动存档。",
@@ -52,7 +57,41 @@
     "autoSave": "自动保存在本机浏览器；清理站点数据会丢失。",
     "timeline": "人生时间线",
     "noFacts": "还没有可显示的事件。",
-    "error": "这一局遇到了问题："
+    "error": "这一局遇到了问题：",
+    "identity": "身份档案",
+    "nameUnassigned": "姓名待接入",
+    "born": "出生",
+    "currency": "币制",
+    "controls": "设置",
+    "timelineCount": "{{count}} 条记录",
+    "status": {
+      "heading": "状态",
+      "aside": "0—100",
+      "pendingNote": "健康、幸福、知识、人际、经济五项指标将由 M4-016 从底层状态派生；在此之前不显示任何估计数字。",
+      "indicators": {
+        "health": "健康",
+        "happiness": "幸福",
+        "knowledge": "知识",
+        "relationships": "人际",
+        "economy": "经济"
+      },
+      "education": "学历",
+      "enrolled": "在读：{{level}}",
+      "employment": {
+        "label": "就业",
+        "child": "儿童",
+        "student": "在校",
+        "not-in-labor-force": "未就业",
+        "employed": "在职",
+        "unemployed": "失业",
+        "retired": "已退休"
+      },
+      "health": "健康状况",
+      "healthy": "无慢性病",
+      "illTreated": "慢性病（已治疗）",
+      "illUntreated": "慢性病（未治疗）",
+      "balance": "存款"
+    }
   },
   "saveIssue": {
     "heading": "上次的存档无法读取",
@@ -131,5 +170,36 @@
     "notGlobal": "随机出生只在五个首发地区之间抽样，不代表全球出生分布。",
     "offline": "默认不连接任何服务器，也不调用 AI 模型。",
     "licenses": "开源许可与第三方声明"
+  },
+  "ui": {
+    "pending": "待接入",
+    "sample": "组件示意"
+  },
+  "design": {
+    "heading": "设计系统预览",
+    "lead": "开发环境专用：M4-022 的颜色令牌、档案组件与像素样例，不进入生产构建。",
+    "tokens": "颜色令牌",
+    "type": "字体层级",
+    "controls": "按钮与控件",
+    "archive": "档案卡",
+    "meters": "状态条",
+    "pixel": "像素头像（人生阶段）",
+    "scenes": "像素场景",
+    "records": "档案行",
+    "sampleValues": "本页的数值与文字只是组件示意，不是模拟结果。",
+    "stages": {
+      "infant": "婴儿",
+      "child": "儿童",
+      "teen": "少年",
+      "adult": "成年",
+      "elder": "老年"
+    },
+    "scene": {
+      "rural": "农村住宅（示意样例）",
+      "urban": "城镇住宅区（示意样例）"
+    },
+    "sampleName": "示例姓名",
+    "sampleRecord": "你踏出了人生的第一步。",
+    "sampleMajor": "中学毕业后决定报考大学。"
   }
 }

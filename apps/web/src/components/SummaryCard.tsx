@@ -1,7 +1,9 @@
 import type { Locale } from '@lifesim/content-schema';
 import { describeCharacterLocations, formatRealMoney } from '@lifesim/real-world';
 import { useTranslation } from 'react-i18next';
+import { ArchiveCard } from './Archive.tsx';
 import { PlacePolityLabel } from './PlacePolityLabel.tsx';
+import { archiveNumber } from '../game/archive.ts';
 import type { GameSession } from '../game/session.ts';
 
 export function SummaryCard({ session, locale }: { session: GameSession; locale: Locale }) {
@@ -20,9 +22,19 @@ export function SummaryCard({ session, locale }: { session: GameSession; locale:
     : null;
 
   return (
-    <section className="summary-card" aria-labelledby="summary-heading" aria-live="polite">
+    <ArchiveCard
+      className="summary-card"
+      title={t('summary.heading')}
+      headingId="summary-heading"
+      live="polite"
+      number={archiveNumber({
+        seed: session.request.seed,
+        packId: session.birth.packId,
+        birthDate: session.birth.birthDate,
+      })}
+      guilloche
+    >
       <p className="eyebrow">{t('summary.eyebrow')}</p>
-      <h2 id="summary-heading">{t('summary.heading')}</h2>
       <dl className="summary-grid">
         <div>
           <dt>{t('summary.age')}</dt>
@@ -89,6 +101,6 @@ export function SummaryCard({ session, locale }: { session: GameSession; locale:
           </ul>
         </div>
       )}
-    </section>
+    </ArchiveCard>
   );
 }

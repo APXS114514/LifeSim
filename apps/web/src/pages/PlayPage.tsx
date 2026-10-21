@@ -1,15 +1,43 @@
 import type { Locale } from '@lifesim/content-schema';
-import { describeCharacterLocations, joinNames } from '@lifesim/real-world';
+import { describeCharacterLocations, formatRealMoney, joinNames } from '@lifesim/real-world';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  ArchiveCard,
+  Field,
+  FieldGrid,
+  Meter,
+  Panel,
+  type MeterTone,
+} from '../components/Archive.tsx';
 import { DecisionCard } from '../components/DecisionCard.tsx';
+import { PixelAvatar } from '../components/PixelPortrait.tsx';
 import { PlacePolityLabel } from '../components/PlacePolityLabel.tsx';
 import { PolityFlag } from '../components/PolityFlag.tsx';
 import { SummaryCard } from '../components/SummaryCard.tsx';
 import { TimeControls } from '../components/TimeControls.tsx';
 import { Timeline } from '../components/Timeline.tsx';
+import { archiveIndexLine, archiveNumber } from '../game/archive.ts';
 import type { GameSession } from '../game/session.ts';
 import type { TimeControl } from '../game/time-control.ts';
+
+/** 五项派生指标的位置先排好；数值等 M4-016（在此之前一律显示「待接入」）。 */
+const INDICATORS: readonly MeterTone[] = [
+  'health',
+  'happiness',
+  'knowledge',
+  'relationships',
+  'economy',
+];
+
+const EMPLOYMENT_KEYS = {
+  child: 'play.status.employment.child',
+  student: 'play.status.employment.student',
+  'not-in-labor-force': 'play.status.employment.not-in-labor-force',
+  employed: 'play.status.employment.employed',
+  unemployed: 'play.status.employment.unemployed',
+  retired: 'play.status.employment.retired',
+} as const;
 
 export function PlayPage({
   session,
@@ -30,7 +58,8 @@ export function PlayPage({
   const [, rerender] = useReducer((count: number) => count + 1, 0);
   useEffect(() => control.subscribe(rerender), [control]);
 
-  const age = session.isEnded ? (session.summary.ageAtDeath ?? 0) : Math.max(0, session.age);
+  const summary = session.summary;
+  const age = session.isEnded ? (summary.ageAtDeath ?? 0) : Math.max(0, session.age);
   const packName = session.pack.names[locale];
   const settlement = session.label('settlement', session.birth.settlement, locale);
   const currency = session.currencyName(
@@ -44,6 +73,24 @@ export function PlayPage({
   const sameResidence =
     locations.birth.place === locations.residence.place &&
     locations.birth.polity === locations.residence.polity;
+  const archive = {
+    seed: session.request.seed,
+    packId: session.birth.packId,
+    birthDate: session.birth.birthDate,
+  };
+
+  const { education, employment, health } = actor;
+  const educationText =
+    education.enrolledIn !== null
+      ? t('play.status.enrolled', { level: session.label('level', education.enrolledIn, locale) })
+      : session.label('level', education.completed, locale);
+  const condition = health.conditions[0];
+  const healthText = condition
+    ? condition.treated
+      ? t('play.status.illTreated')
+      : t('play.status.illUntreated')
+    : t('play.status.healthy');
+  const balanceText = `${formatRealMoney(summary.finalBalanceMinor, summary.currency, locale)} ${session.currencyName(summary.currency, locale)}`;
 
   return (
     <div className={'game pack-' + session.birth.packId}>
@@ -55,66 +102,104 @@ export function PlayPage({
 
       <div className="game-grid">
         <aside className="game-side">
-          <section className="character-card" aria-labelledby="character-heading">
+          <ArchiveCard
+            className="character-card"
+            title={t('play.identity')}
+            number={archiveNumber(archive)}
+            labelledBy="character-heading"
+            guilloche
+          >
             <div className="character-head">
-              <span className="region-flag" aria-hidden="true">
-                <PolityFlag polityId={actor.politicalEntityId} date={session.clock} />
-              </span>
-              <span className="region-mark" aria-hidden="true">
-                {session.birth.packId}
-              </span>
-              <div>
+              <PixelAvatar
+                age={age}
+                year={Number(session.clock.slice(0, 4))}
+                variantKey={`${session.request.seed}|${actor.id}`}
+              />
+              <div className="character-identity">
+                <p className="character-name">{t('play.nameUnassigned')}</p>
                 <p className="eyebrow">
                   {t('play.character')} · {packName}
                 </p>
-                <h2 id="character-heading">{locations.politicalEntity}</h2>
+                <h2 id="character-heading">
+                  <span className="region-flag" aria-hidden="true">
+                    <PolityFlag polityId={actor.politicalEntityId} date={session.clock} />
+                  </span>
+                  {locations.politicalEntity}
+                </h2>
               </div>
             </div>
-            <p className="character-line">
-              {session.birth.birthDate} · {settlement}
-            </p>
-            <p className="character-line">{currency}</p>
-            <p className="character-meta">
-              <span className="meta-label">{t('play.birthPlace')}</span>
-              <span className="meta-value with-flag">
-                <span className="birth-flag">
-                  <PolityFlag
-                    polityId={session.birth.politicalEntityId}
-                    date={session.birth.birthDate}
-                  />
+
+            <FieldGrid compact>
+              <Field label={t('play.born')}>
+                {session.birth.birthDate} · {settlement}
+              </Field>
+              <Field label={t('play.birthPlace')}>
+                <span className="meta-value with-flag">
+                  <span className="birth-flag">
+                    <PolityFlag
+                      polityId={session.birth.politicalEntityId}
+                      date={session.birth.birthDate}
+                    />
+                  </span>
+                  <PlacePolityLabel place={locations.birth.place} polity={locations.birth.polity} />
                 </span>
-                <PlacePolityLabel place={locations.birth.place} polity={locations.birth.polity} />
-              </span>
-            </p>
-            <p className="character-meta">
-              <span className="meta-label">{t('play.currentResidence')}</span>
-              {sameResidence ? (
-                <span className="meta-value">{t('play.sameAsBirth')}</span>
-              ) : (
-                <PlacePolityLabel
-                  place={locations.residence.place}
-                  polity={locations.residence.polity}
-                />
-              )}
-            </p>
-            <p className="character-meta">
-              <span className="meta-label">{t('play.politicalEntity')}</span>
-              <span className="meta-value">{locations.politicalEntity}</span>
-            </p>
-            <p className="character-meta">
-              <span className="meta-label">{t('play.citizenship')}</span>
-              <span className="meta-value">{joinNames(locations.citizenship, locale)}</span>
-            </p>
-            <p className="character-line seed-line">
-              {t('play.seed')} {session.request.seed}
-            </p>
+              </Field>
+              <Field label={t('play.currentResidence')}>
+                {sameResidence ? (
+                  t('play.sameAsBirth')
+                ) : (
+                  <PlacePolityLabel
+                    place={locations.residence.place}
+                    polity={locations.residence.polity}
+                  />
+                )}
+              </Field>
+              <Field label={t('play.politicalEntity')}>{locations.politicalEntity}</Field>
+              <Field label={t('play.citizenship')}>
+                {joinNames(locations.citizenship, locale)}
+              </Field>
+              <Field label={t('play.currency')}>{currency}</Field>
+              <Field label={t('play.seed')}>
+                <span className="seed-line">{session.request.seed}</span>
+              </Field>
+            </FieldGrid>
+
+            <p className="index-strip">{archiveIndexLine(archive)}</p>
+
             <div className="age-badge" aria-label={t('play.age')}>
               <span className="age-number">{age}</span>
               <span className="age-label">{session.isEnded ? t('play.died') : t('play.age')}</span>
             </div>
-          </section>
+          </ArchiveCard>
 
-          <div className="side-controls">
+          <Panel
+            className="status-panel"
+            headingId="status-heading"
+            title={t('play.status.heading')}
+            aside={t('play.status.aside')}
+          >
+            <ul className="meter-list">
+              {INDICATORS.map((key) => (
+                <Meter
+                  key={key}
+                  tone={key}
+                  label={t(`play.status.indicators.${key}`)}
+                  value={null}
+                />
+              ))}
+            </ul>
+            <p className="hint">{t('play.status.pendingNote')}</p>
+            <FieldGrid compact>
+              <Field label={t('play.status.education')}>{educationText}</Field>
+              <Field label={t('play.status.employment.label')}>
+                {t(EMPLOYMENT_KEYS[employment.status])}
+              </Field>
+              <Field label={t('play.status.health')}>{healthText}</Field>
+              <Field label={t('play.status.balance')}>{balanceText}</Field>
+            </FieldGrid>
+          </Panel>
+
+          <Panel className="side-controls" headingId="controls-heading" title={t('play.controls')}>
             <label className="toggle">
               <input
                 type="checkbox"
@@ -131,7 +216,7 @@ export function PlayPage({
                 {t('play.newLife')}
               </button>
             )}
-          </div>
+          </Panel>
         </aside>
 
         <div className="game-main">

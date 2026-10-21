@@ -1,0 +1,371 @@
+/*
+ * 档案设计系统（M4-022 UI-01）：档案卡、面板、字段网格、状态条、「待接入」标记、像素画框。
+ * 页面只组合这些类，不在页面里另写颜色。
+ */
+
+/* ---------- 档案卡：主色标题栏 + 编号 + 证书底纹 ---------- */
+
+.archive-card {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.archive-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  padding: 10px var(--space-5);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.archive-bar h2,
+.archive-title {
+  margin: 0;
+  color: var(--color-on-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.archive-number {
+  color: var(--color-on-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.archive-body {
+  position: relative;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+/* 证书底纹：原创正弦曲线，用 mask 着色，所以颜色仍来自令牌。纯装饰。 */
+.archive-body.has-guilloche::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-guilloche);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='96' viewBox='0 0 240 96'><g fill='none' stroke='black' stroke-width='1'><path d='M0 48 C30 8 60 8 90 48 S150 88 180 48 S240 8 270 48'/><path d='M-30 48 C0 88 30 88 60 48 S120 8 150 48 S210 88 240 48'/><path d='M0 30 C40 70 80 70 120 30 S200 -10 240 30'/><path d='M0 66 C40 26 80 26 120 66 S200 106 240 66'/></g></svg>")
+    repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='96' viewBox='0 0 240 96'><g fill='none' stroke='black' stroke-width='1'><path d='M0 48 C30 8 60 8 90 48 S150 88 180 48 S240 8 270 48'/><path d='M-30 48 C0 88 30 88 60 48 S120 8 150 48 S210 88 240 48'/><path d='M0 30 C40 70 80 70 120 30 S200 -10 240 30'/><path d='M0 66 C40 26 80 26 120 66 S200 106 240 66'/></g></svg>")
+    repeat;
+  pointer-events: none;
+}
+
+.archive-body > * {
+  position: relative;
+}
+
+/* 等宽的档案索引条（原创格式，只用于显示，不是证件号码）。 */
+.index-strip {
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--color-rule);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+/* 档案上的姓名：衬线、大字号（出生登记与终章用 --text-display）。 */
+.display-name {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- 面板 ---------- */
+
+.panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-4) var(--space-5) 0;
+}
+
+.panel-head h2 {
+  font-size: var(--text-lg);
+}
+
+.panel-aside {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.panel-body {
+  padding: var(--space-3) var(--space-5) var(--space-5);
+}
+
+/* ---------- 字段网格 ---------- */
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin: 0;
+}
+
+.field-grid.is-compact {
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+}
+
+.field {
+  min-width: 0;
+}
+
+.field dt {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+}
+
+.field dd {
+  margin: 2px 0 0;
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.field-grid.is-compact .field {
+  display: contents;
+}
+
+.field-grid.is-compact .field dt {
+  padding-top: 3px;
+}
+
+.field-grid.is-compact .field dd {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.field dd.is-pending {
+  color: var(--color-text-faint);
+  font-weight: 400;
+}
+
+/* ---------- 「待接入」：数据或模型尚未提供时的诚实标记 ---------- */
+
+.pending-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+/* ---------- 状态条 ---------- */
+
+.meter-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meter {
+  display: grid;
+  grid-template-columns: 4.5em minmax(0, 1fr) 2.6em;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.meter-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.meter-track {
+  position: relative;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--color-surface-muted);
+  overflow: hidden;
+}
+
+.meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 3px;
+  background: var(--meter-color, var(--color-primary));
+}
+
+.meter-value {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.meter.is-pending .meter-track {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-surface-muted) 0 6px,
+    var(--color-surface) 6px 12px
+  );
+}
+
+.meter.is-pending .meter-value {
+  color: var(--color-text-faint);
+}
+
+.meter[data-tone='health'] {
+  --meter-color: var(--color-success);
+}
+
+.meter[data-tone='happiness'] {
+  --meter-color: var(--color-warning);
+}
+
+.meter[data-tone='knowledge'] {
+  --meter-color: var(--color-primary-strong);
+}
+
+.meter[data-tone='relationships'] {
+  --meter-color: var(--color-danger);
+}
+
+.meter[data-tone='economy'] {
+  --meter-color: var(--color-primary);
+}
+
+/* ---------- 像素画框 ---------- */
+
+.pixel-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+.pixel-frame {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-muted);
+  overflow: hidden;
+}
+
+.avatar-tile {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-primary-soft);
+  overflow: hidden;
+}
+
+.scene-caption {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+/* ---------- 分段控件与页签 ---------- */
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  overflow: hidden;
+}
+
+.segmented button {
+  min-height: 36px;
+  padding: 4px 12px;
+  border: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.segmented button:last-child {
+  border-right: 0;
+}
+
+.segmented button[aria-pressed='true'] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 650;
+}
+
+/* ---------- 档案行（人生记录、名单） ---------- */
+
+.record-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+}
+
+.record-row:last-child {
+  border-bottom: 0;
+}
+
+.record-age {
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding-top: 2px;
+}
+
+.record-row.is-major .record-text {
+  font-weight: 650;
+}
+
+.record-row.is-cohort .record-text {
+  color: var(--color-primary-strong);
+}

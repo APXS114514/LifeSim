@@ -1,0 +1,70 @@
+/* 设计预览页（只在开发环境加载）。 */
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.design-wide {
+  grid-column: 1 / -1;
+}
+
+.swatch-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+}
+
+.swatch-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.stage-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.stage-list li {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+}
+
+.scene-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.scene-frame {
+  margin: 0;
+}
+
+.design-archive .field-grid {
+  margin-top: var(--space-4);
+}
+
+.design-grid .display-name + h2 {
+  margin-top: var(--space-3);
+}
