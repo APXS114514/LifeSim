@@ -1,5 +1,15 @@
 [
   {
+    "id": "beijing-gov:municipality",
+    "title": "北京市人民政府门户网站（首都之窗）",
+    "publisher": "北京市人民政府",
+    "url": "https://www.beijing.gov.cn/",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用「北京市为省级直辖市」的现行行政区划事实，不再分发网页内容。访问日期 2026-10-20。"
+  },
+  {
     "id": "bok:currency-1953",
     "title": "Currency Timeline 1953~1962（Bank of Korea）",
     "publisher": "Bank of Korea",
@@ -18,6 +28,36 @@
     "redistribution": "unknown",
     "verifiedAt": "2026-10-20",
     "notes": "只引用史实，不再分发文本。原文：Another Currency Reform was carried out on June 10, 1962 ... New won-denominated currency, which had a face value ten times higher than that of the hwan-denominated currency。访问日期 2026-10-20。"
+  },
+  {
+    "id": "cn-gazetteer:sichuan",
+    "title": "四川省地方志：历史沿革（1954 年撤销大区一级行政机构与省市合并）",
+    "publisher": "四川省地方志工作办公室",
+    "url": "https://www.scdfz.org.cn/scdqs/scsq/content_12033",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。1954年6月19日，中央人民政府委员会第32次会议通过并公布《关于撤销大区一级行政机构和合并若干省、市建制的决定》；重庆市撤销直辖、并入四川省。访问日期 2026-10-20。"
+  },
+  {
+    "id": "cn-npc:founding",
+    "title": "新中国档案：开国大典（中国人大网）",
+    "publisher": "全国人民代表大会",
+    "url": "http://www.npc.gov.cn/zgrdw/npc/zt/qt/qzjd90zn/2011-06/08/content_1657867.htm",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：1949年10月1日, 中华人民共和国中央人民政府成立典礼, 即开国大典, 在北京天安门广场隆重举行。访问日期 2026-10-20。"
+  },
+  {
+    "id": "cnr:chongqing-1997",
+    "title": "【中国共产党百年瞬间】重庆直辖（中央广播电视总台中国之声）",
+    "publisher": "中央广播电视总台",
+    "url": "http://china.cnr.cn/gdgg/20210314/t20210314_525435766.shtml",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：1997年3月14日，八届全国人大五次会议……表决《关于批准设立重庆直辖市的决定》；1997年6月18日……重庆市各界3500多名代表举行了直辖市挂牌揭幕大会。访问日期 2026-10-20。"
   },
   {
     "id": "e-gov:local-autonomy-act",
@@ -88,6 +128,16 @@
     "redistribution": "unknown",
     "verifiedAt": "2026-10-20",
     "notes": "只引用史实，不再分发文档。沿革段：明治4年(1871年)の廃藩置県を経て、大阪府は大阪市街地と摂津七郡…を管轄することとなった；说明大阪府自 1871 年起存在，覆盖 1950 年起点。访问日期 2026-10-20。"
+  },
+  {
+    "id": "pbc:rmb-history",
+    "title": "人民币发展史（中国人民银行河北省分行·河北钱币博物馆）",
+    "publisher": "中国人民银行",
+    "url": "https://shijiazhuang.pbc.gov.cn/shijiazhuang/131507/131656/131664/2571630/index.html",
+    "license": "NOASSERTION",
+    "redistribution": "unknown",
+    "verifiedAt": "2026-10-20",
+    "notes": "只引用史实，不再分发文本。原文：在1955年的3月1日，我国发行了第二套人民币……它与第一套人民币的兑换比例是1：10000。访问日期 2026-10-20。"
   },
   {
     "id": "shugiin:denomination-2008",
