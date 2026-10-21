@@ -101,6 +101,7 @@ export function App() {
     <div className="shell">
       <header className="masthead">
         <div className="brand">
+          {/* 与 public/favicon.svg 同一图形；改这里时同步更新图标资源。 */}
           <span className="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 40 40" width="40" height="40" fill="none" focusable="false">
               <circle cx="20" cy="20" r="18.5" stroke="currentColor" strokeOpacity="0.35" />

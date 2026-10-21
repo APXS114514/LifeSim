@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LifeSim">
+  <title>LifeSim</title>
+  <rect width="64" height="64" rx="14" fill="#f4efe4" />
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#c4b9a2" stroke-width="2" />
+  <path
+    d="M14 43c7 0 9-19 18-19s9 14 18 14"
+    fill="none"
+    stroke="#8a4b2a"
+    stroke-width="3.4"
+    stroke-linecap="round"
+  />
+  <circle cx="14" cy="43" r="3.4" fill="#8a4b2a" />
+  <circle cx="32" cy="24" r="3.4" fill="#8a4b2a" />
+  <circle cx="50" cy="38" r="3.4" fill="#8a4b2a" />
+</svg>
