@@ -149,3 +149,19 @@ describe('save storage', () => {
     expect(store.getItem(PRESERVED_KEY)).toBe(changed);
   });
 });
+
+it('round-trips local reflection records through the save storage path', () => {
+  const session = GameSession.create({ seed: 'reflection-storage', region: 'JP', year: 1978 });
+  session.recordReflection({
+    node: 5,
+    at: session.clock,
+    option: 'home',
+    note: '本机保存',
+    status: 'answered',
+  });
+  expect(saveGame(session)).toBe(true);
+  const restored = loadGame();
+  expect(restored.kind).toBe('loaded');
+  if (restored.kind !== 'loaded') throw new Error('expected saved reflections');
+  expect(restored.session.reflections).toEqual(session.reflections);
+});

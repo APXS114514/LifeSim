@@ -32,14 +32,24 @@ function storage(raw: string | null = null) {
 describe('playback preferences', () => {
   it('defaults to about 30 minutes at 1× without writing storage', () => {
     const { store, values } = storage();
-    expect(loadPreferences(store)).toEqual({ version: 1, lifeLengthMinutes: 30, pace: 1 });
+    expect(loadPreferences(store)).toEqual({
+      version: 1,
+      lifeLengthMinutes: 30,
+      pace: 1,
+      reflections: { enabled: true, skipDuringAutoPlay: true },
+    });
     expect(values.size).toBe(0);
     expect(loadPreferences(null)).toEqual(DEFAULT_PREFERENCES);
   });
 
   it('round-trips preferences using only their own key', () => {
     const { store, values } = storage();
-    const prefs = { version: 1 as const, lifeLengthMinutes: 10 as const, pace: 16 as const };
+    const prefs = {
+      version: 1 as const,
+      lifeLengthMinutes: 10 as const,
+      pace: 16 as const,
+      reflections: { enabled: false, skipDuringAutoPlay: true },
+    };
     expect(savePreferences(prefs, store)).toBe(true);
     expect([...values.keys()]).toEqual(['lifesim.prefs.v1']);
     expect(loadPreferences(store)).toEqual(prefs);
@@ -80,4 +90,27 @@ describe('playback preferences', () => {
     for (const key of ['lifeLengthMinutes', 'pace', 'prefs'])
       expect(before).not.toContain(`"${key}"`);
   });
+});
+
+it('merges legacy and partial reflection preferences without resetting pacing or writing unknown data', () => {
+  for (const reflections of [undefined, { enabled: false }]) {
+    const { store, values } = storage(
+      JSON.stringify({
+        version: 1,
+        lifeLengthMinutes: 10,
+        pace: 16,
+        reflections,
+        secret: 'fixture-do-not-copy',
+      }),
+    );
+    const prefs = loadPreferences(store);
+    expect(prefs).toEqual({
+      version: 1,
+      lifeLengthMinutes: 10,
+      pace: 16,
+      reflections: { enabled: reflections?.enabled ?? true, skipDuringAutoPlay: true },
+    });
+    expect(savePreferences(prefs, store)).toBe(true);
+    expect(values.get(PREFS_KEY)).not.toContain('secret');
+  }
 });

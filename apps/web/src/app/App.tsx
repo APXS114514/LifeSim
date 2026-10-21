@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
 import { SaveIssuePanel } from '../components/SaveIssuePanel.tsx';
@@ -61,6 +61,14 @@ export function App() {
   useEffect(() => {
     control?.setSpeed(yearDurationMs(prefs.pace, baseYearMsForLifeLength(prefs.lifeLengthMinutes)));
   }, [control, prefs]);
+
+  const persist = useCallback((): void => {
+    if (!session) return;
+    setSaveFailed(!saveGame(session));
+    setGame((current) =>
+      current ? { session: current.session, revision: current.revision + 1 } : current,
+    );
+  }, [session]);
 
   function changePreferences(next: Preferences): void {
     savePreferences(next);
@@ -212,6 +220,7 @@ export function App() {
             saveFailed={saveFailed}
             prefs={prefs}
             onPrefsChange={changePreferences}
+            onPersist={persist}
             control={control}
             onNewLife={newLife}
           />

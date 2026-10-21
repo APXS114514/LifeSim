@@ -17,7 +17,9 @@ export function TimeControls({
   view,
   prefs,
   onPrefsChange,
+  blocked = false,
 }: {
+  blocked?: boolean;
   control: TimeControl;
   session: GameSession;
   view: YearRevealView;
@@ -46,7 +48,7 @@ export function TimeControls({
   // 空格切换播放/暂停；焦点在输入控件或按钮上时不拦截。
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== ' ' || event.repeat) return;
+      if (blocked || event.key !== ' ' || event.repeat) return;
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName)) return;
       if (target?.isContentEditable) return;
@@ -59,7 +61,7 @@ export function TimeControls({
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [control]);
+  }, [control, blocked]);
 
   const status =
     state === 'ended'
@@ -93,7 +95,7 @@ export function TimeControls({
           onClick={() => {
             control.stepOnce();
           }}
-          disabled={!canStep}
+          disabled={blocked || !canStep}
         >
           {t('time.nextYear')}
         </button>
@@ -104,7 +106,7 @@ export function TimeControls({
             if (playing) control.pause();
             else control.play();
           }}
-          disabled={!canPlay}
+          disabled={blocked || !canPlay}
         >
           {playing ? t('time.pause') : t('time.play')}
         </button>
@@ -150,7 +152,7 @@ export function TimeControls({
           onClick={() => {
             control.fastForward();
           }}
-          disabled={!canFastForward}
+          disabled={blocked || !canFastForward}
         >
           {t('time.fastForward')}
         </button>
@@ -166,6 +168,7 @@ export function TimeControls({
               <button
                 type="button"
                 className="secondary"
+                disabled={blocked}
                 onClick={() => {
                   setConfirmingFinish(false);
                   control.finishLife();
@@ -187,6 +190,7 @@ export function TimeControls({
             <button
               type="button"
               className="link-button"
+              disabled={blocked}
               onClick={() => {
                 setConfirmingFinish(true);
               }}

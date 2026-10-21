@@ -14,6 +14,21 @@ function collectConsoleErrors(page: Page): string[] {
  * 那类人生的快进会直接到死亡，无法验证「停在决定前」。
  */
 async function freezeSeed(page: Page, seed = 'probe-0'): Promise<void> {
+  // This fixture keeps the original playback/theme scenario focused; reflections have their own suite.
+  await page.addInitScript(() => {
+    const raw = localStorage.getItem('lifesim.prefs.v1');
+    const prefs = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+    localStorage.setItem(
+      'lifesim.prefs.v1',
+      JSON.stringify({
+        version: 1,
+        lifeLengthMinutes: 30,
+        pace: 1,
+        ...prefs,
+        reflections: { enabled: false, skipDuringAutoPlay: true },
+      }),
+    );
+  });
   await page.addInitScript((value: string) => {
     Object.defineProperty(globalThis.crypto, 'randomUUID', {
       value: () => value,

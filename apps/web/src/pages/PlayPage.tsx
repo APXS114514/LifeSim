@@ -1,8 +1,17 @@
 import type { Locale } from '@lifesim/content-schema';
 import { describeCharacterLocations, joinNames } from '@lifesim/real-world';
-import { useEffect, useReducer, useState, useSyncExternalStore } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useReducer,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArchiveCard, Field, FieldGrid, Panel } from '../components/Archive.tsx';
+import { ReflectionCard } from '../components/ReflectionCard.tsx';
+import { planReflection } from '../game/reflections.ts';
 import { DecisionCard } from '../components/DecisionCard.tsx';
 import { Indicators } from '../components/Indicators.tsx';
 import { PixelAvatar } from '../components/PixelPortrait.tsx';
@@ -37,6 +46,7 @@ export function PlayPage({
   saveFailed,
   prefs,
   onPrefsChange,
+  onPersist,
   control,
   onNewLife,
 }: {
@@ -46,6 +56,7 @@ export function PlayPage({
   saveFailed: boolean;
   prefs: Preferences;
   onPrefsChange: (prefs: Preferences) => void;
+  onPersist: () => void;
   control: TimeControl;
   onNewLife: () => void;
 }) {
@@ -54,6 +65,30 @@ export function PlayPage({
   // 时间控制推进的是内核里的同一份会话；订阅它的变化来重绘时间线与时钟。
   const [, rerender] = useReducer((count: number) => count + 1, 0);
   useEffect(() => control.subscribe(rerender), [control]);
+  const timeArea = useRef<HTMLDivElement>(null);
+  const reflection = planReflection({
+    age: session.age,
+    records: session.reflections,
+    playback: control.state,
+    prefs: prefs.reflections,
+  });
+  const reflectionNode = reflection.kind === 'none' ? null : reflection.node;
+  // Resolve playback before the browser paints the question or another timer can advance.
+  useLayoutEffect(() => {
+    if (reflection.kind === 'show' && control.state === 'playing') control.pause();
+    if (reflection.kind === 'record-skipped' && reflectionNode !== null) {
+      if (
+        session.recordReflection({
+          node: reflectionNode,
+          at: session.clock,
+          option: null,
+          note: null,
+          status: 'skipped',
+        })
+      )
+        onPersist();
+    }
+  }, [reflection.kind, reflectionNode, session, control, onPersist]);
   const allowAnimation = useSyncExternalStore(subscribeMotionPreference, allowsAnimation);
   const view = useYearReveal({
     control,
@@ -173,6 +208,33 @@ export function PlayPage({
               />
               <span>{showFinance ? t('play.hideFinance') : t('play.showFinance')}</span>
             </label>
+            <label className="toggle">
+              <input
+                type="checkbox"
+                checked={prefs.reflections.enabled}
+                onChange={(event) =>
+                  onPrefsChange({
+                    ...prefs,
+                    reflections: { ...prefs.reflections, enabled: event.target.checked },
+                  })
+                }
+              />
+              <span>{t('reflection.enabled')}</span>
+            </label>
+            <label className="toggle">
+              <input
+                type="checkbox"
+                checked={prefs.reflections.skipDuringAutoPlay}
+                disabled={!prefs.reflections.enabled}
+                onChange={(event) =>
+                  onPrefsChange({
+                    ...prefs,
+                    reflections: { ...prefs.reflections, skipDuringAutoPlay: event.target.checked },
+                  })
+                }
+              />
+              <span>{t('reflection.skipDuringAutoPlay')}</span>
+            </label>
             {!saveFailed && <p className="hint">{t('play.autoSave')}</p>}
             {!session.isEnded && (
               <button type="button" className="secondary" onClick={onNewLife}>
@@ -194,13 +256,36 @@ export function PlayPage({
             </>
           ) : (
             <>
-              <TimeControls
-                control={control}
-                session={session}
-                view={view}
-                prefs={prefs}
-                onPrefsChange={onPrefsChange}
-              />
+              <div ref={timeArea} tabIndex={-1}>
+                <TimeControls
+                  blocked={reflection.kind === 'show'}
+                  control={control}
+                  session={session}
+                  view={view}
+                  prefs={prefs}
+                  onPrefsChange={onPrefsChange}
+                />
+              </div>
+              {reflection.kind === 'show' && (
+                <ReflectionCard
+                  key={reflection.node}
+                  node={reflection.node}
+                  locale={locale}
+                  onSubmit={(option, note) => {
+                    if (
+                      session.recordReflection({
+                        node: reflection.node,
+                        at: session.clock,
+                        option,
+                        note,
+                        status: option || note?.trim() ? 'answered' : 'skipped',
+                      })
+                    )
+                      onPersist();
+                    timeArea.current?.focus();
+                  }}
+                />
+              )}
               {session.pending && (
                 <DecisionCard
                   pending={session.pending}

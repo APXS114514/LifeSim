@@ -370,3 +370,49 @@ describe('pending decision guard (M3-040)', () => {
     expect(restored.pending?.at).toBe(restored.clock);
   });
 });
+
+it('saves optional reflections, restores legacy saves and salvages damaged entries', () => {
+  const session = GameSession.create(request);
+  const record = {
+    node: 5 as const,
+    at: session.clock,
+    option: 'home',
+    note: '  你好  ',
+    status: 'answered' as const,
+  };
+  expect(session.recordReflection(record)).toBe(true);
+  const records = session.reflections;
+  expect(session.recordReflection({ ...record, note: 'duplicate' })).toBe(false);
+  expect(session.reflections).toBe(records);
+  const save = session.serialize();
+  expect(save.reflections).toEqual([{ ...record, note: '你好' }]);
+  expect(GameSession.restore(parseGameSave(save)).reflections).toEqual(session.reflections);
+  delete save.reflections;
+  expect(GameSession.restore(parseGameSave(save)).reflections).toEqual([]);
+  for (const reflections of ['x', [{ node: 99 }], [{ node: 5, status: 'wat' }]])
+    expect(GameSession.restore(parseGameSave({ ...save, reflections })).reflections).toEqual([]);
+});
+
+it('keeps authoritative facts, clock and snapshots byte-identical with or without reflections', () => {
+  const a = GameSession.create(request),
+    b = GameSession.create(request);
+  for (let age = 1; age <= 15; age += 1) {
+    a.stepYear();
+    b.stepYear();
+    if (age === 5 || age === 15)
+      a.recordReflection({
+        node: age,
+        at: a.clock,
+        option: null,
+        note: '本机留言',
+        status: 'answered',
+      });
+    expect(a.clock).toBe(b.clock);
+    expect(canonicalJson(a.simulation.snapshot())).toBe(canonicalJson(b.simulation.snapshot()));
+    expect(canonicalJson(a.facts)).toBe(canonicalJson(b.facts));
+  }
+  a.finish();
+  b.finish();
+  expect(canonicalJson(a.facts)).toBe(canonicalJson(b.facts));
+  expect(canonicalJson(a.simulation.snapshot())).toBe(canonicalJson(b.simulation.snapshot()));
+});

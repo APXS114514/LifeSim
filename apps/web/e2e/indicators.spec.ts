@@ -57,6 +57,8 @@ test('increases knowledge on primary school entry without advancing extra time',
   page,
 }) => {
   await startLife(page);
+  // Keep the education scenario focused; reflection defaults are covered by reflections.spec.ts.
+  await page.getByLabel('人生节点反思', { exact: true }).uncheck();
   const before = Number(
     await page.locator('[data-indicator="knowledge"]').getAttribute('aria-valuenow'),
   );

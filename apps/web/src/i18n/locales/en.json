@@ -257,5 +257,49 @@
     "sampleName": "Sample Name",
     "sampleRecord": "You took your first steps.",
     "sampleMajor": "After secondary school, decided to apply to university."
+  },
+  "reflection": {
+    "eyebrow": "A moment in this life",
+    "enabled": "Life reflections",
+    "skipDuringAutoPlay": "Skip during autoplay",
+    "noteLabel": "Leave a few words (optional)",
+    "saveNote": "Save these words",
+    "skip": "Continue without answering",
+    "reviewHeading": "What was left behind",
+    "reviewSkipped": "No words were left that year",
+    "questions": {
+      "5": "You are five. Where did you spend most of this year?",
+      "15": "You are fifteen. What did you put your effort into this year?",
+      "30": "You are thirty. Looking back, what changed in you?",
+      "50": "You are fifty. Where did you want your effort to go?",
+      "70": "You are seventy. What would you say to your younger self?"
+    },
+    "options": {
+      "5": {
+        "home": "At home",
+        "outside": "Outside the house",
+        "with-adults": "Wherever the grown-ups went"
+      },
+      "15": {
+        "study": "Studying",
+        "work": "Helping at home or working",
+        "friends": "Being with friends"
+      },
+      "30": {
+        "careful": "I became more careful",
+        "bolder": "I became more willing to try",
+        "same": "I can't say"
+      },
+      "50": {
+        "work": "Doing the work well",
+        "family": "Taking care of the family",
+        "self": "Keeping something for myself"
+      },
+      "70": {
+        "slow": "Don't rush",
+        "fearless": "Don't be afraid",
+        "enough": "This is enough"
+      }
+    }
   }
 }

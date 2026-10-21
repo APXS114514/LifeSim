@@ -3,6 +3,7 @@ import { describeCharacterLocations, formatRealMoney } from '@lifesim/real-world
 import { useTranslation } from 'react-i18next';
 import { ArchiveCard } from './Archive.tsx';
 import { PlacePolityLabel } from './PlacePolityLabel.tsx';
+import { REFLECTION_QUESTIONS } from '../game/reflections.ts';
 import { archiveNumber } from '../game/archive.ts';
 import type { GameSession } from '../game/session.ts';
 
@@ -100,6 +101,38 @@ export function SummaryCard({ session, locale }: { session: GameSession; locale:
             ))}
           </ul>
         </div>
+      )}
+      {session.reflections.length > 0 && (
+        <section className="reflection-review">
+          <h3>{t('reflection.reviewHeading')}</h3>
+          <ul>
+            {[...session.reflections]
+              .sort((a, b) => a.node - b.node)
+              .map((record) => {
+                const option = REFLECTION_QUESTIONS.find(
+                  (q) => q.node === record.node,
+                )?.options.find((o) => o.id === record.option)?.label[locale];
+                return (
+                  <li key={record.node}>
+                    <strong>{t('time.ageValue', { age: record.node })}</strong>
+                    {' · '}
+                    {record.status === 'skipped'
+                      ? t('reflection.reviewSkipped')
+                      : [
+                          record.option
+                            ? t('reflection.options.' + record.node + '.' + record.option, {
+                                defaultValue: option ?? record.option,
+                              })
+                            : null,
+                          record.note,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ')}
+                  </li>
+                );
+              })}
+          </ul>
+        </section>
       )}
     </ArchiveCard>
   );

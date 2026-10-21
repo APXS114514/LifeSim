@@ -29,11 +29,14 @@ import {
   type RegionModel,
 } from '@lifesim/systems';
 
+import { addReflection, parseReflections, type ReflectionRecord } from './reflections.ts';
+
 export interface GameSaveData {
   version: 1;
   request: RealLifeRequest;
   snapshot: SimulationSnapshot;
   facts: SimEventFact[];
+  reflections?: ReflectionRecord[];
 }
 
 export interface GameSessionOptions {
@@ -43,6 +46,7 @@ export interface GameSessionOptions {
   region: RegionModel;
   simulation: Simulation;
   facts: SimEventFact[];
+  reflections?: ReflectionRecord[];
   narrator: RealNarrator;
 }
 
@@ -77,8 +81,10 @@ export class GameSession {
   readonly narrator: RealNarrator;
   facts: SimEventFact[];
   pending: PendingDecision | null;
+  #reflections: readonly ReflectionRecord[];
 
   private constructor(options: GameSessionOptions) {
+    this.#reflections = parseReflections(options.reflections);
     this.request = options.request;
     this.birth = options.birth;
     this.pack = options.pack;
@@ -122,6 +128,7 @@ export class GameSession {
     }
     const simulation = restoreLifeSimulation(snapshot, base.region);
     return new GameSession({
+      reflections: parseReflections(data.reflections),
       request: data.request,
       birth: base.birth,
       pack: base.pack,
@@ -130,6 +137,17 @@ export class GameSession {
       facts,
       narrator: createRealNarrator(base.pack, base.birth.birthDate),
     });
+  }
+
+  get reflections(): readonly ReflectionRecord[] {
+    return this.#reflections;
+  }
+
+  recordReflection(record: ReflectionRecord): boolean {
+    const next = addReflection(this.#reflections, record);
+    if (next === this.#reflections) return false;
+    this.#reflections = next;
+    return true;
   }
 
   get isEnded(): boolean {
@@ -230,6 +248,7 @@ export class GameSession {
       request: this.request,
       snapshot: this.simulation.snapshot(),
       facts: this.facts,
+      reflections: [...this.reflections],
     };
   }
 
@@ -292,5 +311,6 @@ export function parseGameSave(raw: unknown): GameSaveData {
     request: value['request'] as RealLifeRequest,
     snapshot: SimulationSnapshotSchema.parse(value['snapshot']),
     facts: SimEventFactSchema.array().parse(value['facts']),
+    reflections: parseReflections(value['reflections']),
   };
 }

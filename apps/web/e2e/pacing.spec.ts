@@ -7,6 +7,21 @@ async function saved(page: Page): Promise<Save> {
 }
 
 async function start(page: Page): Promise<void> {
+  // This fixture keeps the original playback/theme scenario focused; reflections have their own suite.
+  await page.addInitScript(() => {
+    const raw = localStorage.getItem('lifesim.prefs.v1');
+    const prefs = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+    localStorage.setItem(
+      'lifesim.prefs.v1',
+      JSON.stringify({
+        version: 1,
+        lifeLengthMinutes: 30,
+        pace: 1,
+        ...prefs,
+        reflections: { enabled: false, skipDuringAutoPlay: true },
+      }),
+    );
+  });
   await page.addInitScript(() => {
     Object.defineProperty(crypto, 'randomUUID', { value: () => 'probe-0' });
   });
