@@ -189,6 +189,7 @@ export function createRealRegion(
     'cpi-index': 'prices',
     'health-out-of-pocket-share': 'illness',
     'health-expenditure-per-capita': 'illness',
+    'sex-ratio-at-birth': 'population',
   };
 
   const qualityFor = (method: string): DataQuality => {

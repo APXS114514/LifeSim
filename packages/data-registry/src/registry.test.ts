@@ -178,3 +178,154 @@ describe('DataRegistry exact lookup', () => {
     expect(withBreakpoint.breakpoints.map((breakpoint) => breakpoint.id)).toEqual(['bp-fixture']);
   });
 });
+
+/**
+ * M3-047 的测试夹具，数值虚构：只用于验证分性别查询与「不跨性别回退」，不是真实人口数据。
+ */
+const qxFemale = {
+  ...qxCN,
+  id: 'test/CN/qx-female',
+  sex: 'female',
+  evidence: { ...qxCN.evidence, yearRange: [2000, 2020] },
+  points: [
+    { year: 2000, age: 0, value: 0.02, projected: false },
+    { year: 2000, age: 1, value: 0.002, projected: false },
+    { year: 2000, age: 2, value: 0.001, projected: false },
+    { year: 2010, age: 0, value: 0.03, projected: false },
+  ],
+};
+
+/** 测试夹具，数值虚构：只有 2010 年，用来验证不向其他性别回退。 */
+const qxMale = {
+  ...qxCN,
+  id: 'test/CN/qx-male',
+  sex: 'male',
+  evidence: { ...qxCN.evidence, yearRange: [2000, 2020] },
+  points: [
+    { year: 2010, age: 0, value: 0.04, projected: false },
+    { year: 2010, age: 1, value: 0.004, projected: false },
+    { year: 2010, age: 2, value: 0.002, projected: false },
+  ],
+};
+
+describe('M3-047 分性别查询', () => {
+  const sexRegistry = new DataRegistry([qxCN, qxFemale, qxMale], {
+    parents: { 'place:cn-city': 'country:CN' },
+  });
+
+  it('keeps the both, female and male series apart and returns the matching one', () => {
+    const female = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2000,
+      age: 0,
+      sex: 'female',
+    });
+    expect(female).toMatchObject({
+      status: 'found',
+      method: 'exact',
+      value: 0.02,
+      seriesId: 'test/CN/qx-female',
+    });
+    const male = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2010,
+      age: 0,
+      sex: 'male',
+    });
+    expect(male).toMatchObject({ status: 'found', value: 0.04, seriesId: 'test/CN/qx-male' });
+    const both = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2000,
+      age: 0,
+    });
+    expect(both).toMatchObject({ status: 'found', value: 0.01, seriesId: 'test/CN/qx' });
+    expect(sexRegistry.series).toHaveLength(3);
+  });
+
+  it('never falls back to another sex or to the both series and names the sex in the reason', () => {
+    const femaleNeighbor = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2001,
+      age: 0,
+      sex: 'female',
+    });
+    expect(femaleNeighbor).toMatchObject({
+      status: 'found',
+      method: 'fallback-neighbor-year',
+      value: 0.02,
+      sourceYear: 2000,
+      seriesId: 'test/CN/qx-female',
+    });
+    const male = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2000,
+      age: 0,
+      sex: 'male',
+    });
+    expect(male.status).toBe('missing');
+    if (male.status !== 'missing') return;
+    expect(male.reason).toContain('male');
+    expect(male.reason).not.toContain('0.01');
+  });
+
+  it('reports a missing female series instead of substituting the both series', () => {
+    const registryWithoutFemale = new DataRegistry([qxCN, qxMale]);
+    const result = registryWithoutFemale.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'country:CN',
+      year: 2000,
+      age: 0,
+      sex: 'female',
+    });
+    expect(result.status).toBe('missing');
+    if (result.status !== 'missing') return;
+    expect(result.reason).toContain('female');
+  });
+
+  it('keeps the parent-geography fallback inside the same sex', () => {
+    const result = sexRegistry.lookup({
+      indicator: 'life-table-qx',
+      geographyId: 'place:cn-city',
+      year: 2000,
+      age: 0,
+      sex: 'female',
+    });
+    expect(result).toMatchObject({
+      status: 'found',
+      method: 'fallback-parent-geography',
+      value: 0.02,
+      sourceGeographyId: 'country:CN',
+      seriesId: 'test/CN/qx-female',
+    });
+  });
+
+  it('rejects a duplicate series for the same sex but accepts the same indicator for two sexes', () => {
+    expect(() => new DataRegistry([qxFemale, qxFemale])).toThrow(/qx-female/);
+    expect(() => new DataRegistry([qxCN, qxFemale, qxMale])).not.toThrow();
+  });
+
+  it('defaults the sex to both when the query omits it', () => {
+    expect(
+      sexRegistry.lookup({
+        indicator: 'life-table-qx',
+        geographyId: 'country:CN',
+        year: 2000,
+        age: 1,
+      }),
+    ).toMatchObject({ status: 'found', value: 0.001, seriesId: 'test/CN/qx' });
+    expect(
+      sexRegistry.lookup({
+        indicator: 'life-table-qx',
+        geographyId: 'country:CN',
+        year: 2000,
+        age: 1,
+        sex: 'both',
+      }),
+    ).toMatchObject({ status: 'found', value: 0.001, seriesId: 'test/CN/qx' });
+  });
+});

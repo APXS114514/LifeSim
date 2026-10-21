@@ -1,0 +1,1256 @@
+{
+  "id": "ru-given",
+  "scheme": "ru",
+  "kind": "given",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "ivan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Иван",
+        "zh-Hans": "伊万",
+        "en": "Ivan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pyotr-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Пётр",
+        "zh-Hans": "彼得",
+        "en": "Pyotr"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aleksandr-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "Александр",
+        "zh-Hans": "亚历山大",
+        "en": "Aleksandr"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nikolay-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "Николай",
+        "zh-Hans": "尼古拉",
+        "en": "Nikolay"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mikhail-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Михаил",
+        "zh-Hans": "米哈伊尔",
+        "en": "Mikhail"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vasily-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Василий",
+        "zh-Hans": "瓦西里",
+        "en": "Vasily"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fedor-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Фёдор",
+        "zh-Hans": "费奥多尔",
+        "en": "Fedor"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dmitry-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Дмитрий",
+        "zh-Hans": "德米特里",
+        "en": "Dmitry"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sergey-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Сергей",
+        "zh-Hans": "谢尔盖",
+        "en": "Sergey"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aleksey-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Алексей",
+        "zh-Hans": "阿列克谢",
+        "en": "Aleksey"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "andrey-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Андрей",
+        "zh-Hans": "安德烈",
+        "en": "Andrey"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vladimir-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Владимир",
+        "zh-Hans": "弗拉基米尔",
+        "en": "Vladimir"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pavel-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Павел",
+        "zh-Hans": "帕维尔",
+        "en": "Pavel"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "grigory-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Григорий",
+        "zh-Hans": "格里戈里",
+        "en": "Grigory"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "stepan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Степан",
+        "zh-Hans": "斯捷潘",
+        "en": "Stepan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "egor-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Егор",
+        "zh-Hans": "叶戈尔",
+        "en": "Egor"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "anna-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Анна",
+        "zh-Hans": "安娜",
+        "en": "Anna"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mariya-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 17,
+      "grade": "D",
+      "forms": {
+        "native": "Мария",
+        "zh-Hans": "玛丽亚",
+        "en": "Mariya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yekaterina-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Екатерина",
+        "zh-Hans": "叶卡捷琳娜",
+        "en": "Yekaterina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "natalya-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Наталья",
+        "zh-Hans": "娜塔莉亚",
+        "en": "Natalya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "olga-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Ольга",
+        "zh-Hans": "奥尔加",
+        "en": "Olga"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tatyana-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Татьяна",
+        "zh-Hans": "塔季扬娜",
+        "en": "Tatyana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yelena-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Елена",
+        "zh-Hans": "叶莲娜",
+        "en": "Yelena"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "irina-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Ирина",
+        "zh-Hans": "伊琳娜",
+        "en": "Irina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "svetlana-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Светлана",
+        "zh-Hans": "斯维特兰娜",
+        "en": "Svetlana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lyudmila-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Людмила",
+        "zh-Hans": "柳德米拉",
+        "en": "Lyudmila"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "galina-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Галина",
+        "zh-Hans": "加林娜",
+        "en": "Galina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "valentina-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Валентина",
+        "zh-Hans": "瓦莲京娜",
+        "en": "Valentina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tamara-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Тамара",
+        "zh-Hans": "塔玛拉",
+        "en": "Tamara"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nina-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Нина",
+        "zh-Hans": "尼娜",
+        "en": "Nina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vera-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Вера",
+        "zh-Hans": "薇拉",
+        "en": "Vera"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lyubov-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Любовь",
+        "zh-Hans": "柳博芙",
+        "en": "Lyubov"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "viktor-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Виктор",
+        "zh-Hans": "维克托",
+        "en": "Viktor"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yury-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Юрий",
+        "zh-Hans": "尤里",
+        "en": "Yury"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "oleg-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Олег",
+        "zh-Hans": "奥列格",
+        "en": "Oleg"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "boris-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Борис",
+        "zh-Hans": "鲍里斯",
+        "en": "Boris"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "valery-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Валерий",
+        "zh-Hans": "瓦列里",
+        "en": "Valery"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gennady-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Геннадий",
+        "zh-Hans": "根纳季",
+        "en": "Gennady"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "anatoly-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Анатолий",
+        "zh-Hans": "阿纳托利",
+        "en": "Anatoly"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "leonid-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Леонид",
+        "zh-Hans": "列昂尼德",
+        "en": "Leonid"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vadim-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Вадим",
+        "zh-Hans": "瓦季姆",
+        "en": "Vadim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "igor-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Игорь",
+        "zh-Hans": "伊戈尔",
+        "en": "Igor"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "konstantin-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Константин",
+        "zh-Hans": "康斯坦丁",
+        "en": "Konstantin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vyacheslav-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Вячеслав",
+        "zh-Hans": "维亚切斯拉夫",
+        "en": "Vyacheslav"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yevgeny-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Евгений",
+        "zh-Hans": "叶夫根尼",
+        "en": "Yevgeny"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "stanislav-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Станислав",
+        "zh-Hans": "斯坦尼斯拉夫",
+        "en": "Stanislav"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "arkady-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Аркадий",
+        "zh-Hans": "阿尔卡季",
+        "en": "Arkady"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "albert-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Альберт",
+        "zh-Hans": "阿尔伯特",
+        "en": "Albert"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "larisa-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Лариса",
+        "zh-Hans": "拉里萨",
+        "en": "Larisa"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nadezhda-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Надежда",
+        "zh-Hans": "娜杰日达",
+        "en": "Nadezhda"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuliya-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Юлия",
+        "zh-Hans": "尤利娅",
+        "en": "Yuliya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "marina-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Марина",
+        "zh-Hans": "玛丽娜",
+        "en": "Marina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "oksana-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Оксана",
+        "zh-Hans": "奥克萨娜",
+        "en": "Oksana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "inna-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Инна",
+        "zh-Hans": "因娜",
+        "en": "Inna"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "alla-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Алла",
+        "zh-Hans": "阿拉",
+        "en": "Alla"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lidiya-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Лидия",
+        "zh-Hans": "莉迪娅",
+        "en": "Lidiya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zoya-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Зоя",
+        "zh-Hans": "卓娅",
+        "en": "Zoya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "antonina-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Антонина",
+        "zh-Hans": "安东尼娜",
+        "en": "Antonina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "raisa-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Раиса",
+        "zh-Hans": "赖莎",
+        "en": "Raisa"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "klavdiya-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Клавдия",
+        "zh-Hans": "克拉夫季娅",
+        "en": "Klavdiya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "valeriya-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Валерия",
+        "zh-Hans": "瓦列里娅",
+        "en": "Valeriya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "elvira-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Эльвира",
+        "zh-Hans": "埃莉维拉",
+        "en": "Elvira"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhanna-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Жанна",
+        "zh-Hans": "然娜",
+        "en": "Zhanna"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dina-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Дина",
+        "zh-Hans": "迪娜",
+        "en": "Dina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "maksim-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Максим",
+        "zh-Hans": "马克西姆",
+        "en": "Maksim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "artyom-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Артём",
+        "zh-Hans": "阿尔乔姆",
+        "en": "Artyom"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "denis-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Денис",
+        "zh-Hans": "杰尼斯",
+        "en": "Denis"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ilya-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Илья",
+        "zh-Hans": "伊利亚",
+        "en": "Ilya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kirill-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Кирилл",
+        "zh-Hans": "基里尔",
+        "en": "Kirill"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nikita-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Никита",
+        "zh-Hans": "尼基塔",
+        "en": "Nikita"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "roman-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Роман",
+        "zh-Hans": "罗曼",
+        "en": "Roman"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "anton-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Антон",
+        "zh-Hans": "安东",
+        "en": "Anton"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vladislav-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Владислав",
+        "zh-Hans": "弗拉季斯拉夫",
+        "en": "Vladislav"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "daniil-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Даниил",
+        "zh-Hans": "丹尼尔",
+        "en": "Daniil"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gleb-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Глеб",
+        "zh-Hans": "格列布",
+        "en": "Gleb"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "matvey-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Матвей",
+        "zh-Hans": "马特维",
+        "en": "Matvey"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "timofey-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Тимофей",
+        "zh-Hans": "季莫费",
+        "en": "Timofey"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "saveliy-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Савелий",
+        "zh-Hans": "萨韦利",
+        "en": "Saveliy"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "semyon-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Семён",
+        "zh-Hans": "谢苗",
+        "en": "Semyon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zakhar-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Захар",
+        "zh-Hans": "扎哈尔",
+        "en": "Zakhar"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "anastasiya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Анастасия",
+        "zh-Hans": "阿纳斯塔西娅",
+        "en": "Anastasiya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "darya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Дарья",
+        "zh-Hans": "达里娅",
+        "en": "Darya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "polina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Полина",
+        "zh-Hans": "波林娜",
+        "en": "Polina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yelizaveta-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Елизавета",
+        "zh-Hans": "伊丽莎白",
+        "en": "Yelizaveta"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kseniya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Ксения",
+        "zh-Hans": "克谢尼娅",
+        "en": "Kseniya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "arina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Арина",
+        "zh-Hans": "阿丽娜",
+        "en": "Arina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "viktoriya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Виктория",
+        "zh-Hans": "维多利亚",
+        "en": "Viktoriya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sofya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Софья",
+        "zh-Hans": "索菲亚",
+        "en": "Sofya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "diana-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Диана",
+        "zh-Hans": "季阿娜",
+        "en": "Diana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "alina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Алина",
+        "zh-Hans": "阿林娜",
+        "en": "Alina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "milana-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Милана",
+        "zh-Hans": "米拉娜",
+        "en": "Milana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "varvara-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Варвара",
+        "zh-Hans": "瓦尔瓦拉",
+        "en": "Varvara"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ulyana-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Ульяна",
+        "zh-Hans": "乌里扬娜",
+        "en": "Ulyana"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "angelina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Ангелина",
+        "zh-Hans": "安格利娜",
+        "en": "Angelina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kristina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Кристина",
+        "zh-Hans": "克里斯京娜",
+        "en": "Kristina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "veronika-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Вероника",
+        "zh-Hans": "韦罗妮卡",
+        "en": "Veronika"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

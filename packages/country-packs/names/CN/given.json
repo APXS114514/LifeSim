@@ -1,0 +1,1256 @@
+{
+  "id": "cn-given",
+  "scheme": "zh",
+  "kind": "given",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "xiuying-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 24,
+      "grade": "D",
+      "forms": {
+        "native": "秀英",
+        "zh-Hans": "秀英",
+        "en": "Xiuying"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guiying-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "桂英",
+        "zh-Hans": "桂英",
+        "en": "Guiying"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yulan-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "玉兰",
+        "zh-Hans": "玉兰",
+        "en": "Yulan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiulan-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "秀兰",
+        "zh-Hans": "秀兰",
+        "en": "Xiulan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shuzhen-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "淑珍",
+        "zh-Hans": "淑珍",
+        "en": "Shuzhen"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guilan-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "桂兰",
+        "zh-Hans": "桂兰",
+        "en": "Guilan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fengying-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "凤英",
+        "zh-Hans": "凤英",
+        "en": "Fengying"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiuzhen-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "秀珍",
+        "zh-Hans": "秀珍",
+        "en": "Xiuzhen"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuzhen-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "玉珍",
+        "zh-Hans": "玉珍",
+        "en": "Yuzhen"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiuyun-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "秀云",
+        "zh-Hans": "秀云",
+        "en": "Xiuyun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "baozhen-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "宝珍",
+        "zh-Hans": "宝珍",
+        "en": "Baozhen"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chunhua-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "春花",
+        "zh-Hans": "春花",
+        "en": "Chunhua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiulian-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "秀莲",
+        "zh-Hans": "秀莲",
+        "en": "Xiulian"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yufeng-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "玉凤",
+        "zh-Hans": "玉凤",
+        "en": "Yufeng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guifang-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "桂芳",
+        "zh-Hans": "桂芳",
+        "en": "Guifang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yumei-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "玉梅",
+        "zh-Hans": "玉梅",
+        "en": "Yumei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "defu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "德福",
+        "zh-Hans": "德福",
+        "en": "Defu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dehai-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "德海",
+        "zh-Hans": "德海",
+        "en": "Dehai"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "changshun-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "长顺",
+        "zh-Hans": "长顺",
+        "en": "Changshun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jinshan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "金山",
+        "zh-Hans": "金山",
+        "en": "Jinshan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yushan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "玉山",
+        "zh-Hans": "玉山",
+        "en": "Yushan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "youfu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "有福",
+        "zh-Hans": "有福",
+        "en": "Youfu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tiancheng-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "天成",
+        "zh-Hans": "天成",
+        "en": "Tiancheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "wanshun-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "万顺",
+        "zh-Hans": "万顺",
+        "en": "Wanshun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fusheng-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "福生",
+        "zh-Hans": "福生",
+        "en": "Fusheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "desheng-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "德胜",
+        "zh-Hans": "德胜",
+        "en": "Desheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mingyuan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "明远",
+        "zh-Hans": "明远",
+        "en": "Mingyuan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guangzhi-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "广志",
+        "zh-Hans": "广志",
+        "en": "Guangzhi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "baoshan-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "宝山",
+        "zh-Hans": "宝山",
+        "en": "Baoshan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "changgui-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "长贵",
+        "zh-Hans": "长贵",
+        "en": "Changgui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mancang-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "满仓",
+        "zh-Hans": "满仓",
+        "en": "Mancang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shichang-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "世昌",
+        "zh-Hans": "世昌",
+        "en": "Shichang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jianguo-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "建国",
+        "zh-Hans": "建国",
+        "en": "Jianguo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jianhua-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "建华",
+        "zh-Hans": "建华",
+        "en": "Jianhua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhiqiang-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 17,
+      "grade": "D",
+      "forms": {
+        "native": "志强",
+        "zh-Hans": "志强",
+        "en": "Zhiqiang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guoqiang-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "国强",
+        "zh-Hans": "国强",
+        "en": "Guoqiang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jianping-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "建平",
+        "zh-Hans": "建平",
+        "en": "Jianping"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "weidong-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "卫东",
+        "zh-Hans": "卫东",
+        "en": "Weidong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiangyang-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "向阳",
+        "zh-Hans": "向阳",
+        "en": "Xiangyang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lixin-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "立新",
+        "zh-Hans": "立新",
+        "en": "Lixin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yongqiang-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "永强",
+        "zh-Hans": "永强",
+        "en": "Yongqiang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhigang-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "志刚",
+        "zh-Hans": "志刚",
+        "en": "Zhigang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minghui-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "明辉",
+        "zh-Hans": "明辉",
+        "en": "Minghui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guohua-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "国华",
+        "zh-Hans": "国华",
+        "en": "Guohua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jianmin-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "建民",
+        "zh-Hans": "建民",
+        "en": "Jianmin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xuejun-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "学军",
+        "zh-Hans": "学军",
+        "en": "Xuejun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dongsheng-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "东升",
+        "zh-Hans": "东升",
+        "en": "Dongsheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chunlin-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "春林",
+        "zh-Hans": "春林",
+        "en": "Chunlin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shulan-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "淑兰",
+        "zh-Hans": "淑兰",
+        "en": "Shulan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guizhi-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "桂芝",
+        "zh-Hans": "桂芝",
+        "en": "Guizhi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuhua-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "玉华",
+        "zh-Hans": "玉华",
+        "en": "Yuhua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiurong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "秀荣",
+        "zh-Hans": "秀荣",
+        "en": "Xiurong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lihua-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "丽华",
+        "zh-Hans": "丽华",
+        "en": "Lihua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yaqin-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "雅琴",
+        "zh-Hans": "雅琴",
+        "en": "Yaqin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiaoyan-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "小燕",
+        "zh-Hans": "小燕",
+        "en": "Xiaoyan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jianfang-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "建芳",
+        "zh-Hans": "建芳",
+        "en": "Jianfang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiaohong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "晓红",
+        "zh-Hans": "晓红",
+        "en": "Xiaohong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hongmei-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "红梅",
+        "zh-Hans": "红梅",
+        "en": "Hongmei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chunmei-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "春梅",
+        "zh-Hans": "春梅",
+        "en": "Chunmei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiumei-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "秀梅",
+        "zh-Hans": "秀梅",
+        "en": "Xiumei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "suhua-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "淑华",
+        "zh-Hans": "淑华",
+        "en": "Suhua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fenglan-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "凤兰",
+        "zh-Hans": "凤兰",
+        "en": "Fenglan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shuhua-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "素华",
+        "zh-Hans": "素华",
+        "en": "Suhua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yufang-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "玉芳",
+        "zh-Hans": "玉芳",
+        "en": "Yufang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lei-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "磊",
+        "zh-Hans": "磊",
+        "en": "Lei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "wei-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 17,
+      "grade": "D",
+      "forms": {
+        "native": "伟",
+        "zh-Hans": "伟",
+        "en": "Wei"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tao-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "涛",
+        "zh-Hans": "涛",
+        "en": "Tao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "军",
+        "zh-Hans": "军",
+        "en": "Jun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "liang-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "亮",
+        "zh-Hans": "亮",
+        "en": "Liang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jie-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "杰",
+        "zh-Hans": "杰",
+        "en": "Jie"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "peng-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "鹏",
+        "zh-Hans": "鹏",
+        "en": "Peng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "bin-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "斌",
+        "zh-Hans": "斌",
+        "en": "Bin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hao-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "浩",
+        "zh-Hans": "浩",
+        "en": "Hao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ning-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "宁",
+        "zh-Hans": "宁",
+        "en": "Ning"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fan-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "帆",
+        "zh-Hans": "帆",
+        "en": "Fan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yu-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "宇",
+        "zh-Hans": "宇",
+        "en": "Yu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "qiang-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "强",
+        "zh-Hans": "强",
+        "en": "Qiang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "feng-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "峰",
+        "zh-Hans": "峰",
+        "en": "Feng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xu-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "旭",
+        "zh-Hans": "旭",
+        "en": "Xu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chao-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "超",
+        "zh-Hans": "超",
+        "en": "Chao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "li-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "丽",
+        "zh-Hans": "丽",
+        "en": "Li"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "na-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "娜",
+        "zh-Hans": "娜",
+        "en": "Na"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "min-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "敏",
+        "zh-Hans": "敏",
+        "en": "Min"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jing-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "静",
+        "zh-Hans": "静",
+        "en": "Jing"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yan-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "燕",
+        "zh-Hans": "燕",
+        "en": "Yan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fang-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "芳",
+        "zh-Hans": "芳",
+        "en": "Fang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "juan-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "娟",
+        "zh-Hans": "娟",
+        "en": "Juan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ting-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "婷",
+        "zh-Hans": "婷",
+        "en": "Ting"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jie-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "洁",
+        "zh-Hans": "洁",
+        "en": "Jie"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xia-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "霞",
+        "zh-Hans": "霞",
+        "en": "Xia"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xue-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "雪",
+        "zh-Hans": "雪",
+        "en": "Xue"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lin-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "琳",
+        "zh-Hans": "琳",
+        "en": "Lin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yue-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "悦",
+        "zh-Hans": "悦",
+        "en": "Yue"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "qian-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "倩",
+        "zh-Hans": "倩",
+        "en": "Qian"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xin-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "欣",
+        "zh-Hans": "欣",
+        "en": "Xin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "meng-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "梦",
+        "zh-Hans": "梦",
+        "en": "Meng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

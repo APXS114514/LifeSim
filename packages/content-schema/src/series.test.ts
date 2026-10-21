@@ -224,3 +224,81 @@ describe('M3 indicator units', () => {
     expect(StatSeriesSchema.safeParse(m3Fixture('cpi-index', 'share', 0.135)).success).toBe(false);
   });
 });
+
+/** M3-047 夹具，数值虚构，只为覆盖 schema 规则（不是真实生命表或出生性别比）。 */
+function sexFixture(sex: 'female' | 'male' | 'other'): Record<string, unknown> {
+  return {
+    ...qx,
+    id: `test/CN/qx-${sex}`,
+    sex,
+    evidence: { ...qx.evidence, methodId: 'fixture' },
+  };
+}
+
+/** M3-047 夹具，数值虚构。 */
+function srbFixture(value: number): StatSeries {
+  return {
+    id: 'test/CN/sex-ratio-at-birth',
+    indicator: 'sex-ratio-at-birth',
+    geographyId: 'country:CN',
+    unit: 'males-per-100-females',
+    ageBasis: 'none',
+    sex: 'both',
+    evidence: {
+      grade: 'B',
+      sourceIds: ['un-wpp:2024'],
+      modelVersion: 'fixture',
+      geographyId: 'country:CN',
+      yearRange: [1950, 2100],
+    },
+    points: [{ year: 1950, age: null, value, projected: false }],
+  };
+}
+
+describe('M3-047 性别与出生性别比', () => {
+  it('accepts series labelled female and male', () => {
+    expect(StatSeriesSchema.safeParse(sexFixture('female')).success).toBe(true);
+    expect(StatSeriesSchema.safeParse(sexFixture('male')).success).toBe(true);
+  });
+
+  it('rejects any sex other than both, female or male', () => {
+    expect(StatSeriesSchema.safeParse(sexFixture('other')).success).toBe(false);
+    expect(StatSeriesSchema.safeParse({ ...qx, sex: 'total' }).success).toBe(false);
+  });
+
+  it('defines the sex-ratio-at-birth indicator spec', () => {
+    expect(INDICATOR_SPEC['sex-ratio-at-birth']).toEqual({
+      unit: 'males-per-100-females',
+      ageBasis: 'none',
+    });
+    expect(INDICATORS).toContain('sex-ratio-at-birth');
+  });
+
+  it('accepts a plausible sex ratio at birth and both range ends', () => {
+    for (const value of [90, 105.9, 130, 111.2]) {
+      expect(StatSeriesSchema.safeParse(srbFixture(value)).success, String(value)).toBe(true);
+    }
+  });
+
+  it('rejects a sex ratio at birth of zero, a negative value or above 130', () => {
+    for (const value of [0, -1, -105.9, 131, 130.01]) {
+      const result = StatSeriesSchema.safeParse(srbFixture(value));
+      expect(result.success, String(value)).toBe(false);
+      if (result.success) continue;
+      expect(result.error.issues.some((issue) => issue.path.includes('value'))).toBe(true);
+    }
+  });
+
+  it('rejects a sex ratio at birth with a null value and no reason, like every other indicator', () => {
+    const withoutReason = {
+      ...srbFixture(105),
+      points: [{ year: 1950, age: null, value: null, projected: false }],
+    } as unknown as StatSeries;
+    expect(StatSeriesSchema.safeParse(withoutReason).success).toBe(false);
+  });
+
+  it('requires the males-per-100-females unit for sex ratio at birth', () => {
+    expect(StatSeriesSchema.safeParse({ ...srbFixture(105), unit: 'ratio' }).success).toBe(false);
+    expect(StatSeriesSchema.safeParse({ ...srbFixture(105), unit: 'index' }).success).toBe(false);
+  });
+});

@@ -1,7 +1,11 @@
-// 从 WPP 2024 单岁生命表（男女合计，Medium）提取五地 1950—2100 年、0—100 岁的 qx。
+// 从 WPP 2024 单岁生命表（Medium）提取五地 1950—2100 年、0—100 岁的 qx，按性别分别输出。
 //   node data/scripts/wpp2024/qx.mjs --estimates <1950-2023 文件> --projections <2024-2100 文件>
+//   node data/scripts/wpp2024/qx.mjs --female-estimates <…> --female-projections <…> \
+//     --male-estimates <…> --male-projections <…>
+// 只给合计参数时输出 `wpp2024-qx.json`（与 M2 起的数据逐字节相同）；给分性别参数时另外输出
+// `wpp2024-qx-female.json`、`wpp2024-qx-male.json`（ADR-0010 A3、M3-047）。
 //
-// 两个源文件解压后超过 1 GB，CLI 先按 LocID 流式筛选，再交给 toQxSeries 做纯转换。
+// 每个源文件解压后超过 1 GB，CLI 先按 LocID 流式筛选，再交给 toQxSeries 做纯转换。
 import { createReadStream, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { dirname, join, resolve } from 'node:path';
@@ -15,6 +19,7 @@ const root = resolve(import.meta.dirname, '../../..');
 const inputsPath = join(root, 'data/scripts/wpp2024/inputs.json');
 
 /** @typedef {'CN'|'JP'|'KP'|'KR'|'RU'} PackId */
+/** @typedef {'both'|'female'|'male'} QxSex */
 /** @typedef {import('../../../packages/content-schema/src/index.ts').StatSeries} StatSeries */
 
 /** @type {Record<PackId, { locId: string, name: string }>} */
@@ -26,6 +31,32 @@ const REGIONS = {
   RU: { locId: '643', name: 'Russian Federation' },
 };
 
+/**
+ * WPP 文件里每个性别口径的行标记。WPP2024 生命表的 SexID：1 = Male、2 = Female、3 = Total，
+ * 与 Sex 列的取值一一对应（已对原始文件逐值核实）。
+ * @type {Record<QxSex, { sexLabel: string, sexId: string, suffix: string, methodId: string }>}
+ */
+const SEX_SPECS = {
+  both: {
+    sexLabel: 'Total',
+    sexId: '3',
+    suffix: '',
+    methodId: 'wpp2024-life-table-single-age-both',
+  },
+  female: {
+    sexLabel: 'Female',
+    sexId: '2',
+    suffix: '-female',
+    methodId: 'wpp2024-life-table-single-age-female',
+  },
+  male: {
+    sexLabel: 'Male',
+    sexId: '1',
+    suffix: '-male',
+    methodId: 'wpp2024-life-table-single-age-male',
+  },
+};
+
 const FIRST_YEAR = 1950;
 const LAST_YEAR = 2100;
 const PROJECTED_FROM = 2024;
@@ -34,9 +65,12 @@ const PROJECTED_FROM = 2024;
  * 把两个生命表文件的记录合并转换为一条 qx 序列。
  * @param {Record<string, string>[]} records
  * @param {PackId} packId
+ * @param {QxSex} [sex] 性别口径，缺省为合计（与改动前的输出保持一致）
  * @returns {StatSeries}
  */
-export function toQxSeries(records, packId) {
+export function toQxSeries(records, packId, sex = 'both') {
+  const spec = SEX_SPECS[sex];
+  if (!spec) throw new Error(`未知的性别口径：${sex}`);
   const region = REGIONS[packId];
   const header = records[0];
   if (!header) throw new Error('WPP 生命表没有数据行');
@@ -58,7 +92,7 @@ export function toQxSeries(records, packId) {
   for (const record of records) {
     if (record.LocID !== region.locId) continue;
     if (record.Variant !== 'Medium') continue;
-    if (hasSex && record.Sex !== 'Total' && record.SexID !== '3') continue;
+    if (hasSex && record.Sex !== spec.sexLabel && record.SexID !== spec.sexId) continue;
 
     const year = Number(record.Time);
     if (!Number.isInteger(year)) throw new Error(`${packId} 的年份不是整数：${record.Time}`);
@@ -117,19 +151,19 @@ export function toQxSeries(records, packId) {
   }
 
   return StatSeriesSchema.parse({
-    id: `wpp2024/${packId}/qx`,
+    id: `wpp2024/${packId}/qx${spec.suffix}`,
     indicator: 'life-table-qx',
     geographyId: `country:${packId}`,
     unit: 'probability',
     ageBasis: 'single-year',
-    sex: 'both',
+    sex,
     evidence: {
       grade: 'B',
       sourceIds: ['un-wpp:2024'],
       modelVersion: 'wpp2024-medium',
       geographyId: `country:${packId}`,
       yearRange: [FIRST_YEAR, LAST_YEAR],
-      methodId: 'wpp2024-life-table-single-age-both',
+      methodId: spec.methodId,
     },
     points,
   });
@@ -153,59 +187,107 @@ async function readFilteredRecords(path) {
   return readCsvRecords(lines.join('\n'));
 }
 
+/** @type {Record<QxSex, [string, string]>} */
+const SEX_TABLE_IDS = {
+  both: ['life-table-both-1950-2023', 'life-table-both-2024-2100'],
+  female: ['life-table-female-1950-2023', 'life-table-female-2024-2100'],
+  male: ['life-table-male-1950-2023', 'life-table-male-2024-2100'],
+};
+
 /**
- * @param {string} estimates
- * @param {string} projections
+ * @param {{ id: string, sha256: string }[]} inputs
+ * @param {string} id
+ * @param {string} path
+ * @returns {void}
+ */
+function verifyInput(inputs, id, path) {
+  const entry = inputs.find((candidate) => candidate.id === id);
+  if (!entry) throw new Error(`inputs.json 缺少 ${id}`);
+  const actualHash = sha256File(path);
+  if (actualHash !== entry.sha256) {
+    throw new Error(`${id} 的 SHA-256 不符：期望 ${entry.sha256}，实际 ${actualHash}`);
+  }
+}
+
+/**
+ * 逐个性别处理：读该性别的两个文件、转换五地、写数据文件。
+ * @param {Record<QxSex, { estimates?: string | undefined, projections?: string | undefined }>} sexInputs
  * @returns {Promise<void>}
  */
-async function run(estimates, projections) {
+async function run(sexInputs) {
   const inputs = /** @type {{ id: string, sha256: string }[]} */ (
     JSON.parse(readFileSync(inputsPath, 'utf8'))
   );
-  /** @type {[string, string][]} */
-  const tables = [
-    ['life-table-both-1950-2023', estimates],
-    ['life-table-both-2024-2100', projections],
-  ];
-  for (const [id, path] of tables) {
-    const entry = inputs.find((candidate) => candidate.id === id);
-    if (!entry) throw new Error(`inputs.json 缺少 ${id}`);
-    const actualHash = sha256File(path);
-    if (actualHash !== entry.sha256) {
-      throw new Error(`${id} 的 SHA-256 不符：期望 ${entry.sha256}，实际 ${actualHash}`);
+  let processed = 0;
+  for (const [
+    sex,
+    files,
+  ] of /** @type {[QxSex, { estimates?: string | undefined, projections?: string | undefined }][]} */ (
+    Object.entries(sexInputs)
+  )) {
+    if (!files.estimates && !files.projections) continue;
+    if (!files.estimates || !files.projections) {
+      throw new Error(`${sex} 的估算与预测文件必须同时提供`);
     }
-  }
+    const [estimatesId, projectionsId] = SEX_TABLE_IDS[sex];
+    verifyInput(inputs, estimatesId, files.estimates);
+    verifyInput(inputs, projectionsId, files.projections);
 
-  const records = [
-    ...(await readFilteredRecords(estimates)),
-    ...(await readFilteredRecords(projections)),
-  ];
-  for (const packId of /** @type {PackId[]} */ (Object.keys(REGIONS))) {
-    const series = toQxSeries(records, packId);
-    const output = join(root, `packages/country-packs/data/${packId}/wpp2024-qx.json`);
-    mkdirSync(dirname(output), { recursive: true });
-    writeFileSync(output, `${JSON.stringify(series, null, 2)}\n`);
-    const samples = [1950, 2023, 2024]
-      .map((year) => {
-        const zero = series.points.find((point) => point.year === year && point.age === 0);
-        const sixty = series.points.find((point) => point.year === year && point.age === 60);
-        return `${year}:q0=${zero?.value ?? 'missing'},q60=${sixty?.value ?? 'missing'}`;
-      })
-      .join(' ');
-    console.log(`${packId}: ${series.points.length} 个点；${samples}`);
+    const records = [
+      ...(await readFilteredRecords(files.estimates)),
+      ...(await readFilteredRecords(files.projections)),
+    ];
+    for (const packId of /** @type {PackId[]} */ (Object.keys(REGIONS))) {
+      const series = toQxSeries(records, packId, sex);
+      const output = join(
+        root,
+        `packages/country-packs/data/${packId}/wpp2024-qx${SEX_SPECS[sex].suffix}.json`,
+      );
+      mkdirSync(dirname(output), { recursive: true });
+      writeFileSync(output, `${JSON.stringify(series, null, 2)}\n`);
+      const samples = [1950, 2023, 2024]
+        .map((year) => {
+          const zero = series.points.find((point) => point.year === year && point.age === 0);
+          const sixty = series.points.find((point) => point.year === year && point.age === 60);
+          return `${year}:q0=${zero?.value ?? 'missing'},q60=${sixty?.value ?? 'missing'}`;
+        })
+        .join(' ');
+      console.log(`${sex} ${packId}: ${series.points.length} 个点；${samples}`);
+    }
+    processed += 1;
+  }
+  if (processed === 0) {
+    throw new Error('没有提供任何性别的输入文件；见文件头的用法说明');
   }
 }
 
 if (import.meta.main) {
   const { values } = parseArgs({
-    options: { estimates: { type: 'string' }, projections: { type: 'string' } },
+    options: {
+      estimates: { type: 'string' },
+      projections: { type: 'string' },
+      'female-estimates': { type: 'string' },
+      'female-projections': { type: 'string' },
+      'male-estimates': { type: 'string' },
+      'male-projections': { type: 'string' },
+    },
   });
-  if (!values.estimates || !values.projections) {
+  /** @type {Record<QxSex, { estimates?: string | undefined, projections?: string | undefined }>} */
+  const sexInputs = {
+    both: { estimates: values.estimates, projections: values.projections },
+    female: {
+      estimates: values['female-estimates'],
+      projections: values['female-projections'],
+    },
+    male: { estimates: values['male-estimates'], projections: values['male-projections'] },
+  };
+  if (!values.estimates && !values['female-estimates'] && !values['male-estimates']) {
     console.error(
-      '用法：node data/scripts/wpp2024/qx.mjs --estimates <1950-2023 文件> --projections <2024-2100 文件>',
+      '用法：node data/scripts/wpp2024/qx.mjs --estimates <1950-2023 文件> --projections <2024-2100 文件>\n' +
+        '      可选 --female-estimates/--female-projections、--male-estimates/--male-projections',
     );
     process.exitCode = 1;
   } else {
-    await run(values.estimates, values.projections);
+    await run(sexInputs);
   }
 }

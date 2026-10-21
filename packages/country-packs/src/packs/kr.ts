@@ -11,6 +11,9 @@ import cpi from '../../data/KR/wdi-cpi.json' with { type: 'json' };
 import healthExpenditure from '../../data/KR/wdi-health-expenditure.json' with { type: 'json' };
 import healthOutOfPocket from '../../data/KR/wdi-health-out-of-pocket.json' with { type: 'json' };
 import qx from '../../data/KR/wpp2024-qx.json' with { type: 'json' };
+import qxFemale from '../../data/KR/wpp2024-qx-female.json' with { type: 'json' };
+import qxMale from '../../data/KR/wpp2024-qx-male.json' with { type: 'json' };
+import srb from '../../data/KR/wpp2024-srb.json' with { type: 'json' };
 import urbanShare from '../../data/KR/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
 
@@ -242,5 +245,8 @@ export const KR_PACK: CountryPack = {
     StatSeriesSchema.parse(cpi),
     StatSeriesSchema.parse(healthOutOfPocket),
     StatSeriesSchema.parse(healthExpenditure),
+    StatSeriesSchema.parse(qxFemale),
+    StatSeriesSchema.parse(qxMale),
+    StatSeriesSchema.parse(srb),
   ],
 };

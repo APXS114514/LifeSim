@@ -11,7 +11,13 @@ import { PACKS, createPackRegistry } from '../../packages/country-packs/src/inde
 const root = resolve(import.meta.dirname, '../..');
 const outputPath = join(root, 'docs/data/COVERAGE.md');
 /** @type {readonly import('../../packages/content-schema/src/index.ts').Indicator[]} */
-const INDICATORS = ['births', 'life-table-qx', 'urban-share'];
+const INDICATORS = ['births', 'life-table-qx', 'urban-share', 'sex-ratio-at-birth'];
+/**
+ * 覆盖率表格的性别口径顺序。既有行都取合计（sex: 'both'），合计放在最前，
+ * 因此各既有行与 M3-047 之前逐字节相同；分性别序列与出生性别比的行追加在后面。
+ * @type {readonly import('../../packages/content-schema/src/index.ts').Sex[]}
+ */
+const SERIES_SEXES = ['both', 'female', 'male'];
 
 /**
  * @param {readonly number[]} years
@@ -140,28 +146,32 @@ export function renderCoverage(packs) {
     const pack = packs[packId];
     if (!pack) continue;
     for (const indicator of INDICATORS) {
-      const series = pack.series.find((candidate) => candidate.indicator === indicator);
-      if (!series) continue;
-      const years = series.points.map((point) => point.year);
-      const first = Math.min(...years);
-      const last = Math.max(...years);
-      const missingCount = series.points.filter((point) => point.value === null).length;
-      lines.push(
-        '| ' +
-          [
-            packId,
-            indicator,
-            series.id,
-            series.evidence.sourceIds.join(', '),
-            series.evidence.grade,
-            first + '—' + last,
-            projectedYears(series),
-            ageRange(series),
-            String(missingCount),
-            missingYears(series),
-          ].join(' | ') +
-          ' |',
-      );
+      for (const sex of SERIES_SEXES) {
+        const series = pack.series.find(
+          (candidate) => candidate.indicator === indicator && candidate.sex === sex,
+        );
+        if (!series) continue;
+        const years = series.points.map((point) => point.year);
+        const first = Math.min(...years);
+        const last = Math.max(...years);
+        const missingCount = series.points.filter((point) => point.value === null).length;
+        lines.push(
+          '| ' +
+            [
+              packId,
+              indicator,
+              series.id,
+              series.evidence.sourceIds.join(', '),
+              series.evidence.grade,
+              first + '—' + last,
+              projectedYears(series),
+              ageRange(series),
+              String(missingCount),
+              missingYears(series),
+            ].join(' | ') +
+            ' |',
+        );
+      }
     }
   }
 

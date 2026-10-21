@@ -1,0 +1,463 @@
+{
+  "id": "cn-family",
+  "scheme": "zh",
+  "kind": "family",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "wang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 30,
+      "grade": "D",
+      "forms": {
+        "native": "王",
+        "zh-Hans": "王",
+        "en": "Wang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "li",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 28,
+      "grade": "D",
+      "forms": {
+        "native": "李",
+        "zh-Hans": "李",
+        "en": "Li"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 27,
+      "grade": "D",
+      "forms": {
+        "native": "张",
+        "zh-Hans": "张",
+        "en": "Zhang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "liu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 24,
+      "grade": "D",
+      "forms": {
+        "native": "刘",
+        "zh-Hans": "刘",
+        "en": "Liu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chen",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 22,
+      "grade": "D",
+      "forms": {
+        "native": "陈",
+        "zh-Hans": "陈",
+        "en": "Chen"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "杨",
+        "zh-Hans": "杨",
+        "en": "Yang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhao",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "赵",
+        "zh-Hans": "赵",
+        "en": "Zhao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "huang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "黄",
+        "zh-Hans": "黄",
+        "en": "Huang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhou",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "周",
+        "zh-Hans": "周",
+        "en": "Zhou"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "wu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "吴",
+        "zh-Hans": "吴",
+        "en": "Wu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "徐",
+        "zh-Hans": "徐",
+        "en": "Xu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sun",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "孙",
+        "zh-Hans": "孙",
+        "en": "Sun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "胡",
+        "zh-Hans": "胡",
+        "en": "Hu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zhu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "朱",
+        "zh-Hans": "朱",
+        "en": "Zhu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gao",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "高",
+        "zh-Hans": "高",
+        "en": "Gao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lin",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "林",
+        "zh-Hans": "林",
+        "en": "Lin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "he",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "何",
+        "zh-Hans": "何",
+        "en": "He"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "guo",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "郭",
+        "zh-Hans": "郭",
+        "en": "Guo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ma",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "马",
+        "zh-Hans": "马",
+        "en": "Ma"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "luo",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "罗",
+        "zh-Hans": "罗",
+        "en": "Luo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "liang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "梁",
+        "zh-Hans": "梁",
+        "en": "Liang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "song",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "宋",
+        "zh-Hans": "宋",
+        "en": "Song"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zheng",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "郑",
+        "zh-Hans": "郑",
+        "en": "Zheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xie",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "谢",
+        "zh-Hans": "谢",
+        "en": "Xie"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "han",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "韩",
+        "zh-Hans": "韩",
+        "en": "Han"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "唐",
+        "zh-Hans": "唐",
+        "en": "Tang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "feng",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "冯",
+        "zh-Hans": "冯",
+        "en": "Feng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "于",
+        "zh-Hans": "于",
+        "en": "Yu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dong",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "董",
+        "zh-Hans": "董",
+        "en": "Dong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "xiao",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "萧",
+        "zh-Hans": "萧",
+        "en": "Xiao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "cheng",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "程",
+        "zh-Hans": "程",
+        "en": "Cheng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "cao",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "曹",
+        "zh-Hans": "曹",
+        "en": "Cao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuan",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "袁",
+        "zh-Hans": "袁",
+        "en": "Yuan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "deng",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "邓",
+        "zh-Hans": "邓",
+        "en": "Deng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zeng",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "曾",
+        "zh-Hans": "曾",
+        "en": "Zeng"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

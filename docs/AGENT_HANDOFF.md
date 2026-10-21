@@ -26,17 +26,18 @@ TypeScript 源码不经构建，由 Node 24 的类型剥离直接运行；因此
 
 ## 3. 验证命令
 
-| 命令                                         | 内容                                                                                                             | 何时必须跑         |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `pnpm verify`                                | 格式、lint、依赖边界、许可证、`check:data`、`check:coverage`、类型检查、单元测试（含 JSON 报告）、测试基线、构建 | 每次提交前         |
-| `pnpm test:e2e`                              | Playwright 冒烟（桌面 + 手机）                                                                                   | 改了 `apps/web` 时 |
-| `pnpm check:data`                            | 来源登记、排序、可再分发许可、国家包引用与孤立数据文件                                                           | 改了来源或国家包时 |
-| `pnpm data:sources`                          | 由 `data/sources.json` 重新生成 `data/SOURCES.md`                                                                | 改了来源时         |
-| `pnpm check:coverage` / `pnpm data:coverage` | 数据覆盖率矩阵检查 / 重新生成 `docs/data/COVERAGE.md`                                                            | 改了序列或国家包时 |
-| `pnpm life --seed demo --birth 1978-05-04`   | 合成人生（加 `--locale en`、`--choose start-work`、`--json`、`--save <文件>`）                                   | 改了规则时看效果   |
-| `pnpm life:real --region JP --year 1978`     | 真实国家包上的可玩切片（加 `--region random`、`--year random`、`--locale en`、`--json`）                         | 改了适配器或规则时 |
-| `pnpm bench --lives 1000`                    | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时   |
-| `pnpm check:commits <base>..<head>`          | 提交信息里没有 AI 工具署名                                                                                       | 提交后             |
+| 命令                                                   | 内容                                                                                                             | 何时必须跑                 |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `pnpm verify`                                          | 格式、lint、依赖边界、许可证、`check:data`、`check:coverage`、类型检查、单元测试（含 JSON 报告）、测试基线、构建 | 每次提交前                 |
+| `pnpm test:e2e`                                        | Playwright 冒烟（桌面 + 手机）                                                                                   | 改了 `apps/web` 时         |
+| `pnpm check:data`                                      | 来源登记、排序、可再分发许可、国家包引用与孤立数据文件                                                           | 改了来源或国家包时         |
+| `pnpm data:sources`                                    | 由 `data/sources.json` 重新生成 `data/SOURCES.md`                                                                | 改了来源时                 |
+| `pnpm check:coverage` / `pnpm data:coverage`           | 数据覆盖率矩阵检查 / 重新生成 `docs/data/COVERAGE.md`                                                            | 改了序列或国家包时         |
+| `pnpm life --seed demo --birth 1978-05-04`             | 合成人生（加 `--locale en`、`--choose start-work`、`--json`、`--save <文件>`）                                   | 改了规则时看效果           |
+| `pnpm life:real --region JP --year 1978`               | 真实国家包上的可玩切片（加 `--region random`、`--year random`、`--locale en`、`--json`）                         | 改了适配器或规则时         |
+| `pnpm bench --lives 1000`                              | 性能基准 JSON（固定种子；`workload.fingerprint` 只取决于种子与规则）                                             | 改了内核或规则时           |
+| `pnpm --filter @lifesim/cli batch --lives-per-cell 10` | 分层批量模拟报告（M5-001；五国 × 年代 × 城乡，含体验指标与重复率；`--out` 写文件）                               | 改了规则或内容时看体验指标 |
+| `pnpm check:commits <base>..<head>`                    | 提交信息里没有 AI 工具署名                                                                                       | 提交后                     |
 
 CI（`.github/workflows/`）：`ci.yml` 运行提交信息检查、上表的全部门禁、`pnpm life`、`pnpm life:real`、500 局基准（报告作为产物上传）与 Playwright；`guardrails.yml` 在 PR 上检查高风险路径（见第 8 节）。**直接 `git push` 不会触发 Guardrails**；高风险改动按第 8/10 节在任务分支上本地提交并请维护者审查，每次推送前还需人类操作员当次批准。
 
@@ -128,7 +129,8 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `CountryPackSchema`、`validateCountryPack`（13 条跨字段规则）：清单、地理、货币、锚点、断点、序列。
 - `resolve.ts`：`assignmentAt`、`politicalEntityAt`、`adminUnitAt`、`placeNameAt`、`currencyAt`、`poolPlace`；日期早于 1950-01-01 抛 `RangeError`。
 - `packs/{cn,jp,kp,kr,ru}.ts`：五国数据包；`PACKS` 为完整 `Record<BirthRegionId, CountryPack>`。
-- `createPackRegistry()`：汇总序列、断点与「地点 → 国家」父级关系；`DATA_FINGERPRINTS`（15 条）锁定数据。
+- `createPackRegistry()`：汇总序列、断点与「地点 → 国家」父级关系；`DATA_FINGERPRINTS`（61 条，含 M3-047 的分性别生命表与出生性别比）锁定数据；查询可带 `sex`，不跨性别回退。
+- `names.ts`（M3-045）：五地姓名表在 `packages/country-packs/names/`（与统计序列分开），`selectNameEntry` 与 `NAME_TABLE_FINGERPRINTS`；规则尚未读取（M3-043）。
 - `selectBirth({ seed, region, year, birthDate? })`：年份等概率、地区按出生数加权、城乡按 urban-share、日期年内等概率；抽样顺序固定，指定项也照常抽样。缺失数据抛错，不跳过、不当 0。
 
 ### real-world（M3-lite 可玩切片）
@@ -206,7 +208,7 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - CI 只在推送时运行；一次推送多个提交时，CI 无法定位是哪个提交出的问题（M3-001…010 就是一次推送的 19 个提交）。推送前务必本地 `pnpm verify`。
 - 快照里的已处理事件键随一生增长，NPC 增多后需评估体积。
 - 跨浏览器逐位一致只在 V8 上实测过。
-- 五国数据文件约 7.5 MB JSON；M3-lite 网页构建约 4.1 MB（gzip 约 690 KB），后续需要按需加载或拆分国家包。
+- 五国数据文件约 22 MB JSON（M3-047 加入分性别生命表后）；网页构建约 11.5 MB（gzip 约 1.74 MB，M3-047 之前为 4.2 MB / 690 KB），P1 预览部署前需要紧凑存储或按需加载（见 M3-047「合并后的已知问题」）。
 - M3-lite 的教育/就业/工资/价格/疾病是 **ADR-0006 的 D 级假设**，不是五国历史统计；M3 接入真实数据时必须替换并更新 ADR。
 - 父母只有就业、健康与死亡（M3-011）；没有婚育、迁居、城市权重；网页在主线程同步推进，存档只在 localStorage。
 - M3-033（朝鲜半岛南→北迁移）只有设计稿，审计发现史实问题，修订前不得实现。
