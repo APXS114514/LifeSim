@@ -2,15 +2,15 @@
 
 > 给接手开发的 Agent 与人类协作者。本文独立于任何聊天记录，只描述**仓库现在是什么样、怎么验证、哪里还没做**。
 > 规则以 [AGENTS.md](../AGENTS.md) 为准，产品边界以 [GDD.md](GDD.md) 为准；本文不复述它们。
-> 最后更新：2026-10-20（M2 已实现；M3-lite 已实现；完整 M3 与 M4 已拆分为任务，等待维护者确认架构问题后开始执行）
+> 最后更新：2026-10-21（Claude Code 接手审计：M3-000…010、M3-031…033、M4-015 已推送待验收；`main` 的 CI 因性能退化变红，修复在 M3-035 任务分支待审查；审计见 [audits/M3-TAKEOVER-AUDIT.md](audits/M3-TAKEOVER-AUDIT.md)）
 
 ## 1. 一页概览
 
 - **项目**：LifeSim，真实历史统计约束下的单人人生模拟（中国大陆、日本、朝鲜、韩国、俄罗斯，1950—2026 出生；中英双语；离线；MIT）。
-- **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2 的 23 个任务已实现并合入 `main`（状态已按代码核对，里程碑仍待验收）；**M3-lite 已实现**；完整 M3（34 个任务）与 M4（15 个任务）已拆分为任务文件，M3 从 [M3-000](tasks/M3-000.md) 开始。
-- **能做什么**：浏览器里五地选出生、跑完整人生、处理重大决定、看死亡总结、切换中英、刷新续玩；Node 里 `pnpm life:real` 跑真实国家包人生；`pnpm life` 仍跑合成地区。
-- **还不能做什么**：家庭、NPC、婚育、收养、迁居、城市人口权重、各国特色事件、政体更替作用到在世角色都属于完整 M3；Worker、IndexedDB、PWA 与完整可玩 Alpha 属于 M4/M5。
-- **下一步**：先完成 [M3-000 旧存档保护](tasks/M3-000.md)，再执行 [M3-001 政体更替作用于在世角色](tasks/M3-001.md)；[M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 中 Q2/Q3/Q4/Q5/Q9/Q12/Q13 已确认，仍待确认的是 Q1/Q6/Q7/Q8/Q10/Q11。
+- **当前阶段**：M0 已验收；M1 完成并审计，等待验收；M2 的 23 个任务已合入 `main`，里程碑待验收；**M3-lite 已实现**；完整 M3 已完成 M3-000…M3-010（M3-007 部分完成）与 M3-031…033（033 只有设计），全部已推送、**均未经维护者验收**；M4 只先做了 M4-015。逐任务状态见 [tasks/INDEX.md](tasks/INDEX.md)。
+- **能做什么**：浏览器里五地选出生、跑完整人生、处理重大决定、看死亡总结、切换中英、刷新续玩；按日期显示历史政体/地名与历史旗帜；苏联解体后在世角色的政治归属与国籍随之改变；出生时生成父母两位 Tier1 NPC（只有初始状态）；Node 里 `pnpm life:real` 跑真实国家包人生；`pnpm life` 仍跑合成地区。
+- **还不能做什么**：网页不能逐年推进（点开始就跳到下一个重大决定，见 [M3-034](tasks/M3-034.md)）；父母没有自己的人生进程（永远在世、在职，见 [M3-011](tasks/M3-011.md)）；婚育、收养、迁居、城市人口权重、各国特色事件都属于后续 M3；规则仍全部使用 ADR-0006 的 D 级公式（M3-009 只接好了真实数据的查询接口）；Worker、IndexedDB、PWA 属于 M4。
+- **下一步**：维护者审查合并 [M3-035](tasks/M3-035.md) 并批准推送，确认 CI 恢复绿灯；随后 [M3-036](tasks/M3-036.md)（Claude Code）、[M3-034](tasks/M3-034.md)（批准后交执行 Agent）、[M3-011](tasks/M3-011.md)（M3-035/036 合并后交执行 Agent）。仍待维护者决定：Q1/Q6/Q7、Q10 的提示形式、Q14（见 [M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 末节）。
 
 ## 2. 开发环境
 
@@ -105,10 +105,13 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `DecisionSpec.options()` 必须是纯函数：只读状态，不抽随机数、不 `emit`、不 `schedule`（违反会抛 `impure-decision-options`）。
 - 确定性工具：`deriveStream`、`fingerprint`、`canonicalJson`、`expDet` / `lnDet` / `scaleAnnualProbability`、日历函数（`addYears`、`addDays`、`ageOn`、`toDayNumber`）。
 - 所有失败都是 `SimulationError`，消息里带 `seed=… event=… at=…`。
+- 提交前校验：事实、角色与账户的 schema，时间与生死约束，各系统不变量。M3-035（任务分支，待审查）起只对本事件新增或改动的角色与账户做 schema 解析；`relationships` 目前**不**逐事件校验（只在恢复快照时校验，见 M3-036）。
 
 ### systems（人生规则）
 
-- `RegionModel`（`region.ts`）：规则向地区要的全部数据（概率、金额、学制、效应系数、锚点）。规则里不写地区数值。
+- `RegionModel`（`region.ts`）：规则向地区要的全部数据（概率、金额、学制、效应系数、锚点）。规则里不写地区数值。M3-009 起另有 `tables`（`RegionTables`：按指标/年份取 `DataValue | null`，缺失为 `null` 而不是 0）与 `queries`（教育、劳动力、价格、卫生四个领域查询，ADR-0007）；**目前没有规则调用它们**。`prices.toRealMinor` 的接口有已知缺陷（不能披露未折算、忽略币制版本），使用前先按 Q14 修订。
+- `family.ts`（M3-010）：`life.birth` 里创建 `char:protagonist:mother` / `:father`、各自账户与两条 `parent-child` 关系，使用出生事件的随机流（在主角三次抽样之后）。父母目前没有任何后续事件。
+- `history.ts`：历史锚点。政体更替（M3-001）改所有在世角色的政治归属与国籍；币制重定值换算所有账户；这两类事实对父母也会各写一条，但模板不区分是谁（M3-011 处理）。
 - 事件类型与同日优先级在 `shared.ts` 的 `EVENT` / `PRIORITY`；`SYSTEMS_VERSION` 是规则版本，写进快照。
 - `createLifeSimulation({ seed, region, birthDate, settlement?, principles?, decisions? })`、`restoreLifeSimulation(snapshot, region)`、`afterSecondaryDecisionKey()`。
 - `LIFE_NARRATIVE`：中英模板（键 = 事实的 `templateId`）与枚举文字；`summarizeLife(snapshot, facts)`。
@@ -132,8 +135,9 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - `createRealRegion(packId, birthDate, { placeId?, polityId? })`：用国家包构造 `RegionModel`；`mortality` 来自 WPP qx，其他表为 ADR-0006 的 D 级基线。
 - `createRealLifeSimulation({ seed, region, year, birthDate?, principles?, decisions? })`：先 `selectBirth`，再用出生地点/政体创建人生。
 - `createRealNarrator(pack, birthDate)` / `realNarrativeResources`：系统模板 + 该包地点/币制名；金额按币制小数位格式化。
-- 明确限制：只有主角；政体只在出生时确定；无家庭/NPC/迁居/城市权重。
-- 网页会话在 `apps/web/src/game/session.ts`：推进、决定、`finish()`、序列化/恢复；`storage.ts` 只存 localStorage。
+- 明确限制：父母只有初始状态；无迁居与城市权重；人口池地点在苏联时期显示为「其他城镇/农村地区，苏联」，实际只覆盖俄罗斯（RSFSR）范围。
+- 显示层（M3-031/032）：`display.ts` 按地点与日期解析名称，`apps/web/src/game/flags.ts` 按政体 ID 与日期选旗；旗帜素材登记在 [FLAG_SOURCES.md](FLAG_SOURCES.md)。
+- 网页会话在 `apps/web/src/game/session.ts`：推进、决定、`finish()`、序列化/恢复；`storage.ts` 只存 localStorage，恢复失败时保留原始存档（M3-000）。`currentDate` 目前取最后一条事实的日期，M3-034 改为内核的权威时钟 `simulation.clock`。
 
 ### 其他
 
@@ -153,20 +157,22 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 | `DATA_FINGERPRINTS`       | `country-packs/src/data-golden.ts` | 数据**有意**更新并经维护者审查后           | 数据指纹测试失败                        |
 | `GOLDEN_LIFE`             | `synthetic-world/src/golden.ts`    | 规则或合成数据**有意**变化，确认差异合理后 | 需要架构审查                            |
 
+当前值（2026-10-21）：`ENGINE_VERSION` 0.1.0、`SNAPSHOT_SCHEMA_VERSION` 1、`SYSTEMS_VERSION` 0.4.0、`GOLDEN_LIFE` 72 条事实 / `b4b67de5d12b1a4827e238ad2051d292`；`pnpm bench --lives 1000` 工作量指纹 `3f03ad12c6cea367315ed8825de0e431`，p50 4.35 ms/局（`main`）/ 2.72 ms/局（M3-035 分支，Apple M5）。
+
 ## 7. 已完成与未完成
 
 **已完成（M0、M1、M2、M3-lite）**：仓库地基与全部质量门禁；契约；确定性内核；合成地区上的教育 → 就业 → 收支 → 健康 → 死亡因果链；重大决定暂停与玩家选择；币制重定值与经济周期锚点；快照与存档往返；双语叙事；headless CLI 与基准；多 Agent 护栏。M2 另含：`StatSeries`/地理/政体更替契约、DataRegistry（回退/断点/预测/情景）、WPP 2024 出生数与单岁生命表、WDI 城镇比例、五国国家包与出生选择器、数据指纹、许可门禁与覆盖率矩阵。M3-lite 另含：`real-world` 适配器、五国完整人生、网页开局/时间线/决定/总结/中英切换/localStorage 续玩、`pnpm life:real` 与 E2E。详见 [ROADMAP.md](ROADMAP.md)、[PLAYABLE_TEST.md](PLAYABLE_TEST.md)、[ADR-0006](adr/0006-first-playable-slice.md)、[audits/M1-AUDIT.md](audits/M1-AUDIT.md) 与 [data/LICENSE_AUDIT.md](../data/LICENSE_AUDIT.md)。
 
 **未完成（按里程碑）**：
 
-| 里程碑 | 内容                                                                                                                       | 状态                                                                         |
-| ------ | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | **已实现，待维护者验收**，见 [tasks/INDEX.md](tasks/INDEX.md)                |
-| M3     | 家庭与 Tier1 NPC、教育/职业/经济、疾病与死亡、迁移、五国特色事件、事件目录                                                 | **已拆分为 M3-000…033**，M3-lite 已实现；见 [tasks/INDEX.md](tasks/INDEX.md) |
-| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | **已拆分为 M4-001…014**，待 M3 验收后开始                                    |
-| M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                                                       |
+| 里程碑 | 内容                                                                                                                       | 状态                                                                                              |
+| ------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| M2     | 统计序列与地理契约、DataRegistry、许可审计、WPP 出生与生命表、城镇比例、五个国家包、币制与政体锚点、出生选择器、覆盖率矩阵 | **已实现，待维护者验收**，见 [tasks/INDEX.md](tasks/INDEX.md)                                     |
+| M3     | 家庭与 Tier1 NPC、教育/职业/经济、疾病与死亡、迁移、五国特色事件、事件目录                                                 | M3-000…010、031…033 已推送待验收；M3-011…030、034…036 未完成；见 [tasks/INDEX.md](tasks/INDEX.md) |
+| M4     | 网页时间线、决策卡、Web Worker、IndexedDB 存档、PWA 离线                                                                   | 已拆分为 M4-001…015；M4-015 已推送待验收，其余待 M3 验收后开始                                    |
+| M5     | 批量校准、三浏览器、发布门禁                                                                                               | 未拆分                                                                                            |
 
-**待维护者决定的产品问题**：角色是否有性别（GDD 未规定；M2 先用男女合计生命表，见 ADR-0005）。
+**待维护者决定的产品问题**：Q1 角色性别、Q6 国际迁移范围、Q7 生育率换算、Q10 敏感内容的提示形式、Q14 购买力折算接口；选项与建议见 [M3_OPEN_QUESTIONS.md](M3_OPEN_QUESTIONS.md) 末节。
 
 ## 8. 质量门禁与高风险变更
 
@@ -195,17 +201,19 @@ Simulation.restore(snapshot, { modules, dataPackVersions })
 - 朝鲜的币制改革细节来自韩国官方教育/研究机构（非朝鲜官方来源）；中国重庆 1997 年采用 6 月 18 日正式挂牌日（全国人大批准日为 3 月 14 日）；苏联解体采用 1991-12-26 宣言（12 月 25 日为戈尔巴乔夫辞职/降旗）。这些取舍需维护者复核。
 - WPP Demographic Indicators 文件包含 2101 年行（`Births` 为空），转换脚本按项目范围忽略；重新下载后若列名/方案名变化，脚本会报错而不是猜。
 - `RegionModel` 面向合成公式，M3 接入真实数据时预计要重塑（届时写 ADR）；M2 的 `country-packs` 尚未接入 `systems`。
-- 每个事件深拷贝全部状态并校验全部角色；加入 NPC 后需重新测量性能。
+- 性能：M3-010 加入两位父母后，单局 p50 从 1.82 升到 4.34 ms（内核每个事件校验全部角色），CI 模板覆盖测试因此超时；M3-035 改为增量校验后为 2.72 ms。每个事件仍深拷贝整份状态，M3-011 让父母有自己的事件后要重新测量，p50 > 5.5 ms 就停下来报告。**任务报告必须附 `pnpm bench --lives 1000` 前后对比**。
+- CI 只在推送时运行；一次推送多个提交时，CI 无法定位是哪个提交出的问题（M3-001…010 就是一次推送的 19 个提交）。推送前务必本地 `pnpm verify`。
 - 快照里的已处理事件键随一生增长，NPC 增多后需评估体积。
 - 跨浏览器逐位一致只在 V8 上实测过。
 - 五国数据文件约 7.5 MB JSON；M3-lite 网页构建约 4.1 MB（gzip 约 690 KB），后续需要按需加载或拆分国家包。
 - M3-lite 的教育/就业/工资/价格/疾病是 **ADR-0006 的 D 级假设**，不是五国历史统计；M3 接入真实数据时必须替换并更新 ADR。
-- M3-lite 只有主角；政体只在出生时确定；没有家庭、NPC、婚育、迁居、城市权重；网页在主线程同步推进，存档只在 localStorage。
+- M3-lite 的父母只有初始状态；没有婚育、迁居、城市权重；网页在主线程同步推进，存档只在 localStorage。
+- M3-033（朝鲜半岛南→北迁移）只有设计稿，审计发现史实问题，修订前不得实现。
 
 ## 10. 如何接手一个任务
 
 1. 读 [docs/FLASH_AGENT_PROMPT.md](FLASH_AGENT_PROMPT.md)（统一执行规程）。
-2. M2 的 23 个任务已完成，等待维护者验收；M3（34 个）与 M4（15 个）的任务文件已就绪。执行单个任务时，在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并；M3 从 [M3-000](tasks/M3-000.md) 开始，随后是 [M3-001](tasks/M3-001.md)。
+2. 在 [docs/tasks/INDEX.md](tasks/INDEX.md) 里确认前置依赖都已合并（「当前任务」一节列出了下一批）。高风险的内核任务（M3-035、M3-036）由 Claude Code 执行；执行 Agent 拿细粒度任务，不读全部 GDD 自行设计。
 3. 只读这个任务文件和它列出的源码，按规程执行，完成后停止并提交报告。
 4. 改动数据或国家包时，依次运行 `pnpm data:sources`、`pnpm data:coverage`，再运行 `pnpm verify`；有意更新数据时同步维护 `DATA_FINGERPRINTS` 并说明原因。
 5. 默认用本地 Git 提交，不需要开 PR；**推送前必须获得人类操作员的当次批准**：
