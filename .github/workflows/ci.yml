@@ -56,6 +56,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm check:boundaries
       - run: pnpm check:licenses
+      - run: pnpm check:data
       - run: pnpm typecheck
       # 测试结果写成 JSON，再对照 qa/test-baseline.json：不能少测试、不能跳过。
       - run: pnpm test:report

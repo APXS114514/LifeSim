@@ -10,3 +10,6 @@ docs/AGENT_PROMPTS.md
 
 # 由 scripts/check-licenses.mjs 生成
 THIRD_PARTY_NOTICES.md
+
+# 由 scripts/check-data.mjs 生成
+data/SOURCES.md
