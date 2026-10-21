@@ -72,6 +72,8 @@ data/                      外部数据来源登记（目前没有外部数据�
 - [docs/adr/](docs/adr/)：架构决策记录
 - [docs/AGENT_PROMPTS.md](docs/AGENT_PROMPTS.md)：分阶段开发任务
 - [AGENTS.md](AGENTS.md)：给开发 Agent 的仓库约定
+- [docs/AGENT_HANDOFF.md](docs/AGENT_HANDOFF.md)：交接手册（现状、接口、命令、风险）
+- [docs/tasks/INDEX.md](docs/tasks/INDEX.md)：任务队列；执行规程见 [docs/FLASH_AGENT_PROMPT.md](docs/FLASH_AGENT_PROMPT.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md) · [SECURITY.md](SECURITY.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ## 许可

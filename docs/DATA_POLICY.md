@@ -26,11 +26,13 @@ M1 使用虚构地区 `ZZ-SYN`（`packages/synthetic-world`）验证内核。它
 
 ## 流程
 
-1. **登记来源**：在 [data/SOURCES.md](../data/SOURCES.md) 加一行，字段与 `SourceRecord` 一致：ID、标题、发布者、URL、版本、SPDX 许可证、再分发状态、核验日期、备注。
-2. **存放原始数据**：只有可再分发的原始文件才能放进 `data/sources/`；不可再分发的数据只登记获取方式，由脚本在本地下载，并加入 `.gitignore`。
-3. **派生数据**：由 `data/scripts/` 里的脚本生成到 `data/derived/`，脚本记录方法 ID，输出带证据元信息。
-4. **许可审计**：M2 起维护 `data/LICENSE_AUDIT.md`，逐个数据集记录条款原文链接、是否允许再分发与修改、署名要求、核验人和日期。未通过审计的数据不进公开构建（GDD §9.4）。
-5. **制度断点**：苏联解体、币制改革、教育制度改革、行政区划调整等断点前后不做线性插值（GDD §9.2），断点本身作为有日期的规则登记。
+具体位置与回退规则见 [ADR-0005](adr/0005-m2-data-architecture.md)。
+
+1. **登记来源**：在 `data/sources.json` 加一条，字段与 `SourceRecord` 一致：ID、标题、发布者、URL、版本、SPDX 许可证、再分发状态、核验日期、备注。`data/SOURCES.md` 由它生成，不手改。
+2. **许可审计**：在 `data/LICENSE_AUDIT.md` 记录条款原文的出处链接、是否允许再分发与修改、署名要求、核验人和日期。只有标为可再分发（`allowed`）的来源，其派生数据才能进仓库（GDD §9.4）。这一步由维护者确认。
+3. **原始数据**：只缓存在本机 `data/cache/`（已 gitignore），不进仓库；`data/scripts/<来源>/inputs.json` 记录文件名、官方 URL、SHA-256 与获取日期，保证可复现。
+4. **派生数据**：由 `data/scripts/<来源>/` 的脚本生成到 `packages/country-packs/data/<packId>/`，每个文件是一个通过 schema 的统计序列，带证据元信息。
+5. **制度断点**：苏联解体、币制改革、教育制度改革、行政区划调整等断点前后不做线性插值（GDD §9.2），断点作为有日期的数据登记在国家包里。
 
 ## 已知待核实事项（进入 M2 时处理）
 

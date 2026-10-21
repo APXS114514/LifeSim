@@ -4,6 +4,12 @@
 
 ## [未发布]
 
+### 新增：M1 审计与多 Agent 交接
+
+- M1 架构审计（`docs/audits/M1-AUDIT.md`）；修复：决策选项强制为纯函数、提交的事实冻结、出生时宏观状态按锚点地区过滤；补充队列、JSON、人生原则执行器与模板全覆盖测试。
+- 多 Agent 质量门禁：测试中禁止 `skip` / `only` / `todo`；测试基线 `qa/test-baseline.json` 与 `pnpm check:tests`；PR 护栏工作流（高风险路径需 `arch-approved`）；`.github/CODEOWNERS`；黄金指纹移到单独的高风险文件。
+- 交接文档：`docs/AGENT_HANDOFF.md`、`docs/FLASH_AGENT_PROMPT.md`、重写 `AGENTS.md`；ADR-0005（M2 数据架构）；M2 任务队列 `docs/tasks/`（23 个任务）。
+
 ### 新增：M1 确定性人生模拟内核
 
 - `simulation-core`：规范推进器 `Simulation`（逐年 / 快进 / 分批 / 取消共用一条路径）、全序事件队列与幂等键、计数器式随机流、确定性 exp/ln、草稿—校验—提交的原子结算、循环与失控检测、人生原则执行器、重大决定暂停与玩家选择、快照与恢复（ADR-0004）。

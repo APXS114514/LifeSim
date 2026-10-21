@@ -18,7 +18,7 @@ GDD §11.2 的目标分层：UI → GameController → Worker RPC → Simulation
 | `apps/cli`                 | headless 入口：跑完整人生（`pnpm life`）、性能基准（`pnpm bench`）                           | M1 验收入口                              |
 | `apps/web`                 | React 界面、i18n、（M4）Worker 与 IndexedDB 适配                                             | 角色创建页草图                           |
 
-GDD §11.3 中其余的包按里程碑加入，不提前建空壳：`country-packs`、`data-registry`（M2）、`calibration`（M5，批量模拟）、`optional-ai-contract`（v0.1 之后，只有接口）。
+GDD §11.3 中其余的包按里程碑加入，不提前建空壳：`data-registry`、`country-packs`（M2，设计见 ADR-0005，任务见 docs/tasks/）、`calibration`（M5，批量模拟）、`optional-ai-contract`（v0.1 之后，只有接口）。
 
 ## 依赖规则
 
@@ -84,7 +84,7 @@ GDD §4.1、§11.4 要求相同种子加相同输入产生相同结果，快进�
 | `CharacterState`                                   | §6               | `content-schema/src/character-state.ts` | 身份、地理、生死、人生原则、出身、特质、教育、就业、健康、财务指针；跨字段规则（在读与学历、学生身份、计薪）由 schema 检查 |
 | `SimulationSnapshot`                               | §11.4            | `content-schema/src/snapshot.ts`        | 新增 `world`（宏观状态）；`householdAccounts` 收紧为账户数组                                                               |
 | `AdvanceRequest`、`SimulationEngine`、`Simulation` | §4.1、§11.4      | `simulation-core/src/`                  | 引擎接口是同步的，带 `CancellationToken`；异步发生在 Worker RPC 层                                                         |
-| `RegionModel`、`MacroState`                        | §5、§9           | `systems/src/region.ts`                 | M2 的国家包与 DataRegistry 实现同一接口                                                                                    |
+| `RegionModel`、`MacroState`                        | §5、§9           | `systems/src/region.ts`                 | M3 起由基于 DataRegistry 的适配器为真实地区实现（ADR-0005）                                                                |
 | `SaveRepository`、存档信封                         | §11.4            | `save/src/`                             | 导出格式：外层信封记录格式版本与 SHA-256，载荷为 JSON 字符串；导入依次校验大小、UTF-8、危险键、schema、校验和、日志不变量  |
 | `NarrativeProvider`、`createTemplateNarrator`      | §7、§10、§15     | `narrative/src/index.ts`                | 占位符语法统一为 `{{name}}`（与 i18next 一致）；枚举值按 `enums.<参数名>.<值>` 查找                                        |
 

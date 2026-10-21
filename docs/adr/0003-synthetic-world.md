@@ -14,7 +14,7 @@ M1 要在没有真实数据包的情况下，验证模拟内核与人生系统�
 - 每张数据表与每个历史锚点的 `EvidenceMeta` 都是 `grade: 'D'`，来源指向本 ADR（`adr:0003`）。
 - 地名、币种都明确标注「虚构」（港城、高地乡、合成币 SYN），不借用任何真实地名。
 - 网页应用不在它的依赖允许名单里（`scripts/check-boundaries.mjs`），它不会进入公开构建。
-- 规则代码（`packages/systems`）只通过 `RegionModel` 接口取数，不含任何地区数值；M2 的真实国家包实现同一接口即可替换。
+- 规则代码（`packages/systems`）只通过 `RegionModel` 接口取数，不含任何地区数值。真实地区在 M2 先建数据包与 DataRegistry（ADR-0005），M3 再通过适配器为规则提供数据。
 
 ## 取值（全部为设计假设）
 

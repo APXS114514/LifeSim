@@ -8,6 +8,7 @@ GDD 没有规定、但会影响实现的决定写在这里（GDD §0）。ADR �
 | [0002](0002-docs-single-source.md)     | 设计文档以 GDD 为唯一来源     | 已采纳 |
 | [0003](0003-synthetic-world.md)        | M1 使用的合成地区（D 类假设） | 已采纳 |
 | [0004](0004-deterministic-kernel.md)   | 确定性模拟内核的设计          | 已采纳 |
+| [0005](0005-m2-data-architecture.md)   | M2 数据架构                   | 已采纳 |
 
 ## 模板
 
