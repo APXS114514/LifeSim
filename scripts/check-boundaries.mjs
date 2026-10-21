@@ -24,6 +24,15 @@ const ALLOWED_INTERNAL = {
     '@lifesim/data-registry',
     '@lifesim/simulation-core',
   ],
+  // M3 可玩切片：把国家包适配成 systems 能消费的 RegionModel。
+  '@lifesim/real-world': [
+    '@lifesim/content-schema',
+    '@lifesim/country-packs',
+    '@lifesim/data-registry',
+    '@lifesim/narrative',
+    '@lifesim/simulation-core',
+    '@lifesim/systems',
+  ],
   // 合成数据只供测试与 headless 运行：网页应用不在允许名单里，因此不会进入公开构建。
   '@lifesim/synthetic-world': [
     '@lifesim/content-schema',
@@ -37,12 +46,16 @@ const ALLOWED_INTERNAL = {
     '@lifesim/simulation-core',
     '@lifesim/synthetic-world',
     '@lifesim/systems',
+    '@lifesim/real-world',
   ],
   '@lifesim/web': [
     '@lifesim/content-schema',
+    '@lifesim/country-packs',
     '@lifesim/narrative',
     '@lifesim/save',
     '@lifesim/simulation-core',
+    '@lifesim/systems',
+    '@lifesim/real-world',
   ],
 };
 

@@ -30,6 +30,7 @@
     "test:watch": "vitest",
     "test:e2e": "pnpm --filter @lifesim/web test:e2e",
     "life": "pnpm --filter @lifesim/cli life",
+    "life:real": "pnpm --filter @lifesim/cli life:real",
     "bench": "pnpm --filter @lifesim/cli bench",
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:licenses": "node scripts/check-licenses.mjs",

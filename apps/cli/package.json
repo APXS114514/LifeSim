@@ -7,12 +7,14 @@
   "type": "module",
   "scripts": {
     "life": "node src/run-life.ts",
+    "life:real": "node src/run-real-life.ts",
     "bench": "node src/bench.ts",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@lifesim/content-schema": "workspace:*",
     "@lifesim/narrative": "workspace:*",
+    "@lifesim/real-world": "workspace:*",
     "@lifesim/save": "workspace:*",
     "@lifesim/simulation-core": "workspace:*",
     "@lifesim/synthetic-world": "workspace:*",
