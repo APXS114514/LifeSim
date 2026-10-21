@@ -85,7 +85,7 @@ export class GameSession {
     this.simulation = options.simulation;
     this.facts = options.facts;
     this.narrator = options.narrator;
-    this.pending = options.simulation.pendingDecision();
+    this.pending = this.#pendingAtClock();
   }
 
   static create(request: RealLifeRequest): GameSession {
@@ -232,6 +232,16 @@ export class GameSession {
     };
   }
 
+  /**
+   * 内核只把「队首」当作待决事项，不看它排在哪个日期；界面只能在决定日期到达当天
+   * （`pending.at <= clock`）时显示决定卡，否则会在错误的日期让玩家选择（M3-040）。
+   */
+  #pendingAtClock(): PendingDecision | null {
+    const pending = this.simulation.pendingDecision();
+    if (!pending || pending.at > this.simulation.clock) return null;
+    return pending;
+  }
+
   /** 推进到 `targetDate`；事实只来自 `advanceTo` 的 `newFacts`，按序号追加。 */
   #advance(targetDate: ISODate): StepResult {
     const newFacts: SimEventFact[] = [];
@@ -247,9 +257,12 @@ export class GameSession {
       }
       if (result.stopReason === 'work-budget-exhausted') continue;
       if (result.stopReason === 'major-decision') {
+        // 内核因为这个决定而停下：它已把时钟设为决定日期，可以直接采用。
         this.pending = result.pendingDecision;
       } else {
-        this.pending = this.simulation.pendingDecision();
+        // 其他停止原因下队首仍可能是**未来日期**的决定（内核只看队首、不看日期），
+        // 只有排在当前时钟当天或之前的才算待决（M3-040）。
+        this.pending = this.#pendingAtClock();
       }
       return { stopReason: result.stopReason, newFacts, clock: this.simulation.clock };
     }
