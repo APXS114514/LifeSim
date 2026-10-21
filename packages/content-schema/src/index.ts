@@ -1,6 +1,7 @@
 export * from './primitives.ts';
 export * from './product-scope.ts';
 export * from './evidence.ts';
+export * from './series.ts';
 export * from './money.ts';
 export * from './anchor.ts';
 export * from './country-pack.ts';
