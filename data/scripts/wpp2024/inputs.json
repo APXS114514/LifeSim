@@ -1,0 +1,9 @@
+[
+  {
+    "id": "demographic-indicators",
+    "file": "WPP2024_Demographic_Indicators_Medium.csv.gz",
+    "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+    "sha256": "286ac36bb1415e2e1ade03acfef0a29f0e4c087e2f78e38c48f50c5df89082bc",
+    "retrievedAt": "2026-10-20"
+  }
+]
