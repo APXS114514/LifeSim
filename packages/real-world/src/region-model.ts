@@ -99,10 +99,19 @@ function growthIndex(year: number): number {
 }
 
 let cachedRegistry: DataRegistry | undefined;
+let cachedPacks: CountryPack[] = [];
 
 /** 全部国家包的查询入口；首次调用时建索引（约 7.7 万个点）。 */
 export function realDataRegistry(): DataRegistry {
-  cachedRegistry ??= createPackRegistry();
+  const packs = Object.values(PACKS);
+  if (
+    !cachedRegistry ||
+    packs.length !== cachedPacks.length ||
+    packs.some((pack, index) => pack !== cachedPacks[index])
+  ) {
+    cachedRegistry = createPackRegistry();
+    cachedPacks = packs;
+  }
   return cachedRegistry;
 }
 

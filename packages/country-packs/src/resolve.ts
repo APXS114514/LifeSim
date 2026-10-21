@@ -10,19 +10,21 @@ import {
 } from '@lifesim/content-schema';
 import { PACK_COVERAGE_START, type CountryPack } from './schema.ts';
 
+type PackGeography = Omit<CountryPack, 'series'>;
+
 function assertCoverage(date: ISODate): void {
   if (date < PACK_COVERAGE_START) {
     throw new RangeError(`${date} is before the pack coverage start ${PACK_COVERAGE_START}`);
   }
 }
 
-function requirePlace(pack: CountryPack, placeId: string): Place {
+function requirePlace(pack: PackGeography, placeId: string): Place {
   const place = pack.places.find((candidate) => candidate.id === placeId);
   if (!place) throw new Error(`Unknown place ${placeId}`);
   return place;
 }
 
-export function assignmentAt(pack: CountryPack, placeId: string, date: ISODate): PlaceAssignment {
+export function assignmentAt(pack: PackGeography, placeId: string, date: ISODate): PlaceAssignment {
   assertCoverage(date);
   requirePlace(pack, placeId);
   const assignment = resolveOn(
@@ -34,7 +36,7 @@ export function assignmentAt(pack: CountryPack, placeId: string, date: ISODate):
 }
 
 export function politicalEntityAt(
-  pack: CountryPack,
+  pack: PackGeography,
   placeId: string,
   date: ISODate,
 ): PoliticalEntity {
@@ -50,7 +52,7 @@ export function politicalEntityAt(
   return entity;
 }
 
-export function adminUnitAt(pack: CountryPack, placeId: string, date: ISODate): AdminUnit {
+export function adminUnitAt(pack: PackGeography, placeId: string, date: ISODate): AdminUnit {
   const assignment = assignmentAt(pack, placeId, date);
   const unit = pack.adminUnits.find((candidate) => candidate.id === assignment.adminUnitId);
   if (!unit) {
@@ -59,7 +61,7 @@ export function adminUnitAt(pack: CountryPack, placeId: string, date: ISODate): 
   return unit;
 }
 
-export function placeNameAt(pack: CountryPack, placeId: string, date: ISODate): LocalizedName {
+export function placeNameAt(pack: PackGeography, placeId: string, date: ISODate): LocalizedName {
   assertCoverage(date);
   const place = requirePlace(pack, placeId);
   const name = resolveOn(place.names, date);
@@ -67,7 +69,7 @@ export function placeNameAt(pack: CountryPack, placeId: string, date: ISODate): 
   return name.names;
 }
 
-export function currencyAt(pack: CountryPack, date: ISODate): CurrencyVersion {
+export function currencyAt(pack: PackGeography, date: ISODate): CurrencyVersion {
   assertCoverage(date);
   let version = pack.currency.initialVersion;
   const redenominations = pack.anchors
@@ -79,7 +81,7 @@ export function currencyAt(pack: CountryPack, date: ISODate): CurrencyVersion {
   return { code: pack.currency.code, version };
 }
 
-export function poolPlace(pack: CountryPack, settlement: 'urban' | 'rural'): Place {
+export function poolPlace(pack: PackGeography, settlement: 'urban' | 'rural'): Place {
   const kind = settlement === 'urban' ? 'other-urban' : 'other-rural';
   const place = pack.places.find((candidate) => candidate.kind === kind);
   if (!place) throw new Error(`Pack ${pack.manifest.packId} has no ${kind} place`);

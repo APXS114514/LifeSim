@@ -165,3 +165,28 @@ it('round-trips local reflection records through the save storage path', () => {
   if (restored.kind !== 'loaded') throw new Error('expected saved reflections');
   expect(restored.session.reflections).toEqual(session.reflections);
 });
+
+describe('asynchronous pack preparation', () => {
+  it('prepares the saved country before restoring the session', async () => {
+    const { loadGameAsync } = await import('./storage.ts');
+    saveGame(newSession());
+    const countries: string[] = [];
+    const result = await loadGameAsync((region) => {
+      countries.push(region);
+      return Promise.resolve();
+    });
+    expect(countries).toEqual(['JP']);
+    expect(result.kind).toBe('loaded');
+  });
+
+  it('keeps a valid save untouched when a country download fails', async () => {
+    const { loadGameAsync } = await import('./storage.ts');
+    saveGame(newSession());
+    const raw = store.getItem(SAVE_KEY);
+    await expect(loadGameAsync(() => Promise.reject(new Error('offline')))).rejects.toThrow(
+      'offline',
+    );
+    expect(store.getItem(SAVE_KEY)).toBe(raw);
+    expect(store.getItem(PRESERVED_KEY)).toBeNull();
+  });
+});

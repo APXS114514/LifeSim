@@ -66,7 +66,9 @@ function EraRibbon() {
  */
 export function CharacterCreationPage({
   onStart,
+  busy = false,
 }: {
+  busy?: boolean;
   onStart: (choice: { region: RegionChoice; year: number | 'random' }) => void;
 }) {
   const { t } = useTranslation();
@@ -131,7 +133,7 @@ export function CharacterCreationPage({
           <span className="archive-number">{t('creation.formNumber')}</span>
         </div>
         <div className="archive-body">
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>{t('creation.region.legend')}</legend>
             <div className="choices">
               <label className="choice choice-random">
@@ -168,7 +170,7 @@ export function CharacterCreationPage({
             </p>
           </fieldset>
 
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>{t('creation.year.legend')}</legend>
             <div className="choices choices-year">
               <label className="choice">
@@ -236,7 +238,7 @@ export function CharacterCreationPage({
             <button
               type="submit"
               className="primary"
-              disabled={yearMode === 'specific' && !yearValid}
+              disabled={busy || (yearMode === 'specific' && !yearValid)}
               aria-describedby={ids.start}
             >
               {t('creation.start')}

@@ -301,5 +301,10 @@
         "enough": "This is enough"
       }
     }
+  },
+  "packs": {
+    "loading": "Loading country data ({{completed}}/{{total}})…",
+    "failed": "Country data could not be loaded. Reconnect if this country has not been cached, then retry. Your save has been kept.",
+    "retry": "Retry loading"
   }
 }

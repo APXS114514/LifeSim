@@ -1,3 +1,6 @@
+import { BIRTH_REGION_IDS, isSelectableBirthYear } from '@lifesim/content-schema';
+import { loadRequiredPacks } from '@lifesim/country-packs';
+import type { RealLifeRequest } from '@lifesim/real-world';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitch } from '../components/LanguageSwitch.tsx';
@@ -5,7 +8,7 @@ import { SaveIssuePanel } from '../components/SaveIssuePanel.tsx';
 import {
   clearGame,
   downloadSaveBackup,
-  loadGame,
+  loadGameAsync,
   saveGame,
   type SaveLoadResult,
 } from '../game/storage.ts';
@@ -20,18 +23,94 @@ import type { BirthRegionId, Locale } from '@lifesim/content-schema';
 type GameState = { session: GameSession; revision: number };
 type SaveIssue = Extract<SaveLoadResult, { kind: 'failed' }>;
 
+const PENDING_START_KEY = 'lifesim.pending-start.v1';
+
+function pendingStart(): RealLifeRequest | null {
+  try {
+    const raw = sessionStorage.getItem(PENDING_START_KEY);
+    if (!raw) return null;
+    const value = JSON.parse(raw) as RealLifeRequest;
+    return typeof value.seed === 'string' &&
+      (value.region === 'random' || BIRTH_REGION_IDS.includes(value.region)) &&
+      (value.year === 'random' || isSelectableBirthYear(value.year))
+      ? value
+      : null;
+  } catch {
+    return null;
+  }
+}
+function clearPendingStart(): void {
+  try {
+    sessionStorage.removeItem(PENDING_START_KEY);
+  } catch {
+    /* Storage can be disabled. */
+  }
+}
+async function prepareSession(
+  request: RealLifeRequest,
+  progress: (completed: number, total: number) => void,
+): Promise<GameSession> {
+  await loadRequiredPacks(request.region, progress);
+  const created = GameSession.create(request);
+  created.settleBirthDay();
+  return created;
+}
+
+function createSessionSeed(): string {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  return [...crypto.getRandomValues(new Uint32Array(4))]
+    .map((word) => word.toString(16).padStart(8, '0'))
+    .join('');
+}
+
 export function App() {
   const { t, i18n } = useTranslation();
   const locale: Locale = i18n.resolvedLanguage === 'en' ? 'en' : 'zh-Hans';
-  const [boot] = useState<SaveLoadResult>(() => loadGame());
-  const [game, setGame] = useState<GameState | null>(
-    boot.kind === 'loaded' ? { session: boot.session, revision: 0 } : null,
+  const [game, setGame] = useState<GameState | null>(null);
+  const [issue, setIssue] = useState<SaveIssue | null>(null);
+  const [restored, setRestored] = useState(false);
+  const [busy, setBusy] = useState(true);
+  const [progress, setProgress] = useState({ completed: 0, total: 0 });
+  const [packError, setPackError] = useState<{ detail: string; request?: RealLifeRequest } | null>(
+    null,
   );
-  const [issue, setIssue] = useState<SaveIssue | null>(boot.kind === 'failed' ? boot : null);
-  const [restored, setRestored] = useState(boot.kind === 'loaded');
+
   const [error, setError] = useState<string | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
   const [prefs, setPrefs] = useState(() => loadPreferences());
+
+  useEffect(() => {
+    let cancelled = false;
+    const pending = pendingStart();
+    const onProgress = (completed: number, total: number) => {
+      if (!cancelled) setProgress({ completed, total });
+    };
+    const ready: Promise<SaveLoadResult> = pending
+      ? prepareSession(pending, onProgress).then((session) => ({ kind: 'loaded', session }))
+      : loadGameAsync(undefined, onProgress);
+    void ready
+      .then((result) => {
+        if (cancelled) return;
+        if (result.kind === 'loaded') {
+          setGame({ session: result.session, revision: 0 });
+          setRestored(pending === null);
+          if (pending) {
+            setSaveFailed(!saveGame(result.session));
+            clearPendingStart();
+          }
+        } else if (result.kind === 'failed') setIssue(result);
+      })
+      .catch((caught: unknown) => {
+        if (!cancelled)
+          setPackError({ detail: String(caught), ...(pending ? { request: pending } : {}) });
+      })
+      .finally(() => {
+        if (!cancelled) setBusy(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     document.title = t('app.title');
@@ -76,25 +155,26 @@ export function App() {
   }
 
   function start(choice: { region: BirthRegionId | 'random'; year: number | 'random' }): void {
-    if (issue) return;
+    if (issue || busy || packError) return;
+    const seed = createSessionSeed();
+    void startRequest({ seed, ...choice });
+  }
+
+  async function startRequest(request: RealLifeRequest): Promise<void> {
+    setBusy(true);
+    setPackError(null);
     try {
-      const seed =
-        typeof crypto !== 'undefined' && 'randomUUID' in crypto
-          ? crypto.randomUUID()
-          : String(Math.random());
-      const created = GameSession.create({
-        seed,
-        region: choice.region,
-        year: choice.year,
+      const created = await prepareSession(request, (completed, total) => {
+        setProgress({ completed, total });
       });
-      // 只结算出生当天，然后停在出生日等玩家自己开始推进（M3-034）。
-      created.settleBirthDay();
       setSaveFailed(!saveGame(created));
       setGame({ session: created, revision: 0 });
       setRestored(false);
       setError(null);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : String(caught));
+      setPackError({ detail: String(caught), request });
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -108,19 +188,25 @@ export function App() {
 
   /** 重试读取：成功则进入游戏；仍然失败则更新提示；没有存档则回到出生设置。 */
   function retryLoad(): void {
-    const result = loadGame();
-    if (result.kind === 'loaded') {
-      setGame({ session: result.session, revision: 0 });
-      setIssue(null);
-      setRestored(true);
-      setError(null);
-      setSaveFailed(false);
-      return;
-    }
-    setIssue(result.kind === 'failed' ? result : null);
-    setGame(null);
-    setRestored(false);
-    setSaveFailed(false);
+    if (busy) return;
+    setBusy(true);
+    setPackError(null);
+    void loadGameAsync(undefined, (completed, total) => {
+      setProgress({ completed, total });
+    })
+      .then((result) => {
+        setIssue(result.kind === 'failed' ? result : null);
+        setGame(result.kind === 'loaded' ? { session: result.session, revision: 0 } : null);
+        setRestored(result.kind === 'loaded');
+        setError(null);
+        setSaveFailed(false);
+      })
+      .catch((caught: unknown) => {
+        setPackError({ detail: String(caught) });
+      })
+      .finally(() => {
+        setBusy(false);
+      });
   }
 
   /** 玩家明确确认清除后才删除存档（主键与保留副本）。 */
@@ -175,6 +261,29 @@ export function App() {
         />
       )}
 
+      {busy && <p role="status">{t('packs.loading', progress)}</p>}
+      {packError && (
+        <section className="error-panel" role="alert">
+          <p>{t('packs.failed')}</p>
+          <button
+            type="button"
+            onClick={() => {
+              // Browsers retain failed ESM imports until navigation; preserve this request first.
+              if (packError.request) {
+                try {
+                  sessionStorage.setItem(PENDING_START_KEY, JSON.stringify(packError.request));
+                } catch {
+                  /* A refresh still allows choosing again when storage is disabled. */
+                }
+              }
+              window.location.reload();
+            }}
+          >
+            {t('packs.retry')}
+          </button>
+        </section>
+      )}
+
       {error && (
         <div className="error-panel" role="alert">
           <p>{t('play.error')}</p>
@@ -225,7 +334,7 @@ export function App() {
             onNewLife={newLife}
           />
         ) : (
-          <CharacterCreationPage onStart={start} />
+          <CharacterCreationPage onStart={start} busy={busy || packError !== null} />
         )}
       </main>
 

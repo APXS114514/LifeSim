@@ -1,5 +1,5 @@
 import type { BirthRegionId, ISODate } from '@lifesim/content-schema';
-import { PACKS, politicalEntityAt, poolPlace } from '@lifesim/country-packs';
+import { PACK_METADATA, politicalEntityAt, poolPlace } from '@lifesim/country-packs';
 
 /**
  * 政体 → 旗帜资源。键是政治实体 ID，不是国家代码；同一实体可以按日期切换旗帜。
@@ -56,7 +56,7 @@ export function hasFlag(polityId: string): boolean {
  * 通过国家包的地点/政体解析得到，不写死「苏联 → 俄罗斯」或某个现代国家代码。
  */
 export function polityForRegionAt(region: BirthRegionId, date: ISODate): string {
-  const pack = PACKS[region];
+  const pack = PACK_METADATA[region];
   const place = poolPlace(pack, 'urban').id;
   return politicalEntityAt(pack, place, date).id;
 }

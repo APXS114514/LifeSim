@@ -1,3 +1,4 @@
+import { loadRequiredPacks, type PackProgress } from '@lifesim/country-packs';
 import { SimulationError } from '@lifesim/simulation-core';
 import { GameSession, parseGameSave } from './session.ts';
 
@@ -136,4 +137,22 @@ export function downloadSaveBackup(raw: string): boolean {
   } finally {
     URL.revokeObjectURL(url);
   }
+}
+
+/** Download failure is retryable, not save corruption: never preserve or overwrite in this step. */
+export async function loadGameAsync(
+  prepare: typeof loadRequiredPacks = loadRequiredPacks,
+  progress?: PackProgress,
+): Promise<SaveLoadResult> {
+  const store = storage();
+  const raw = store ? read(store, SAVE_KEY) : null;
+  if (raw === null) return loadGame();
+  let data;
+  try {
+    data = parseGameSave(JSON.parse(raw));
+  } catch {
+    return loadGame();
+  }
+  await prepare(data.request.region, progress);
+  return loadGame();
 }
