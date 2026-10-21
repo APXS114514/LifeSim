@@ -91,6 +91,52 @@
       "illTreated": "慢性病（已治疗）",
       "illUntreated": "慢性病（未治疗）",
       "balance": "存款"
+    },
+    "panel": {
+      "heading": "角色状态",
+      "indicators": {
+        "health": "健康",
+        "happiness": "幸福",
+        "knowledge": "知识",
+        "relationships": "人际",
+        "economy": "经济"
+      },
+      "education": "学历",
+      "enrolling": "在读：{{level}}",
+      "employmentLabel": "就业",
+      "employment": {
+        "child": "儿童",
+        "student": "在校",
+        "not-in-labor-force": "未参与劳动",
+        "employed": "在职",
+        "unemployed": "失业",
+        "retired": "退休"
+      },
+      "illness": "疾病",
+      "noIllness": "无慢性病",
+      "treated": "已治疗",
+      "untreated": "未治疗",
+      "income": "最近年度收入",
+      "incomeSource": {
+        "wage": "工资",
+        "pension": "养老金",
+        "none": "无收入"
+      },
+      "noIncomeYet": "—",
+      "balance": "余额",
+      "debtBadge": "负债",
+      "condition": {
+        "chronic": "慢性病"
+      },
+      "about": {
+        "heading": "这些是什么",
+        "summary": "这些指标从底层状态派生，采用 D 级设计假设，并非统计测量值。它们只用于展示，不参与模拟规则。",
+        "health": "健康反映年龄、已治疗及未治疗疾病的数量。",
+        "happiness": "幸福综合健康、经济、人际和知识，并根据最近 730 天的个人事件作小幅调整。",
+        "knowledge": "知识反映已完成学历、当前在读阶段和学业能力。",
+        "relationships": "人际取角色对有效关系的信任、亲密与低冲突程度的平均值。",
+        "economy": "经济反映余额或负债相对最近年度收入的情况，不用于跨时代比较财富。"
+      }
     }
   },
   "saveWriteIssue": {

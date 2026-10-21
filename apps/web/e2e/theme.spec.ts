@@ -49,7 +49,7 @@ test('uses #66CCFF with dark text on the primary action', async ({ page }) => {
   expect(color).not.toBe('rgb(255, 255, 255)');
 });
 
-test('shows the identity record with a pixel portrait and honest pending meters', async ({
+test('shows the identity record with a pixel portrait and real derived meters', async ({
   page,
 }) => {
   await startJapan1978(page);
@@ -57,10 +57,19 @@ test('shows the identity record with a pixel portrait and honest pending meters'
   await expect(card.locator('.archive-bar')).toContainText('身份档案');
   await expect(card.locator('.archive-number')).toHaveText(/^JP-1978-[0-9A-F]{7}$/);
   await expect(card.locator('.avatar-tile svg.pixel-art rect').first()).toBeAttached();
-  // 指标尚未接入（M4-016）：五条状态条都是「待接入」，不暴露任何数值。
+  // M4-016：五条状态条展示真实派生值，数值与可访问性语义一致。
   const status = page.locator('.status-panel');
-  await expect(status.locator('.meter.is-pending')).toHaveCount(5);
-  await expect(status.getByRole('progressbar')).toHaveCount(0);
+  await expect(status.locator('.meter.is-pending')).toHaveCount(0);
+  await expect(status.getByRole('progressbar')).toHaveCount(5);
+  for (const bar of await status.getByRole('progressbar').all()) {
+    const percent = Number(await bar.getAttribute('aria-valuenow'));
+    expect(Number.isInteger(percent)).toBe(true);
+    expect(percent).toBeGreaterThanOrEqual(0);
+    expect(percent).toBeLessThanOrEqual(100);
+    await expect(bar).toHaveAttribute('aria-valuemin', '0');
+    await expect(bar).toHaveAttribute('aria-valuemax', '100');
+    await expect(bar.locator('.indicator-value')).toHaveText(String(percent));
+  }
   // 真实字段：出生日是「无学历 · 儿童」，入学后变成「在读」。
   await expect(status).toContainText('无学历');
   await expect(status).toContainText('儿童');

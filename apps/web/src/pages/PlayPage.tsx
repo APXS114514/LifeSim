@@ -1,16 +1,10 @@
 import type { Locale } from '@lifesim/content-schema';
-import { describeCharacterLocations, formatRealMoney, joinNames } from '@lifesim/real-world';
+import { describeCharacterLocations, joinNames } from '@lifesim/real-world';
 import { useEffect, useReducer, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ArchiveCard,
-  Field,
-  FieldGrid,
-  Meter,
-  Panel,
-  type MeterTone,
-} from '../components/Archive.tsx';
+import { ArchiveCard, Field, FieldGrid, Panel } from '../components/Archive.tsx';
 import { DecisionCard } from '../components/DecisionCard.tsx';
+import { Indicators } from '../components/Indicators.tsx';
 import { PixelAvatar } from '../components/PixelPortrait.tsx';
 import { PlacePolityLabel } from '../components/PlacePolityLabel.tsx';
 import { PolityFlag } from '../components/PolityFlag.tsx';
@@ -35,24 +29,6 @@ function subscribeMotionPreference(listener: () => void): () => void {
 function allowsAnimation(): boolean {
   return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
-
-/** 五项派生指标的位置先排好；数值等 M4-016（在此之前一律显示「待接入」）。 */
-const INDICATORS: readonly MeterTone[] = [
-  'health',
-  'happiness',
-  'knowledge',
-  'relationships',
-  'economy',
-];
-
-const EMPLOYMENT_KEYS = {
-  child: 'play.status.employment.child',
-  student: 'play.status.employment.student',
-  'not-in-labor-force': 'play.status.employment.not-in-labor-force',
-  employed: 'play.status.employment.employed',
-  unemployed: 'play.status.employment.unemployed',
-  retired: 'play.status.employment.retired',
-} as const;
 
 export function PlayPage({
   session,
@@ -103,19 +79,6 @@ export function PlayPage({
     packId: session.birth.packId,
     birthDate: session.birth.birthDate,
   };
-
-  const { education, employment, health } = actor;
-  const educationText =
-    education.enrolledIn !== null
-      ? t('play.status.enrolled', { level: session.label('level', education.enrolledIn, locale) })
-      : session.label('level', education.completed, locale);
-  const condition = health.conditions[0];
-  const healthText = condition
-    ? condition.treated
-      ? t('play.status.illTreated')
-      : t('play.status.illUntreated')
-    : t('play.status.healthy');
-  const balanceText = `${formatRealMoney(summary.finalBalanceMinor, summary.currency, locale)} ${session.currencyName(summary.currency, locale)}`;
 
   return (
     <div className={'game pack-' + session.birth.packId}>
@@ -197,32 +160,7 @@ export function PlayPage({
             </div>
           </ArchiveCard>
 
-          <Panel
-            className="status-panel"
-            headingId="status-heading"
-            title={t('play.status.heading')}
-            aside={t('play.status.aside')}
-          >
-            <ul className="meter-list">
-              {INDICATORS.map((key) => (
-                <Meter
-                  key={key}
-                  tone={key}
-                  label={t(`play.status.indicators.${key}`)}
-                  value={null}
-                />
-              ))}
-            </ul>
-            <p className="hint">{t('play.status.pendingNote')}</p>
-            <FieldGrid compact>
-              <Field label={t('play.status.education')}>{educationText}</Field>
-              <Field label={t('play.status.employment.label')}>
-                {t(EMPLOYMENT_KEYS[employment.status])}
-              </Field>
-              <Field label={t('play.status.health')}>{healthText}</Field>
-              <Field label={t('play.status.balance')}>{balanceText}</Field>
-            </FieldGrid>
-          </Panel>
+          <Indicators session={session} locale={locale} />
 
           <Panel className="side-controls" headingId="controls-heading" title={t('play.controls')}>
             <label className="toggle">

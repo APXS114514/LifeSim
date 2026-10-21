@@ -91,6 +91,52 @@
       "illTreated": "Chronic illness (treated)",
       "illUntreated": "Chronic illness (untreated)",
       "balance": "Savings"
+    },
+    "panel": {
+      "heading": "Character status",
+      "indicators": {
+        "health": "Health",
+        "happiness": "Happiness",
+        "knowledge": "Knowledge",
+        "relationships": "Relationships",
+        "economy": "Economy"
+      },
+      "education": "Education",
+      "enrolling": "Enrolled: {{level}}",
+      "employmentLabel": "Work",
+      "employment": {
+        "child": "Child",
+        "student": "In school",
+        "not-in-labor-force": "Not working",
+        "employed": "Employed",
+        "unemployed": "Unemployed",
+        "retired": "Retired"
+      },
+      "illness": "Illness",
+      "noIllness": "No chronic illness",
+      "treated": "Treated",
+      "untreated": "Untreated",
+      "income": "Latest annual income",
+      "incomeSource": {
+        "wage": "Wage",
+        "pension": "Pension",
+        "none": "No income"
+      },
+      "noIncomeYet": "—",
+      "balance": "Balance",
+      "debtBadge": "Debt",
+      "condition": {
+        "chronic": "Chronic illness"
+      },
+      "about": {
+        "heading": "What are these?",
+        "summary": "These indicators are derived from the underlying state using D-grade design assumptions, not statistical measurements. They are read-only and do not affect simulation rules.",
+        "health": "Health reflects age and the number of treated and untreated illnesses.",
+        "happiness": "Happiness combines health, economy, relationships and knowledge, with a small adjustment for personal events in the last 730 days.",
+        "knowledge": "Knowledge reflects completed education, current enrollment and aptitude.",
+        "relationships": "Relationships average this character’s trust, intimacy and lack of conflict in active relationships.",
+        "economy": "Economy reflects the balance or debt relative to the latest annual income; it does not compare wealth across eras."
+      }
     }
   },
   "saveWriteIssue": {
