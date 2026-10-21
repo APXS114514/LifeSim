@@ -17,7 +17,7 @@ import {
   type SimulationEngine,
 } from './contract.ts';
 import { SimulationError, type SimulationErrorCode } from './errors.ts';
-import { canonicalJson, cloneJson, type JsonValue } from './json.ts';
+import { canonicalJson, cloneJson, jsonEqual, type JsonValue } from './json.ts';
 import { chooseByPrinciples } from './policy.ts';
 import { RNG_ALGORITHM, deriveStream, type RandomStream } from './random.ts';
 import {
@@ -648,7 +648,13 @@ export class Simulation implements SimulationEngine {
     return facts;
   }
 
-  /** 提交前检查：事实结构、角色与账户结构、时间与生死约束、各系统的不变量。 */
+  /**
+   * 提交前检查：事实结构、角色与账户结构、时间与生死约束、各系统的不变量。
+   *
+   * 已提交的状态都校验过（创建时为空，恢复时整份快照经过 schema 解析），而 schema 校验只取决于值本身，
+   * 所以与提交前逐字段相同的角色和账户不必再解析一遍；只解析本事件新增或改动的（M3-035）。
+   * 这样每个事件的校验成本取决于它改了多少角色，而不是一局里有多少 NPC。
+   */
   #verify(occurrence: Occurrence, draft: SimState, facts: readonly SimEventFact[]): void {
     const violations: string[] = [];
 
@@ -656,15 +662,22 @@ export class Simulation implements SimulationEngine {
       const parsed = SimEventFactSchema.safeParse(fact);
       if (!parsed.success) violations.push(`fact ${fact.id}: ${parsed.error.message}`);
     }
+    const actorsBefore = new Map(this.#state.actors.map((actor) => [actor.id, actor]));
     for (const actor of draft.actors) {
+      const before = actorsBefore.get(actor.id);
+      if (before && jsonEqual(before, actor)) continue;
       const parsed = CharacterStateSchema.safeParse(actor);
       if (!parsed.success) violations.push(`actor ${actor.id}: ${parsed.error.message}`);
-      const before = this.#state.actors.find((candidate) => candidate.id === actor.id);
       if (before?.vitalStatus.kind === 'deceased' && actor.vitalStatus.kind !== 'deceased') {
         violations.push(`actor ${actor.id} came back to life`);
       }
     }
+    const accountsBefore = new Map(
+      this.#state.householdAccounts.map((account) => [account.id, account]),
+    );
     for (const account of draft.householdAccounts) {
+      const before = accountsBefore.get(account.id);
+      if (before && jsonEqual(before, account)) continue;
       const parsed = HouseholdAccountSchema.safeParse(account);
       if (!parsed.success) violations.push(`account ${account.id}: ${parsed.error.message}`);
     }

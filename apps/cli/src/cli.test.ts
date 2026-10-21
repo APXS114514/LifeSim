@@ -60,6 +60,10 @@ describe('bilingual narrative of synthetic lives', () => {
     );
   });
 
+  // 时间预算（M3-035）：200 局完整人生 + 1 局真实国家包人生，是一次集成扫描而不是单元测试。
+  // 本机（Apple M5）单独运行约 1.1 s；GitHub ubuntu-latest 与其他测试文件并行时慢 3.5 倍以上，
+  // 默认 5 s 没有余量（提交 713409d 的 CI 在 5 s 处超时）。性能退化由 `pnpm bench` 与
+  // simulation-core 的增量校验测试把关，这里的预算只防止误报，不代表性能目标。
   it('reaches every template in a fixed, varied sample of lives (no dead or missing templates)', () => {
     const templates = [...flattenMessages(resources.en).keys()]
       .filter((key) => key.startsWith('templates.'))
@@ -102,7 +106,7 @@ describe('bilingual narrative of synthetic lives', () => {
     }
     expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
     expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);
-  });
+  }, 20_000);
 });
 
 describe('save files', () => {

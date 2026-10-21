@@ -10,12 +10,30 @@ import type { EventDefinition, SimulationModule } from '../types.ts';
 export const TOY_ACTOR = 'char:toy';
 
 export type TrapKind =
-  'throw' | 'cycle' | 'chain' | 'past' | 'bad-cause' | 'invalid-state' | 'invariant';
+  | 'throw'
+  | 'cycle'
+  | 'chain'
+  | 'past'
+  | 'bad-cause'
+  | 'invalid-state'
+  | 'invariant'
+  | 'invalid-companion'
+  | 'invalid-account';
 
 export interface ToyWorldOptions {
   trap?: { age: number; kind: TrapKind };
   /** 让 18 岁决定的 options() 违规抽随机数，验证内核会拒绝。 */
   impureDecision?: boolean;
+  /** 出生时另建几个 Tier1 同伴（各有一个账户），之后的事件不再碰它们；用于验证增量校验。 */
+  companions?: number;
+}
+
+export function companionId(index: number): string {
+  return `char:toy-companion-${index}`;
+}
+
+export function companionAccountId(index: number): string {
+  return `account:toy-companion-${index}`;
 }
 
 export function makeActor(id: string, birthDate: ISODate): CharacterState {
@@ -56,6 +74,20 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
     priority: 0,
     handle(ctx) {
       ctx.state.actors.push(makeActor(TOY_ACTOR, ctx.at));
+      for (let index = 0; index < (options.companions ?? 0); index++) {
+        const id = companionId(index);
+        ctx.state.actors.push({
+          ...makeActor(id, ctx.at),
+          tier: 'tier1',
+          finance: { accountId: companionAccountId(index), lastSettlementFactId: null },
+        });
+        ctx.state.householdAccounts.push({
+          id: companionAccountId(index),
+          ownerIds: [id],
+          currency: { code: 'TOY', version: 1 },
+          balanceMinor: 0,
+        });
+      }
       const born = ctx.emit({ type: 'toy.born', outcomeCode: 'born', actorIds: [TOY_ACTOR] });
       ctx.schedule({
         type: 'toy.birthday',
@@ -210,6 +242,20 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
         case 'invariant':
           actor.currentResidenceId = 'nowhere';
           return;
+        case 'invalid-companion':
+          ctx.actor(companionId(0)).education = {
+            completed: 'none',
+            enrolledIn: 'tertiary',
+            lastFactId: null,
+          };
+          return;
+        case 'invalid-account': {
+          const account = ctx.state.householdAccounts.find(
+            (candidate) => candidate.id === companionAccountId(0),
+          );
+          if (account) account.balanceMinor = 0.5;
+          return;
+        }
         default:
           return;
       }

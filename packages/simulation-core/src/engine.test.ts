@@ -1,13 +1,17 @@
 import {
+  CharacterStateSchema,
+  HouseholdAccountSchema,
   SimulationSnapshotSchema,
   checkJournalInvariants,
   type SimulationSnapshot,
 } from '@lifesim/content-schema';
 import fc from 'fast-check';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   FAR_FUTURE,
   TOY_ACTOR,
+  companionAccountId,
+  companionId,
   createToySimulation,
   toyModules,
   type TrapKind,
@@ -291,6 +295,63 @@ describe('guarantees added in the M1 audit', () => {
     );
     const automatic = createToySimulation(seed, { impureDecision: true });
     expect(() => automatic.advanceTo(forever)).toThrow(/impure-decision-options/);
+  });
+
+  it('still rejects an invalid change to an actor or account the event did not mainly touch', () => {
+    for (const [kind, needle] of [
+      ['invalid-companion', `actor ${companionId(0)}`],
+      ['invalid-account', `account ${companionAccountId(0)}`],
+    ] as const) {
+      const simulation = createToySimulation('companions', {
+        companions: 2,
+        trap: { age: 3, kind },
+      });
+      simulation.advanceTo({ ...forever, targetDate: '1973-06-14' });
+      let error: unknown;
+      try {
+        simulation.advanceTo(forever);
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error).toBeInstanceOf(SimulationError);
+      expect((error as SimulationError).code).toBe('invariant-violation');
+      expect((error as SimulationError).details.join('\n')).toContain(needle);
+      // 失败的事件没有提交：同伴与账户仍是出生时的合法状态，重试得到同样的错误。
+      const snapshot = simulation.snapshot();
+      expect(snapshot.actors.find((actor) => actor.id === companionId(0))?.education).toEqual({
+        completed: 'none',
+        enrolledIn: null,
+        lastFactId: null,
+      });
+      expect(
+        snapshot.householdAccounts.find((account) => account.id === companionAccountId(0))
+          ?.balanceMinor,
+      ).toBe(0);
+      expect(() => simulation.advanceTo(forever)).toThrow(SimulationError);
+    }
+  });
+
+  it('re-parses only the actors and accounts an event changed, not the whole cast (M3-035)', () => {
+    const simulation = createToySimulation('companions', { companions: 5 });
+    simulation.advanceTo({ ...forever, targetDate: '1972-01-01' });
+    const actorParse = vi.spyOn(CharacterStateSchema, 'safeParse');
+    const accountParse = vi.spyOn(HouseholdAccountSchema, 'safeParse');
+    try {
+      // 1972-06-15 的生日事件只抽随机数、写事实，不改任何角色或账户。
+      const result = simulation.advanceTo({ ...forever, targetDate: '1972-06-15' });
+      expect(result.newFacts.map((fact) => fact.type)).toEqual(['toy.birthday']);
+      expect(actorParse).not.toHaveBeenCalled();
+      expect(accountParse).not.toHaveBeenCalled();
+    } finally {
+      actorParse.mockRestore();
+      accountParse.mockRestore();
+    }
+  });
+
+  it('gives the same facts and snapshot with or without companions for the protagonist', () => {
+    const alone = runToEnd(createToySimulation('companions'));
+    const withCompanions = runToEnd(createToySimulation('companions', { companions: 3 }));
+    expect(canonicalJson(withCompanions.facts)).toBe(canonicalJson(alone.facts));
   });
 
   it('freezes committed facts so callers cannot rewrite the journal', () => {
