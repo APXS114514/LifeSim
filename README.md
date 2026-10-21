@@ -4,7 +4,7 @@
 
 可溯源的历史统计和可解释的概率模型构成现实约束；个人选择、NPC 的自主意愿和家庭因果改变个人命运，但不改写已经发生的宏观历史。
 
-> **当前状态：第一个可玩测试版本（M3-lite）。** 五地 1950—2026 可选出生，使用真实 WPP 生命表与 M2 地理/币制，在浏览器里跑完一生、处理重大决定、查看死亡总结、切换中英并自动存档。家庭、NPC、婚育、迁居与城市权重仍属于 M3；完整公开 Alpha 仍属于 M4/M5。范围见 [docs/PLAYABLE_TEST.md](docs/PLAYABLE_TEST.md)，进度见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+> **当前状态：可玩测试版，尚未达到 v0.1 Alpha。** 五地 1950—2026 可选出生，可在浏览器里跑完一生、处理重大决定、查看总结、切换中英并自动存档；父母会就业、生病与去世。本次增加了派生状态面板、可调年内节奏和人生节点反思，并修复存档可靠性与币制显示。年度重点、日常事件库、婚育、迁居、城市权重与离线等仍需继续推进。最新实现、验证与缺口见 [开发进度报告](docs/audits/2026-10-21-ALPHA-PROGRESS.md)，总体顺序见 [v0.1 路线图](docs/V0.1_PLAN.md)。
 
 ## v0.1 目标（公开 Alpha）
 
@@ -99,6 +99,6 @@ data/                      来源登记、许可审计与数据转换脚本（�
 
 LifeSim is a single-player life simulation set inside real history. Births can be chosen in Mainland China, Japan, North Korea, South Korea or Russia (including the Soviet era) between 1950 and 2026. Macro history stays fixed, while your life and family are shaped by choices, other people's own decisions and calibrated probabilities. When the protagonist dies, the run ends.
 
-**Status: first playable test build (M3-lite).** Choose a birth in one of five regions between 1950 and 2026, run a whole life in the browser with real WPP life tables and M2 geography/currency, make major decisions, read the death summary, switch between Chinese and English, and resume from an autosave. Family, NPCs, marriage, children, migration and city weights are still M3; the public Alpha is M4/M5. See [docs/PLAYABLE_TEST.md](docs/PLAYABLE_TEST.md).
+**Status: playable test build, before v0.1 Alpha.** Choose births in five regions between 1950 and 2026, run a whole life with real WPP life tables, make major decisions, read the summary, switch languages and resume from an autosave. Parents have their own employment, illness and death. Derived status indicators, adjustable year pacing and local life reflections are implemented. Annual focus, daily events, marriage, children, migration, city weights and offline support still need work. See the [progress report](docs/audits/2026-10-21-ALPHA-PROGRESS.md) for validation and remaining scope.
 
 Original code is released under the [MIT License](LICENSE). Third-party data and assets keep their own licenses.
