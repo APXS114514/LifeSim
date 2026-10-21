@@ -7,10 +7,65 @@ import {
   type EducationLevel,
   type EvidenceMeta,
   type HistoricalAnchor,
+  type Indicator,
   type Origin,
 } from '@lifesim/content-schema';
 import type { SimState } from '@lifesim/simulation-core';
 import { z } from 'zod';
+
+/** 数据质量与回退方式；与 DataRegistry 的 LookupMethod 对应（ADR-0007）。 */
+export type DataQuality = 'exact' | 'neighbor-year' | 'parent-geography' | 'derived' | 'assumption';
+
+/** 规则可用的数据值；缺失时调用方拿到 null，而不是 0。 */
+export interface DataValue {
+  readonly value: number;
+  readonly grade: EvidenceMeta['grade'];
+  readonly quality: DataQuality;
+  readonly sourceIds: readonly string[];
+  readonly sourceYear: number;
+  readonly projected: boolean;
+  readonly reason?: string;
+}
+
+/** 低层只读表：只回答指标值，不做人生规则。 */
+export interface RegionTables {
+  value(indicator: Indicator, year: number): DataValue | null;
+  ageValue(indicator: Indicator, year: number, age: number): DataValue | null;
+  evidenceFor(indicator: Indicator): EvidenceMeta;
+}
+
+export interface EducationQueries {
+  secondaryEnrollmentRate(year: number, settlement: Origin['settlement']): DataValue | null;
+  upperSecondaryCompletionRate(year: number, settlement: Origin['settlement']): DataValue | null;
+}
+
+export interface LaborQueries {
+  participationRate(year: number): DataValue | null;
+  agricultureShare(year: number): DataValue | null;
+}
+
+export interface PriceQueries {
+  cpi(year: number): DataValue | null;
+  /** 名义最小单位 → baseYear 购买力；CPI 缺失时返回原值（调用方应披露未折算）。 */
+  toRealMinor(
+    nominalMinor: number,
+    currency: CurrencyVersion,
+    year: number,
+    baseYear: number,
+  ): number;
+}
+
+export interface HealthQueries {
+  outOfPocketShare(year: number): DataValue | null;
+  expenditurePerCapitaUsd(year: number): DataValue | null;
+}
+
+export interface RegionQueries {
+  readonly education: EducationQueries;
+  readonly labor: LaborQueries;
+  readonly prices: PriceQueries;
+  readonly health: HealthQueries;
+}
 
 /**
  * 系统规则向地区数据要的全部东西。M1 由合成地区包实现；M2 起由国家包与 DataRegistry 实现。
@@ -29,6 +84,9 @@ export interface RegionModel {
   readonly initialMacro: { economyPhase: EconomyPhase; currency: CurrencyVersion };
   readonly rules: RegionRules;
   readonly effects: RegionEffects;
+  /** M3-009：低层表与领域查询；规则不直接读国家包。 */
+  readonly tables: RegionTables;
+  readonly queries: RegionQueries;
 
   placeId(settlement: Origin['settlement']): string;
   urbanBirthShare(year: number): number;

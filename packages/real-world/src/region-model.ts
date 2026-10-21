@@ -7,6 +7,7 @@ import {
   type EducationLevel,
   type EvidenceMeta,
   type HistoricalAnchor,
+  type Indicator,
   type ISODate,
   type LifePrinciples,
   type Origin,
@@ -23,9 +24,13 @@ import {
 import type { DataRegistry } from '@lifesim/data-registry';
 import {
   createLifeSimulation,
+  type DataQuality,
+  type DataValue,
   type RegionEffects,
   type RegionModel,
+  type RegionQueries,
   type RegionRules,
+  type RegionTables,
 } from '@lifesim/systems';
 import type { Simulation } from '@lifesim/simulation-core';
 
@@ -173,6 +178,99 @@ export function createRealRegion(
     .filter((anchor) => anchor.kind === 'redenomination')
     .sort((left, right) => (left.at < right.at ? -1 : left.at > right.at ? 1 : 0));
 
+  const indicatorTable: Record<Indicator, keyof RegionModel['evidence']> = {
+    births: 'population',
+    'life-table-qx': 'mortality',
+    'urban-share': 'population',
+    'education-enrollment-secondary': 'education',
+    'education-completion-upper-secondary': 'education',
+    'labor-force-participation': 'labor',
+    'employment-agriculture-share': 'labor',
+    'cpi-index': 'prices',
+    'health-out-of-pocket-share': 'illness',
+    'health-expenditure-per-capita': 'illness',
+  };
+
+  const qualityFor = (method: string): DataQuality => {
+    if (method === 'exact') return 'exact';
+    if (method === 'fallback-neighbor-year') return 'neighbor-year';
+    if (method === 'fallback-parent-geography') return 'parent-geography';
+    if (method === 'hold-first-observed') return 'assumption';
+    return 'derived';
+  };
+
+  const lookupValue = (indicator: Indicator, year: number, age?: number): DataValue | null => {
+    if (indicator === 'life-table-qx' && age === undefined) return null;
+    const result = data.lookup(
+      age === undefined
+        ? { indicator, geographyId: pack.geographyId, year }
+        : { indicator, geographyId: pack.geographyId, year, age },
+    );
+    if (result.status === 'missing') return null;
+    return {
+      value: result.value,
+      grade: result.evidence.grade,
+      quality: qualityFor(result.method),
+      sourceIds: result.evidence.sourceIds,
+      sourceYear: result.sourceYear,
+      projected: result.projected,
+    };
+  };
+
+  const tables: RegionTables = {
+    value: (indicator, year) => lookupValue(indicator, year),
+    ageValue: (indicator, year, age) => lookupValue(indicator, year, age),
+    evidenceFor(indicator) {
+      const sample = tables.value(indicator, 2020) ?? tables.value(indicator, 2000);
+      if (sample !== null) {
+        return {
+          grade: sample.grade,
+          sourceIds: [...sample.sourceIds],
+          modelVersion: pack.manifest.dataVersion,
+          geographyId: pack.geographyId,
+          yearRange: [sample.sourceYear, sample.sourceYear],
+          methodId: sample.quality,
+        };
+      }
+      return tableEvidence(pack)[indicatorTable[indicator]];
+    },
+  };
+
+  const queries: RegionQueries = {
+    education: {
+      secondaryEnrollmentRate: (year) => tables.value('education-enrollment-secondary', year),
+      upperSecondaryCompletionRate: (year) =>
+        tables.value('education-completion-upper-secondary', year),
+    },
+    labor: {
+      participationRate: (year) => tables.value('labor-force-participation', year),
+      agricultureShare: (year) => tables.value('employment-agriculture-share', year),
+    },
+    prices: {
+      cpi: (year) => tables.value('cpi-index', year),
+      toRealMinor(nominalMinor, _currency, year, baseYear) {
+        const current = tables.value('cpi-index', year);
+        const base = tables.value('cpi-index', baseYear);
+        // CPI 缺失时不假装折算：返回名义值，调用方负责标注“未折算”。
+        if (current === null || base === null || current.value <= 0 || base.value <= 0) {
+          return nominalMinor;
+        }
+        const baseScaled = BigInt(Math.round(base.value * 1000));
+        const currentScaled = BigInt(Math.round(current.value * 1000));
+        const numerator = BigInt(nominalMinor) * baseScaled;
+        const rounded =
+          numerator >= 0n
+            ? (numerator + currentScaled / 2n) / currentScaled
+            : (numerator - currentScaled / 2n) / currentScaled;
+        return Number(rounded);
+      },
+    },
+    health: {
+      outOfPocketShare: (year) => tables.value('health-out-of-pocket-share', year),
+      expenditurePerCapitaUsd: (year) => tables.value('health-expenditure-per-capita', year),
+    },
+  };
+
   const annualWageMinor = (
     year: number,
     level: EducationLevel,
@@ -200,6 +298,8 @@ export function createRealRegion(
     },
     rules: REAL_RULES,
     effects: REAL_EFFECTS,
+    tables,
+    queries,
     placeId(settlement) {
       return settlement === 'urban' ? urbanPlace : ruralPlace;
     },

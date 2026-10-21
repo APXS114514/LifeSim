@@ -4,10 +4,17 @@ import type {
   EducationLevel,
   EvidenceMeta,
   HistoricalAnchor,
+  Indicator,
   Locale,
 } from '@lifesim/content-schema';
 import { expDet, lnDet } from '@lifesim/simulation-core';
-import type { RegionModel, RegionTable } from '@lifesim/systems';
+import type {
+  DataValue,
+  RegionModel,
+  RegionQueries,
+  RegionTable,
+  RegionTables,
+} from '@lifesim/systems';
 
 /**
  * 合成地区「ZZ-SYN」（虚构）。
@@ -104,6 +111,75 @@ function toMinor(newUnitAmount: number, currency: CurrencyVersion): number {
 const nominal = (real: number, year: number, realGrowth: number) =>
   real * growth(year, realGrowth) * growth(year, 0.04);
 
+const TABLE_FOR: Record<Indicator, RegionTable> = {
+  births: 'population',
+  'life-table-qx': 'mortality',
+  'urban-share': 'population',
+  'education-enrollment-secondary': 'education',
+  'education-completion-upper-secondary': 'education',
+  'labor-force-participation': 'labor',
+  'employment-agriculture-share': 'labor',
+  'cpi-index': 'prices',
+  'health-out-of-pocket-share': 'illness',
+  'health-expenditure-per-capita': 'illness',
+};
+
+/** 合成地区的 D 级查询值；全部是设计假设，不是统计。 */
+function syntheticValue(indicator: Indicator, year: number): DataValue | null {
+  const value =
+    indicator === 'education-enrollment-secondary'
+      ? 70
+      : indicator === 'education-completion-upper-secondary'
+        ? 0.5
+        : indicator === 'labor-force-participation'
+          ? 0.65
+          : indicator === 'employment-agriculture-share'
+            ? 0.35
+            : indicator === 'cpi-index'
+              ? 100
+              : indicator === 'health-out-of-pocket-share'
+                ? 0.3
+                : indicator === 'health-expenditure-per-capita'
+                  ? 500
+                  : null;
+  if (value === null) return null;
+  return {
+    value,
+    grade: 'D',
+    quality: 'assumption',
+    sourceIds: ['adr:0003'],
+    sourceYear: year,
+    projected: false,
+  };
+}
+
+const SYNTHETIC_TABLES: RegionTables = {
+  value: (indicator, year) => syntheticValue(indicator, year),
+  ageValue: (indicator, year) =>
+    indicator === 'life-table-qx' ? syntheticValue(indicator, year) : null,
+  evidenceFor: (indicator) => EVIDENCE[TABLE_FOR[indicator]],
+};
+
+const SYNTHETIC_QUERIES: RegionQueries = {
+  education: {
+    secondaryEnrollmentRate: (year) => syntheticValue('education-enrollment-secondary', year),
+    upperSecondaryCompletionRate: (year) =>
+      syntheticValue('education-completion-upper-secondary', year),
+  },
+  labor: {
+    participationRate: (year) => syntheticValue('labor-force-participation', year),
+    agricultureShare: (year) => syntheticValue('employment-agriculture-share', year),
+  },
+  prices: {
+    cpi: (year) => syntheticValue('cpi-index', year),
+    toRealMinor: (nominalMinor) => nominalMinor,
+  },
+  health: {
+    outOfPocketShare: (year) => syntheticValue('health-out-of-pocket-share', year),
+    expenditurePerCapitaUsd: (year) => syntheticValue('health-expenditure-per-capita', year),
+  },
+};
+
 export const syntheticRegion: RegionModel = {
   packId: SYNTHETIC_PACK_ID,
   dataVersion: DATA_VERSION,
@@ -111,6 +187,8 @@ export const syntheticRegion: RegionModel = {
   evidence: EVIDENCE,
   anchors: ANCHORS,
   initialMacro: { economyPhase: 'normal', currency: { code: 'SYN', version: 1 } },
+  tables: SYNTHETIC_TABLES,
+  queries: SYNTHETIC_QUERIES,
   rules: {
     primaryStartAge: 6,
     primaryYears: 6,
