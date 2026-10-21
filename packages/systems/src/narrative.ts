@@ -69,6 +69,7 @@ export const LIFE_NARRATIVE = {
       cause: { illness: '慢性病', other: '其他原因' },
       phase: { normal: '经济正常', recession: '经济衰退中' },
       decidedBy: { player: '本人选择', principles: '按人生原则' },
+      otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
     },
   },
   en: {
@@ -140,6 +141,7 @@ export const LIFE_NARRATIVE = {
       cause: { illness: 'chronic illness', other: 'other causes' },
       phase: { normal: 'normal economy', recession: 'during a recession' },
       decidedBy: { player: "player's choice", principles: 'by life principles' },
+      otherPlace: { 'other-urban': 'other urban areas', 'other-rural': 'other rural areas' },
     },
   },
 } satisfies Record<Locale, unknown>;

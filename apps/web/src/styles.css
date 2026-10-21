@@ -385,6 +385,14 @@ legend {
   margin: 0;
 }
 
+.choice span,
+.intro-regions li,
+.character-head h2,
+.decision-card h2,
+.summary-card h2 {
+  overflow-wrap: anywhere;
+}
+
 .year-input {
   display: flex;
   align-items: center;
@@ -614,6 +622,50 @@ legend {
   margin: 0;
   color: var(--ink-muted);
   font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.character-meta {
+  display: grid;
+  grid-template-columns: 4.6em minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: start;
+  margin: 2px 0 0;
+  font-size: 0.84rem;
+}
+
+.meta-label {
+  padding-top: 2px;
+  color: var(--ink-muted);
+  font-size: 0.74rem;
+}
+
+.meta-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.place-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.place-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.place-polity {
+  color: var(--ink-muted);
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
+
+.summary-grid dd .place-label {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
 }
 
 .seed-line {

@@ -39,6 +39,12 @@
     "restored": "已恢复上次自动存档。",
     "character": "这一生",
     "seed": "种子",
+    "birthPlace": "出生地",
+    "currentResidence": "现居地",
+    "sameAsBirth": "同出生地",
+    "politicalEntity": "政治归属",
+    "citizenship": "国籍",
+
     "age": "年龄",
     "died": "享年",
     "continue": "继续",
@@ -94,6 +100,9 @@
     "unknownCause": "未知",
     "facts": "事件数",
     "decisions": "重大决定",
+    "birthPlace": "出生地",
+    "residence": "去世时居住地",
+
     "decisionLine": "{{decision}}：{{option}}"
   },
   "about": {

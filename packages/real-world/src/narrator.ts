@@ -1,5 +1,5 @@
 import type { Locale, SimEventFact } from '@lifesim/content-schema';
-import { placeNameAt, type CountryPack } from '@lifesim/country-packs';
+import type { CountryPack } from '@lifesim/country-packs';
 import {
   createTemplateNarrator,
   mergeMessageTrees,
@@ -8,11 +8,12 @@ import {
 } from '@lifesim/narrative';
 import { LIFE_NARRATIVE } from '@lifesim/systems';
 import type { ISODate } from '@lifesim/content-schema';
+import { placeLabel } from './display.ts';
 
-function labels(pack: CountryPack, birthDate: ISODate, locale: Locale): MessageTree {
+function labels(pack: CountryPack, date: ISODate, locale: Locale): MessageTree {
   const places: Record<string, string> = {};
   for (const place of pack.places) {
-    places[place.id] = placeNameAt(pack, place.id, birthDate)[locale];
+    places[place.id] = placeLabel(pack, place.id, date, locale);
   }
   const currencies: Record<string, string> = {};
   for (const [version, name] of Object.entries(pack.currency.versionNames)) {
@@ -28,14 +29,14 @@ function labels(pack: CountryPack, birthDate: ISODate, locale: Locale): MessageT
   };
 }
 
-/** 真实国家包的叙事资源：系统模板 + 该包的地点与币制名称。 */
+/** 真实国家包的叙事资源：系统模板 + 该日期下的地点、政体与币制名称。 */
 export function realNarrativeResources(
   pack: CountryPack,
-  birthDate: ISODate,
+  date: ISODate,
 ): Record<Locale, MessageTree> {
   return {
-    'zh-Hans': mergeMessageTrees(LIFE_NARRATIVE['zh-Hans'], labels(pack, birthDate, 'zh-Hans')),
-    en: mergeMessageTrees(LIFE_NARRATIVE.en, labels(pack, birthDate, 'en')),
+    'zh-Hans': mergeMessageTrees(LIFE_NARRATIVE['zh-Hans'], labels(pack, date, 'zh-Hans')),
+    en: mergeMessageTrees(LIFE_NARRATIVE.en, labels(pack, date, 'en')),
   };
 }
 
@@ -77,12 +78,16 @@ export function createRealNarrator(pack: CountryPack, birthDate: ISODate): RealN
   const base = createTemplateNarrator({ resources });
   const cache = new Map<string, TemplateNarrator>();
 
-  function narratorFor(locale: Locale, currencyLabel: string): TemplateNarrator {
-    const key = locale + '|' + String(decimalsFor(currencyLabel));
+  function narratorFor(
+    locale: Locale,
+    currencyLabel: string,
+    placeDate: ISODate | null,
+  ): TemplateNarrator {
+    const key = locale + '|' + String(decimalsFor(currencyLabel)) + '|' + (placeDate ?? 'static');
     const existing = cache.get(key);
     if (existing) return existing;
     const created = createTemplateNarrator({
-      resources,
+      resources: placeDate ? realNarrativeResources(pack, placeDate) : resources,
       formatParam(name, value) {
         if (name.endsWith('Minor') && typeof value === 'number') {
           return formatRealMoney(value, currencyLabel, locale);
@@ -106,7 +111,11 @@ export function createRealNarrator(pack: CountryPack, birthDate: ISODate): RealN
           : typeof details['fromCurrency'] === 'string'
             ? details['fromCurrency']
             : pack.currency.code + '-' + pack.currency.initialVersion;
-      return narratorFor(locale, currency).render(fact, locale);
+      // 地点名称按事实发生的日期解析；没有地点参数的事实继续使用出生时的基准资源。
+      const hasPlace = ['place', 'fromPlaceId', 'toPlaceId'].some(
+        (key) => typeof details[key] === 'string',
+      );
+      return narratorFor(locale, currency, hasPlace ? fact.at : null).render(fact, locale);
     },
     label(name, value, locale) {
       return base.label(name, value, locale);

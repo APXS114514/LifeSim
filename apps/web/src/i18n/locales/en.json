@@ -39,6 +39,12 @@
     "restored": "Restored the previous autosave.",
     "character": "This life",
     "seed": "Seed",
+    "birthPlace": "Birthplace",
+    "currentResidence": "Current residence",
+    "sameAsBirth": "Same as birthplace",
+    "politicalEntity": "Political entity",
+    "citizenship": "Citizenship",
+
     "age": "Age",
     "died": "Died at",
     "continue": "Continue",
@@ -94,6 +100,9 @@
     "unknownCause": "Unknown",
     "facts": "Events",
     "decisions": "Major decisions",
+    "birthPlace": "Birthplace",
+    "residence": "Residence at death",
+
     "decisionLine": "{{decision}}: {{option}}"
   },
   "about": {
