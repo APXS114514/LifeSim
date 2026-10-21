@@ -5,12 +5,13 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { SourceRecordSchema } from '../packages/content-schema/src/index.ts';
+import { NameTableSchema, SourceRecordSchema } from '../packages/content-schema/src/index.ts';
 
 const root = resolve(import.meta.dirname, '..');
 const sourcesPath = join(root, 'data/sources.json');
 const markdownPath = join(root, 'data/SOURCES.md');
 const packDataRoot = join(root, 'packages/country-packs/data');
+const packNamesRoot = join(root, 'packages/country-packs/names');
 
 const INTRO = [
   '# 数据来源登记',
@@ -214,6 +215,79 @@ export function checkPackSources(packs, sources, adrNumbers, dataFiles, imported
   return problems;
 }
 
+/**
+ * 检查姓名表（M3-045）：能否通过 `NameTableSchema`、表 ID 是否与文件位置一致、
+ * 每个条目的来源是否已登记且允许再分发（`adr:` 引用按 ADR 编号核对）。
+ * @param {readonly import('../packages/content-schema/src/index.ts').SourceRecord[]} sources
+ * @param {readonly string[]} adrNumbers docs/adr 下已有的编号
+ * @param {readonly string[]} nameFiles 相对 packages/country-packs/names 的路径
+ * @returns {string[]}
+ */
+export function checkNameTables(sources, adrNumbers, nameFiles) {
+  /** @type {string[]} */
+  const problems = [];
+  const sourceById = new Map(sources.map((source) => [source.id, source]));
+  const adrSet = new Set(adrNumbers);
+
+  for (const file of nameFiles) {
+    const path = join(packNamesRoot, file);
+    /** @type {unknown} */
+    let parsed;
+    try {
+      parsed = JSON.parse(readFileSync(path, 'utf8'));
+    } catch (error) {
+      problems.push(
+        `姓名表 ${file} 无法读取：${error instanceof Error ? error.message : String(error)}`,
+      );
+      continue;
+    }
+    const result = NameTableSchema.safeParse(parsed);
+    if (!result.success) {
+      const detail = result.error.issues
+        .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+        .join('; ');
+      problems.push(`姓名表 ${file} 不合法：${detail}`);
+      continue;
+    }
+    const table = result.data;
+    // 文件名与表 ID 必须一致：存档里的 NameRef.table 由文件位置决定。
+    const expectedId = file
+      .replaceAll('\\', '/')
+      .replace(/\.json$/, '')
+      .split('/')
+      .map((part) => part.toLowerCase())
+      .join('-');
+    if (table.id !== expectedId) {
+      problems.push(`姓名表 ${file} 的表 ID 应为 ${expectedId}，实际为 ${table.id}`);
+    }
+
+    const reported = new Set();
+    for (const entry of table.entries) {
+      for (const sourceId of entry.sourceIds) {
+        const key = `${entry.id}|${sourceId}`;
+        if (reported.has(key)) continue;
+        reported.add(key);
+        if (sourceId.startsWith('adr:')) {
+          if (!adrSet.has(sourceId.slice(4))) {
+            problems.push(`姓名表 ${table.id} 的条目 ${entry.id} 引用了不存在的 ADR：${sourceId}`);
+          }
+          continue;
+        }
+        const source = sourceById.get(sourceId);
+        if (source === undefined) {
+          problems.push(`姓名表 ${table.id} 的条目 ${entry.id} 引用了未登记的来源：${sourceId}`);
+        } else if (source.redistribution !== 'allowed') {
+          problems.push(
+            `姓名表 ${table.id} 的条目 ${entry.id} 的派生数据来自尚未确认可再分发的来源：${sourceId}`,
+          );
+        }
+      }
+    }
+  }
+
+  return problems;
+}
+
 /** @param {string} directory @returns {string[]} */
 function listJsonFiles(directory) {
   if (!existsSync(directory)) return [];
@@ -275,14 +349,16 @@ async function main() {
     packs.flatMap((pack) => pack.series.map((series) => series.id)),
   );
   const packProblems = checkPackSources(packs, records, adrNumbers, dataFiles, importedSeriesIds);
-  if (packProblems.length > 0) {
-    for (const problem of packProblems) console.error(`- ${problem}`);
+  const nameFiles = listJsonFiles(packNamesRoot);
+  const nameProblems = checkNameTables(records, adrNumbers, nameFiles);
+  if (packProblems.length > 0 || nameProblems.length > 0) {
+    for (const problem of [...packProblems, ...nameProblems]) console.error(`- ${problem}`);
     process.exitCode = 1;
     return;
   }
 
   console.log(
-    `来源登记检查通过：${records.length} 条来源，${packs.length} 个国家包，${dataFiles.length} 个数据文件，SOURCES.md 已同步。`,
+    `来源登记检查通过：${records.length} 条来源，${packs.length} 个国家包，${dataFiles.length} 个数据文件，${nameFiles.length} 个姓名表文件，SOURCES.md 已同步。`,
   );
 }
 

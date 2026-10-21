@@ -1,10 +1,15 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { SourceRecordSchema } from '../packages/content-schema/src/index.ts';
 import { describe, expect, it } from 'vitest';
 import type { CountryPack } from '../packages/country-packs/src/index.ts';
-import { checkPackSources, renderSourcesMarkdown, validateSources } from './check-data.mjs';
+import {
+  checkNameTables,
+  checkPackSources,
+  renderSourcesMarkdown,
+  validateSources,
+} from './check-data.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 
@@ -208,5 +213,136 @@ describe('checkPackSources', () => {
       encoding: 'utf8',
     });
     expect(output).toContain('来源登记检查通过');
+  });
+});
+/** 测试夹具：一张来源未登记的姓名表；只在测试期间写到磁盘，用完删除。 */
+const fixtureNamesDir = join(root, 'packages/country-packs/names/fixture-pack');
+
+const fixtureNameTable = {
+  id: 'fixture-pack-family',
+  scheme: 'zh',
+  kind: 'family',
+  version: '0.1.0',
+  entries: [
+    {
+      id: 'fixture-entry',
+      sex: 'any',
+      born: [[1880, 2026]],
+      weight: 1,
+      grade: 'D',
+      forms: { native: '例', 'zh-Hans': '例', en: 'Example' },
+      sourceIds: ['fixture-unregistered:names'],
+    },
+  ],
+};
+
+/** 写入夹具文件并返回相对 `packages/country-packs/names` 的路径。 */
+function writeFixtureNameTable(fileName: string, table: unknown): string {
+  mkdirSync(fixtureNamesDir, { recursive: true });
+  writeFileSync(join(fixtureNamesDir, fileName), JSON.stringify(table));
+  return `fixture-pack/${fileName}`;
+}
+
+/** 仓库里真实的姓名表文件（相对路径）。 */
+function committedNameFiles(): string[] {
+  return readdirSync(join(root, 'packages/country-packs/names'), { recursive: true })
+    .map((entry) => String(entry).replaceAll('\\', '/'))
+    .filter((entry) => entry.endsWith('.json') && !entry.startsWith('fixture-pack/'))
+    .sort();
+}
+
+describe('checkNameTables', () => {
+  it('reports a name table whose source is not registered', () => {
+    const file = writeFixtureNameTable('family.json', fixtureNameTable);
+    try {
+      const problems = checkNameTables([allowedSource], ['0010'], [file]);
+      expect(problems.some((problem) => problem.includes('fixture-unregistered:names'))).toBe(true);
+    } finally {
+      rmSync(fixtureNamesDir, { recursive: true, force: true });
+    }
+  });
+
+  it('fails the command-line gate when a name table references an unregistered source', () => {
+    writeFixtureNameTable('family.json', fixtureNameTable);
+    try {
+      execFileSync(process.execPath, ['scripts/check-data.mjs'], { cwd: root, encoding: 'utf8' });
+      throw new Error('check-data.mjs should have failed on the fixture name table');
+    } catch (error) {
+      const stderr = String((error as { stderr?: string }).stderr ?? '');
+      expect(stderr).toContain('fixture-unregistered:names');
+    } finally {
+      rmSync(fixtureNamesDir, { recursive: true, force: true });
+    }
+  });
+
+  it('reports a name table id that does not match its file name', () => {
+    const file = writeFixtureNameTable('family.json', { ...fixtureNameTable, id: 'other-id' });
+    try {
+      const problems = checkNameTables([], ['0010'], [file]);
+      expect(problems.some((problem) => problem.includes('fixture-pack-family'))).toBe(true);
+    } finally {
+      rmSync(fixtureNamesDir, { recursive: true, force: true });
+    }
+  });
+
+  it('reports an ADR reference that does not exist', () => {
+    const file = writeFixtureNameTable('family.json', {
+      ...fixtureNameTable,
+      entries: [{ ...fixtureNameTable.entries[0], sourceIds: ['adr:9999'] }],
+    });
+    try {
+      const problems = checkNameTables([], ['0010'], [file]);
+      expect(problems.some((problem) => problem.includes('adr:9999'))).toBe(true);
+    } finally {
+      rmSync(fixtureNamesDir, { recursive: true, force: true });
+    }
+  });
+
+  it('accepts every committed name table: sources registered and redistributable', () => {
+    const raw: unknown = JSON.parse(readFileSync(join(root, 'data/sources.json'), 'utf8'));
+    const records = (raw as unknown[]).map((record) => SourceRecordSchema.parse(record));
+    const adrNumbers = readdirSync(join(root, 'docs/adr'))
+      .filter((name) => /^\d{4}-[^/]+\.md$/.test(name))
+      .map((name) => name.slice(0, 4));
+    const files = committedNameFiles();
+    expect(files).toHaveLength(10);
+    expect(checkNameTables(records, adrNumbers, files)).toEqual([]);
+  });
+});
+describe('synthetic names versus real names', () => {
+  it('never reuses a real name of the five country packs', async () => {
+    const { NAME_TABLES } = await import('../packages/country-packs/src/names.ts');
+    const { syntheticFamilyName, syntheticGivenName } =
+      await import('../packages/synthetic-world/src/names.ts');
+    const { deriveStream } = await import('../packages/simulation-core/src/index.ts');
+
+    const real = new Set<string>();
+    for (const table of Object.values(NAME_TABLES)) {
+      for (const entry of table.entries) {
+        for (const writing of [
+          entry.forms,
+          entry.genderedForms?.feminine,
+          entry.genderedForms?.masculine,
+        ]) {
+          if (writing === undefined) continue;
+          real.add(writing.native.toLowerCase());
+          real.add(writing.en.toLowerCase());
+          real.add(writing['zh-Hans']);
+        }
+      }
+    }
+    expect(real.size).toBeGreaterThan(500);
+
+    for (let index = 0; index < 400; index += 1) {
+      const family = syntheticFamilyName(deriveStream(`synthetic-collision-${index}`, 'family'));
+      expect(real.has(family.toLowerCase())).toBe(false);
+      for (const sex of ['female', 'male'] as const) {
+        const given = syntheticGivenName(
+          sex,
+          deriveStream(`synthetic-collision-${index}-${sex}`, 'given'),
+        );
+        expect(real.has(given.toLowerCase())).toBe(false);
+      }
+    }
   });
 });
