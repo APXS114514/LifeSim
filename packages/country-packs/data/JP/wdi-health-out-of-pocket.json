@@ -1,0 +1,167 @@
+{
+  "id": "wdi/JP/health-out-of-pocket-share",
+  "indicator": "health-out-of-pocket-share",
+  "geographyId": "country:JP",
+  "unit": "share",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SH.XPD.OOPC.CH.ZS"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:JP",
+    "yearRange": [
+      2000,
+      2023
+    ],
+    "methodId": "wdi-oop-health-percent-to-share"
+  },
+  "points": [
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 0.15916363719999999
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 0.15785700800000002
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 0.1597850704
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 0.16886775969999998
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 0.16588945389999998
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 0.1567343521
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 0.16422067640000002
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 0.1551505852
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 0.15238265039999999
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 0.15159132960000002
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 0.1457035923
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 0.1312178326
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 0.12972344400000002
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 0.1270128059
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 0.128696804
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 0.1294767094
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 0.1285439873
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 0.1265492725
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 0.1299456692
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 0.129017725
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 0.115586462
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 0.10819700239999999
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 0.11148087500000001
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 0.1223568153
+    }
+  ]
+}

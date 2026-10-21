@@ -194,3 +194,22 @@ WDI 数据集页面的 "Data Access and Licensing" 部分：
 
 - 指标页面：<https://data.worldbank.org/indicator/SL.TLF.CACT.ZS>、<https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS>
 - 版本记录：API `lastupdated: 2026-10-08`。
+
+## `worldbank-wdi:FP.CPI.TOTL` — 世界银行 WDI 消费者价格指数
+
+- 条款页面：<https://datacatalog.worldbank.org/public-licenses>、<https://data.worldbank.org/summary-terms-of-use>、WDI 数据集 <https://datacatalog.worldbank.org/search/dataset/0037712>；访问日期 2026-10-20。
+- 结论：CC BY 4.0，允许复制、修改、再分发；本项目只保留非空观测，基期 2010=100。
+- **用途边界**：CPI 只用于把名义金额折算成可比购买力，不作为工资或收入；不得用它替代缺失的工资数据。
+- 建议结论：`allowed`（待维护者确认）。
+
+## `worldbank-wdi:SH.XPD.OOPC.CH.ZS` — 世界银行 WDI 自付卫生支出占比
+
+- 条款页面：同上；指标元信息 <https://api.worldbank.org/v2/indicator/SH.XPD.OOPC.CH.ZS?format=json>，访问日期 2026-10-20。
+- 结论：CC BY 4.0；百分比 ÷ 100 转为 0—1 share，只保留非空观测。朝鲜没有观测，不生成序列。
+- 建议结论：`allowed`（待维护者确认）。
+
+## `worldbank-wdi:SH.XPD.CHEX.PC.CD` — 世界银行 WDI 人均卫生支出
+
+- 条款页面：同上；指标元信息 <https://api.worldbank.org/v2/indicator/SH.XPD.CHEX.PC.CD?format=json>，访问日期 2026-10-20。
+- 结论：CC BY 4.0；单位为现价美元/人，**不是 PPP**，跨国比较时必须披露这一点；只保留非空观测。
+- 建议结论：`allowed`（待维护者确认）。

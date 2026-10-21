@@ -1,0 +1,167 @@
+{
+  "id": "wdi/JP/health-expenditure-per-capita",
+  "indicator": "health-expenditure-per-capita",
+  "geographyId": "country:JP",
+  "unit": "usd-per-capita",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SH.XPD.CHEX.PC.CD"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:JP",
+    "yearRange": [
+      2000,
+      2023
+    ],
+    "methodId": "wdi-health-expenditure-current-usd-per-capita"
+  },
+  "points": [
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 2751.38452148
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 2488.65185547
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 2412.35131836
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 2650.23852539
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 2884.67358398
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 2892.60473633
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 2763.53344727
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 2781.49365234
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 3223.29101563
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 3696.58422852
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 4071.80200195
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 5103.34326172
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 5232.36279297
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 4356.15527344
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 4121.21142578
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 3754.18115234
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 4194.22802734
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 4135.24316406
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 4265.77929688
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 4431.29980469
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 4581.60986328
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 4843.94433594
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 4201.79248047
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 3638.19287109
+    }
+  ]
+}

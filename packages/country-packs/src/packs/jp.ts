@@ -9,6 +9,9 @@ import educationCompletion from '../../data/JP/wdi-education-completion.json' wi
 import educationEnrollment from '../../data/JP/wdi-education-enrollment.json' with { type: 'json' };
 import employmentAgriculture from '../../data/JP/wdi-employment-agriculture.json' with { type: 'json' };
 import laborParticipation from '../../data/JP/wdi-labor-participation.json' with { type: 'json' };
+import cpi from '../../data/JP/wdi-cpi.json' with { type: 'json' };
+import healthExpenditure from '../../data/JP/wdi-health-expenditure.json' with { type: 'json' };
+import healthOutOfPocket from '../../data/JP/wdi-health-out-of-pocket.json' with { type: 'json' };
 import qx from '../../data/JP/wpp2024-qx.json' with { type: 'json' };
 import urbanShare from '../../data/JP/wdi-urban-share.json' with { type: 'json' };
 import type { CountryPack } from '../schema.ts';
@@ -165,5 +168,8 @@ export const JP_PACK: CountryPack = {
     StatSeriesSchema.parse(laborParticipation),
     StatSeriesSchema.parse(employmentAgriculture),
     StatSeriesSchema.parse(educationCompletion),
+    StatSeriesSchema.parse(cpi),
+    StatSeriesSchema.parse(healthOutOfPocket),
+    StatSeriesSchema.parse(healthExpenditure),
   ],
 };

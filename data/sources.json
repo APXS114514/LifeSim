@@ -231,6 +231,17 @@
     "notes": "只引用史实，不再分发文本；非朝鲜官方来源。页面标注 KOGL 第4类（署名、禁止商用、禁止变更）。原文：2차 화폐개혁은 내각결정 11호에 의해 1959년 2월 13일부터 17일까지 실시 ... 100:1；5차 화폐개혁은 ... 2009년 11월 30일부터 12월 6일까지 ... 교환비율은 현금의 경우 100:1。访问日期 2026-10-20。"
   },
   {
+    "id": "worldbank-wdi:FP.CPI.TOTL",
+    "title": "Consumer price index (2010 = 100) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator FP.CPI.TOTL, CC BY 4.0; base 2010=100; only non-null observations emitted. CPI is used for purchasing-power conversion, not as a wage or income series."
+  },
+  {
     "id": "worldbank-wdi:SE.SEC.CUAT.UP.ZS",
     "title": "Educational attainment, at least completed upper secondary, population 25+, total (%) — World Development Indicators",
     "publisher": "World Bank",
@@ -251,6 +262,28 @@
     "redistribution": "allowed",
     "verifiedAt": "2026-10-20",
     "notes": "Attribution: World Bank, World Development Indicators, indicator SE.SEC.ENRR, CC BY 4.0; changes: only non-null annual observations emitted; values kept as gross percent (may exceed 100)."
+  },
+  {
+    "id": "worldbank-wdi:SH.XPD.CHEX.PC.CD",
+    "title": "Current health expenditure per capita (current US$) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SH.XPD.CHEX.PC.CD",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SH.XPD.CHEX.PC.CD, CC BY 4.0; current US dollars, not PPP; only non-null observations emitted."
+  },
+  {
+    "id": "worldbank-wdi:SH.XPD.OOPC.CH.ZS",
+    "title": "Out-of-pocket expenditure (% of current health expenditure) — World Development Indicators",
+    "publisher": "World Bank",
+    "url": "https://data.worldbank.org/indicator/SH.XPD.OOPC.CH.ZS",
+    "version": "2026-10-08",
+    "license": "CC-BY-4.0",
+    "redistribution": "allowed",
+    "verifiedAt": "2026-10-20",
+    "notes": "Attribution: World Bank, World Development Indicators, indicator SH.XPD.OOPC.CH.ZS, CC BY 4.0; percent divided by 100 into a 0–1 share; only non-null observations emitted."
   },
   {
     "id": "worldbank-wdi:SL.AGR.EMPL.ZS",

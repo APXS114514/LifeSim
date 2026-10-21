@@ -72,7 +72,7 @@
 | [M3-003](M3-003.md) | 统计指标契约扩展（教育/劳动力/价格/卫生） | —                      | content-schema                            | 高                          | 否       | 已实现，待验收（本地提交） |
 | [M3-004](M3-004.md) | WDI 教育指标转换                          | 003                    | data、country-packs                       | 高                          | 是       | 已实现，待验收（本地提交） |
 | [M3-005](M3-005.md) | WDI 劳动力指标转换                        | 003                    | data、country-packs                       | 高                          | 是       | 已实现，待验收（本地提交） |
-| [M3-006](M3-006.md) | WDI 价格与卫生支出转换                    | 003                    | data、country-packs                       | 高                          | 是       | 未开始                     |
+| [M3-006](M3-006.md) | WDI 价格与卫生支出转换                    | 003                    | data、country-packs                       | 高                          | 是       | 已实现，待验收（本地提交） |
 | [M3-007](M3-007.md) | 经济周期历史锚点（按国家）                | —                      | country-packs、data                       | 高                          | 是       | 未开始                     |
 | [M3-008](M3-008.md) | 数据驱动人生规则设计（ADR-0007 草案）     | 003、004—007           | docs/adr                                  | 高                          | 否       | 未开始                     |
 | [M3-009](M3-009.md) | RegionModel 扩展实现                      | 008、004—007           | systems、real-world、synthetic-world      | 高                          | 否       | 未开始                     |

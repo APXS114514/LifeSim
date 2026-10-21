@@ -1,5 +1,12 @@
 [
   {
+    "id": "cpi",
+    "file": "cpi.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/FP.CPI.TOTL?format=json&per_page=20000",
+    "sha256": "4a446364ea87cecb36bc41ef2eab153877a8b209a08966528d864438633d6a93",
+    "retrievedAt": "2026-10-20"
+  },
+  {
     "id": "education-completion",
     "file": "education-completion.json",
     "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SE.SEC.CUAT.UP.ZS?format=json&per_page=20000",
@@ -18,6 +25,20 @@
     "file": "employment-agriculture.json",
     "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SL.AGR.EMPL.ZS?format=json&per_page=20000",
     "sha256": "ad859dde5f2b338c46055c8a962046df9c681d8bd4354c4b52d79248f1755a13",
+    "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "health-expenditure",
+    "file": "health-expenditure.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SH.XPD.CHEX.PC.CD?format=json&per_page=20000",
+    "sha256": "e856106d5925e7c3540e590950db010eb990e40a145658d30021a221b557e987",
+    "retrievedAt": "2026-10-20"
+  },
+  {
+    "id": "health-out-of-pocket",
+    "file": "health-out-of-pocket.json",
+    "url": "https://api.worldbank.org/v2/country/CHN;JPN;PRK;KOR;RUS/indicator/SH.XPD.OOPC.CH.ZS?format=json&per_page=20000",
+    "sha256": "50df5ff35e6135bd888f2dd9f9e2320fbd235e62be14464a0ba231ee00ecfa6e",
     "retrievedAt": "2026-10-20"
   },
   {

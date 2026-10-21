@@ -1,0 +1,167 @@
+{
+  "id": "wdi/RU/health-expenditure-per-capita",
+  "indicator": "health-expenditure-per-capita",
+  "geographyId": "country:RU",
+  "unit": "usd-per-capita",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:SH.XPD.CHEX.PC.CD"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:RU",
+    "yearRange": [
+      2000,
+      2023
+    ],
+    "methodId": "wdi-health-expenditure-current-usd-per-capita"
+  },
+  "points": [
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 95.20859528
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 117.87785339
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 140.05729675
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 163.31135559
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 207.61283875
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 270.1439209
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 350.84014893
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 459.60296631
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 606.77508545
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 513.91033936
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 564.30065918
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 681.04345703
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 755.48553467
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 805.52130127
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 736.32177734
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 496.94955444
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 463.29275513
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 577.06811523
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 606.11401367
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 650.47058105
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 814.94451904
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 881.74395752
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 1082.82104492
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 1003.33166504
+    }
+  ]
+}

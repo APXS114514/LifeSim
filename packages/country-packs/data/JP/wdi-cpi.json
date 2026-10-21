@@ -1,0 +1,419 @@
+{
+  "id": "wdi/JP/cpi-index",
+  "indicator": "cpi-index",
+  "geographyId": "country:JP",
+  "unit": "index",
+  "ageBasis": "none",
+  "sex": "both",
+  "evidence": {
+    "grade": "B",
+    "sourceIds": [
+      "worldbank-wdi:FP.CPI.TOTL"
+    ],
+    "modelVersion": "wdi-2026-10-08",
+    "geographyId": "country:JP",
+    "yearRange": [
+      1960,
+      2025
+    ],
+    "methodId": "wdi-cpi-index-2010-100"
+  },
+  "points": [
+    {
+      "year": 1960,
+      "age": null,
+      "projected": false,
+      "value": 18.9725686020745
+    },
+    {
+      "year": 1961,
+      "age": null,
+      "projected": false,
+      "value": 19.9911036970719
+    },
+    {
+      "year": 1962,
+      "age": null,
+      "projected": false,
+      "value": 21.3575836652316
+    },
+    {
+      "year": 1963,
+      "age": null,
+      "projected": false,
+      "value": 22.7900166324066
+    },
+    {
+      "year": 1964,
+      "age": null,
+      "projected": false,
+      "value": 23.6561260208547
+    },
+    {
+      "year": 1965,
+      "age": null,
+      "projected": false,
+      "value": 25.2306756261743
+    },
+    {
+      "year": 1966,
+      "age": null,
+      "projected": false,
+      "value": 26.5025116118097
+    },
+    {
+      "year": 1967,
+      "age": null,
+      "projected": false,
+      "value": 27.5599215648415
+    },
+    {
+      "year": 1968,
+      "age": null,
+      "projected": false,
+      "value": 29.0314650999064
+    },
+    {
+      "year": 1969,
+      "age": null,
+      "projected": false,
+      "value": 30.5555650254969
+    },
+    {
+      "year": 1970,
+      "age": null,
+      "projected": false,
+      "value": 32.6712854640853
+    },
+    {
+      "year": 1971,
+      "age": null,
+      "projected": false,
+      "value": 34.760728139114
+    },
+    {
+      "year": 1972,
+      "age": null,
+      "projected": false,
+      "value": 36.4443699640338
+    },
+    {
+      "year": 1973,
+      "age": null,
+      "projected": false,
+      "value": 40.6750596779349
+    },
+    {
+      "year": 1974,
+      "age": null,
+      "projected": false,
+      "value": 50.1207220187672
+    },
+    {
+      "year": 1975,
+      "age": null,
+      "projected": false,
+      "value": 56.0005173150257
+    },
+    {
+      "year": 1976,
+      "age": null,
+      "projected": false,
+      "value": 61.2500261845193
+    },
+    {
+      "year": 1977,
+      "age": null,
+      "projected": false,
+      "value": 66.2491472954351
+    },
+    {
+      "year": 1978,
+      "age": null,
+      "projected": false,
+      "value": 69.0379488823536
+    },
+    {
+      "year": 1979,
+      "age": null,
+      "projected": false,
+      "value": 71.5936308319755
+    },
+    {
+      "year": 1980,
+      "age": null,
+      "projected": false,
+      "value": 77.1625999451718
+    },
+    {
+      "year": 1981,
+      "age": null,
+      "projected": false,
+      "value": 80.9529525664016
+    },
+    {
+      "year": 1982,
+      "age": null,
+      "projected": false,
+      "value": 83.1719061510395
+    },
+    {
+      "year": 1983,
+      "age": null,
+      "projected": false,
+      "value": 84.751939248272
+    },
+    {
+      "year": 1984,
+      "age": null,
+      "projected": false,
+      "value": 86.6687007104884
+    },
+    {
+      "year": 1985,
+      "age": null,
+      "projected": false,
+      "value": 88.4300490811738
+    },
+    {
+      "year": 1986,
+      "age": null,
+      "projected": false,
+      "value": 88.9567267802513
+    },
+    {
+      "year": 1987,
+      "age": null,
+      "projected": false,
+      "value": 89.0689695685793
+    },
+    {
+      "year": 1988,
+      "age": null,
+      "projected": false,
+      "value": 89.6733538134223
+    },
+    {
+      "year": 1989,
+      "age": null,
+      "projected": false,
+      "value": 91.7109921246073
+    },
+    {
+      "year": 1990,
+      "age": null,
+      "projected": false,
+      "value": 94.5343299540882
+    },
+    {
+      "year": 1991,
+      "age": null,
+      "projected": false,
+      "value": 97.608055542147
+    },
+    {
+      "year": 1992,
+      "age": null,
+      "projected": false,
+      "value": 99.3262336096293
+    },
+    {
+      "year": 1993,
+      "age": null,
+      "projected": false,
+      "value": 100.560904281237
+    },
+    {
+      "year": 1994,
+      "age": null,
+      "projected": false,
+      "value": 101.260263193127
+    },
+    {
+      "year": 1995,
+      "age": null,
+      "projected": false,
+      "value": 101.130752283517
+    },
+    {
+      "year": 1996,
+      "age": null,
+      "projected": false,
+      "value": 101.268897253767
+    },
+    {
+      "year": 1997,
+      "age": null,
+      "projected": false,
+      "value": 103.038879685093
+    },
+    {
+      "year": 1998,
+      "age": null,
+      "projected": false,
+      "value": 103.720970475702
+    },
+    {
+      "year": 1999,
+      "age": null,
+      "projected": false,
+      "value": 103.366973989437
+    },
+    {
+      "year": 2000,
+      "age": null,
+      "projected": false,
+      "value": 102.667615077547
+    },
+    {
+      "year": 2001,
+      "age": null,
+      "projected": false,
+      "value": 101.907817741173
+    },
+    {
+      "year": 2002,
+      "age": null,
+      "projected": false,
+      "value": 100.966705131346
+    },
+    {
+      "year": 2003,
+      "age": null,
+      "projected": false,
+      "value": 100.707683312127
+    },
+    {
+      "year": 2004,
+      "age": null,
+      "projected": false,
+      "value": 100.699049251487
+    },
+    {
+      "year": 2005,
+      "age": null,
+      "projected": false,
+      "value": 100.414125250346
+    },
+    {
+      "year": 2006,
+      "age": null,
+      "projected": false,
+      "value": 100.664513008924
+    },
+    {
+      "year": 2007,
+      "age": null,
+      "projected": false,
+      "value": 100.724951433408
+    },
+    {
+      "year": 2008,
+      "age": null,
+      "projected": false,
+      "value": 102.115035196547
+    },
+    {
+      "year": 2009,
+      "age": null,
+      "projected": false,
+      "value": 100.733585494049
+    },
+    {
+      "year": 2010,
+      "age": null,
+      "projected": false,
+      "value": 99.9999999999999
+    },
+    {
+      "year": 2011,
+      "age": null,
+      "projected": false,
+      "value": 99.7275443838987
+    },
+    {
+      "year": 2012,
+      "age": null,
+      "projected": false,
+      "value": 99.6835999296888
+    },
+    {
+      "year": 2013,
+      "age": null,
+      "projected": false,
+      "value": 100.017577781683
+    },
+    {
+      "year": 2014,
+      "age": null,
+      "projected": false,
+      "value": 102.777289506064
+    },
+    {
+      "year": 2015,
+      "age": null,
+      "projected": false,
+      "value": 103.594656354368
+    },
+    {
+      "year": 2016,
+      "age": null,
+      "projected": false,
+      "value": 103.462822991738
+    },
+    {
+      "year": 2017,
+      "age": null,
+      "projected": false,
+      "value": 103.963789769731
+    },
+    {
+      "year": 2018,
+      "age": null,
+      "projected": false,
+      "value": 104.992089998242
+    },
+    {
+      "year": 2019,
+      "age": null,
+      "projected": false,
+      "value": 105.484267885392
+    },
+    {
+      "year": 2020,
+      "age": null,
+      "projected": false,
+      "value": 105.457901212866
+    },
+    {
+      "year": 2021,
+      "age": null,
+      "projected": false,
+      "value": 105.211812269291
+    },
+    {
+      "year": 2022,
+      "age": null,
+      "projected": false,
+      "value": 107.839690631042
+    },
+    {
+      "year": 2023,
+      "age": null,
+      "projected": false,
+      "value": 111.364035858674
+    },
+    {
+      "year": 2024,
+      "age": null,
+      "projected": false,
+      "value": 114.41378098084
+    },
+    {
+      "year": 2025,
+      "age": null,
+      "projected": false,
+      "value": 118.043592898576
+    }
+  ]
+}
