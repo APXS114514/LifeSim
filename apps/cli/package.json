@@ -9,6 +9,7 @@
     "life": "node src/run-life.ts",
     "life:real": "node src/run-real-life.ts",
     "bench": "node src/bench.ts",
+    "batch": "node src/batch.ts",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
