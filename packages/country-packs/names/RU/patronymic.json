@@ -1,0 +1,508 @@
+{
+  "id": "ru-patronymic",
+  "scheme": "ru",
+  "kind": "given",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "ivanovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "Иванович",
+        "zh-Hans": "伊万诺维奇",
+        "en": "Ivanovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Ивановна",
+          "zh-Hans": "伊万诺夫娜",
+          "en": "Ivanovna"
+        },
+        "masculine": {
+          "native": "Иванович",
+          "zh-Hans": "伊万诺维奇",
+          "en": "Ivanovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "petrovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 19,
+      "grade": "D",
+      "forms": {
+        "native": "Петрович",
+        "zh-Hans": "彼得罗维奇",
+        "en": "Petrovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Петровна",
+          "zh-Hans": "彼得罗夫娜",
+          "en": "Petrovna"
+        },
+        "masculine": {
+          "native": "Петрович",
+          "zh-Hans": "彼得罗维奇",
+          "en": "Petrovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aleksandrovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "Александрович",
+        "zh-Hans": "亚历山德罗维奇",
+        "en": "Aleksandrovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Александровна",
+          "zh-Hans": "亚历山德罗夫娜",
+          "en": "Aleksandrovna"
+        },
+        "masculine": {
+          "native": "Александрович",
+          "zh-Hans": "亚历山德罗维奇",
+          "en": "Aleksandrovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nikolaevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 17,
+      "grade": "D",
+      "forms": {
+        "native": "Николаевич",
+        "zh-Hans": "尼古拉耶维奇",
+        "en": "Nikolaevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Николаевна",
+          "zh-Hans": "尼古拉耶夫娜",
+          "en": "Nikolaevna"
+        },
+        "masculine": {
+          "native": "Николаевич",
+          "zh-Hans": "尼古拉耶维奇",
+          "en": "Nikolaevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mikhaylovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Михайлович",
+        "zh-Hans": "米哈伊洛维奇",
+        "en": "Mikhaylovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Михайловна",
+          "zh-Hans": "米哈伊洛夫娜",
+          "en": "Mikhaylovna"
+        },
+        "masculine": {
+          "native": "Михайлович",
+          "zh-Hans": "米哈伊洛维奇",
+          "en": "Mikhaylovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vasilyevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "Васильевич",
+        "zh-Hans": "瓦西里耶维奇",
+        "en": "Vasilyevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Васильевна",
+          "zh-Hans": "瓦西里耶夫娜",
+          "en": "Vasilyevna"
+        },
+        "masculine": {
+          "native": "Васильевич",
+          "zh-Hans": "瓦西里耶维奇",
+          "en": "Vasilyevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fedorovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Фёдорович",
+        "zh-Hans": "费奥多罗维奇",
+        "en": "Fedorovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Фёдоровна",
+          "zh-Hans": "费奥多罗夫娜",
+          "en": "Fedorovna"
+        },
+        "masculine": {
+          "native": "Фёдорович",
+          "zh-Hans": "费奥多罗维奇",
+          "en": "Fedorovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dmitrievich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Дмитриевич",
+        "zh-Hans": "德米特里耶维奇",
+        "en": "Dmitrievich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Дмитриевна",
+          "zh-Hans": "德米特里耶夫娜",
+          "en": "Dmitrievna"
+        },
+        "masculine": {
+          "native": "Дмитриевич",
+          "zh-Hans": "德米特里耶维奇",
+          "en": "Dmitrievich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sergeevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Сергеевич",
+        "zh-Hans": "谢尔盖耶维奇",
+        "en": "Sergeevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Сергеевна",
+          "zh-Hans": "谢尔盖耶夫娜",
+          "en": "Sergeevna"
+        },
+        "masculine": {
+          "native": "Сергеевич",
+          "zh-Hans": "谢尔盖耶维奇",
+          "en": "Sergeevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "alekseevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Алексеевич",
+        "zh-Hans": "阿列克谢耶维奇",
+        "en": "Alekseevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Алексеевна",
+          "zh-Hans": "阿列克谢耶夫娜",
+          "en": "Alekseevna"
+        },
+        "masculine": {
+          "native": "Алексеевич",
+          "zh-Hans": "阿列克谢耶维奇",
+          "en": "Alekseevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "andreevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Андреевич",
+        "zh-Hans": "安德烈耶维奇",
+        "en": "Andreevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Андреевна",
+          "zh-Hans": "安德烈耶夫娜",
+          "en": "Andreevna"
+        },
+        "masculine": {
+          "native": "Андреевич",
+          "zh-Hans": "安德烈耶维奇",
+          "en": "Andreevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vladimirovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Владимирович",
+        "zh-Hans": "弗拉基米罗维奇",
+        "en": "Vladimirovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Владимировна",
+          "zh-Hans": "弗拉基米罗夫娜",
+          "en": "Vladimirovna"
+        },
+        "masculine": {
+          "native": "Владимирович",
+          "zh-Hans": "弗拉基米罗维奇",
+          "en": "Vladimirovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pavlovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Павлович",
+        "zh-Hans": "帕夫洛维奇",
+        "en": "Pavlovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Павловна",
+          "zh-Hans": "帕夫洛夫娜",
+          "en": "Pavlovna"
+        },
+        "masculine": {
+          "native": "Павлович",
+          "zh-Hans": "帕夫洛维奇",
+          "en": "Pavlovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "grigoryevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Григорьевич",
+        "zh-Hans": "格里戈里耶维奇",
+        "en": "Grigoryevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Григорьевна",
+          "zh-Hans": "格里戈里耶夫娜",
+          "en": "Grigoryevna"
+        },
+        "masculine": {
+          "native": "Григорьевич",
+          "zh-Hans": "格里戈里耶维奇",
+          "en": "Grigoryevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "stepanovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Степанович",
+        "zh-Hans": "斯捷潘诺维奇",
+        "en": "Stepanovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Степановна",
+          "zh-Hans": "斯捷潘诺夫娜",
+          "en": "Stepanovna"
+        },
+        "masculine": {
+          "native": "Степанович",
+          "zh-Hans": "斯捷潘诺维奇",
+          "en": "Stepanovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "egorovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Егорович",
+        "zh-Hans": "叶戈罗维奇",
+        "en": "Egorovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Егоровна",
+          "zh-Hans": "叶戈罗夫娜",
+          "en": "Egorovna"
+        },
+        "masculine": {
+          "native": "Егорович",
+          "zh-Hans": "叶戈罗维奇",
+          "en": "Egorovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "viktorovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Викторович",
+        "zh-Hans": "维克托罗维奇",
+        "en": "Viktorovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Викторовна",
+          "zh-Hans": "维克托罗夫娜",
+          "en": "Viktorovna"
+        },
+        "masculine": {
+          "native": "Викторович",
+          "zh-Hans": "维克托罗维奇",
+          "en": "Viktorovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuryevich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Юрьевич",
+        "zh-Hans": "尤里耶维奇",
+        "en": "Yuryevich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Юрьевна",
+          "zh-Hans": "尤里耶夫娜",
+          "en": "Yuryevna"
+        },
+        "masculine": {
+          "native": "Юрьевич",
+          "zh-Hans": "尤里耶维奇",
+          "en": "Yuryevich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "olegovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Олегович",
+        "zh-Hans": "奥列戈维奇",
+        "en": "Olegovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Олеговна",
+          "zh-Hans": "奥列戈夫娜",
+          "en": "Olegovna"
+        },
+        "masculine": {
+          "native": "Олегович",
+          "zh-Hans": "奥列戈维奇",
+          "en": "Olegovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "borisovich",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Борисович",
+        "zh-Hans": "鲍里索维奇",
+        "en": "Borisovich"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Борисовна",
+          "zh-Hans": "鲍里索夫娜",
+          "en": "Borisovna"
+        },
+        "masculine": {
+          "native": "Борисович",
+          "zh-Hans": "鲍里索维奇",
+          "en": "Borisovich"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

@@ -1,0 +1,463 @@
+{
+  "id": "jp-family",
+  "scheme": "ja",
+  "kind": "family",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "sato",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 30,
+      "grade": "D",
+      "forms": {
+        "native": "佐藤",
+        "zh-Hans": "佐藤",
+        "en": "Sato"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "suzuki",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 28,
+      "grade": "D",
+      "forms": {
+        "native": "鈴木",
+        "zh-Hans": "铃木",
+        "en": "Suzuki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "takahashi",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 26,
+      "grade": "D",
+      "forms": {
+        "native": "高橋",
+        "zh-Hans": "高桥",
+        "en": "Takahashi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tanaka",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 22,
+      "grade": "D",
+      "forms": {
+        "native": "田中",
+        "zh-Hans": "田中",
+        "en": "Tanaka"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ito",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "伊藤",
+        "zh-Hans": "伊藤",
+        "en": "Ito"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "watanabe",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "渡辺",
+        "zh-Hans": "渡边",
+        "en": "Watanabe"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yamamoto",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "山本",
+        "zh-Hans": "山本",
+        "en": "Yamamoto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nakamura",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "中村",
+        "zh-Hans": "中村",
+        "en": "Nakamura"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kobayashi",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "小林",
+        "zh-Hans": "小林",
+        "en": "Kobayashi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kato",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "加藤",
+        "zh-Hans": "加藤",
+        "en": "Kato"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yoshida",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "吉田",
+        "zh-Hans": "吉田",
+        "en": "Yoshida"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yamada",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "山田",
+        "zh-Hans": "山田",
+        "en": "Yamada"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sasaki",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "佐々木",
+        "zh-Hans": "佐佐木",
+        "en": "Sasaki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yamaguchi",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "山口",
+        "zh-Hans": "山口",
+        "en": "Yamaguchi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "matsumoto",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "松本",
+        "zh-Hans": "松本",
+        "en": "Matsumoto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "inoue",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "井上",
+        "zh-Hans": "井上",
+        "en": "Inoue"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kimura",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "木村",
+        "zh-Hans": "木村",
+        "en": "Kimura"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shimizu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "清水",
+        "zh-Hans": "清水",
+        "en": "Shimizu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yamazaki",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "山崎",
+        "zh-Hans": "山崎",
+        "en": "Yamazaki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mori",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "森",
+        "zh-Hans": "森",
+        "en": "Mori"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ikeda",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "池田",
+        "zh-Hans": "池田",
+        "en": "Ikeda"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hashimoto",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "橋本",
+        "zh-Hans": "桥本",
+        "en": "Hashimoto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "abe",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "阿部",
+        "zh-Hans": "阿部",
+        "en": "Abe"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ishikawa",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "石川",
+        "zh-Hans": "石川",
+        "en": "Ishikawa"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yamashita",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "山下",
+        "zh-Hans": "山下",
+        "en": "Yamashita"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nakajima",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "中島",
+        "zh-Hans": "中岛",
+        "en": "Nakajima"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ishii",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "石井",
+        "zh-Hans": "石井",
+        "en": "Ishii"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ogawa",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "小川",
+        "zh-Hans": "小川",
+        "en": "Ogawa"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "maeda",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "前田",
+        "zh-Hans": "前田",
+        "en": "Maeda"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "okada",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "岡田",
+        "zh-Hans": "冈田",
+        "en": "Okada"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hasegawa",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "長谷川",
+        "zh-Hans": "长谷川",
+        "en": "Hasegawa"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fujita",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "藤田",
+        "zh-Hans": "藤田",
+        "en": "Fujita"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "goto",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "後藤",
+        "zh-Hans": "后藤",
+        "en": "Goto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kondo",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "近藤",
+        "zh-Hans": "近藤",
+        "en": "Kondo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "murakami",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "村上",
+        "zh-Hans": "村上",
+        "en": "Murakami"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

@@ -1,0 +1,1256 @@
+{
+  "id": "kr-given",
+  "scheme": "ko",
+  "kind": "given",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "yeongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "영수",
+        "zh-Hans": "英洙",
+        "en": "Yeongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeongho-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "정호",
+        "zh-Hans": "正浩",
+        "en": "Jeongho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sangcheol-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "상철",
+        "zh-Hans": "相哲",
+        "en": "Sangcheol"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "byeongcheol-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "병철",
+        "zh-Hans": "炳哲",
+        "en": "Byeongcheol"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mansu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "만수",
+        "zh-Hans": "万洙",
+        "en": "Mansu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "동수",
+        "zh-Hans": "东洙",
+        "en": "Dongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "giyeong-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "기영",
+        "zh-Hans": "基英",
+        "en": "Giyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "성수",
+        "zh-Hans": "成洙",
+        "en": "Seongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jaeyeong-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "재영",
+        "zh-Hans": "在荣",
+        "en": "Jaeyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "myeongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "명수",
+        "zh-Hans": "明洙",
+        "en": "Myeongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongcheol-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "영철",
+        "zh-Hans": "英哲",
+        "en": "Yeongcheol"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "changsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "창수",
+        "zh-Hans": "昌洙",
+        "en": "Changsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "종수",
+        "zh-Hans": "钟洙",
+        "en": "Jongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haksu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "학수",
+        "zh-Hans": "学洙",
+        "en": "Haksu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "bongsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "봉수",
+        "zh-Hans": "奉洙",
+        "en": "Bongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ilsu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "일수",
+        "zh-Hans": "一洙",
+        "en": "Ilsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sunja-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "순자",
+        "zh-Hans": "顺子",
+        "en": "Sunja"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongja-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "영자",
+        "zh-Hans": "英子",
+        "en": "Yeongja"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeongsuk-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "정숙",
+        "zh-Hans": "贞淑",
+        "en": "Jeongsuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "myeongsuk-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "명숙",
+        "zh-Hans": "明淑",
+        "en": "Myeongsuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "geumsun-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "금순",
+        "zh-Hans": "锦顺",
+        "en": "Geumsun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "oksun-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "옥순",
+        "zh-Hans": "玉顺",
+        "en": "Oksun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongsuk-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "영숙",
+        "zh-Hans": "英淑",
+        "en": "Yeongsuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "misuk-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "미숙",
+        "zh-Hans": "美淑",
+        "en": "Misuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeongja-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "정자",
+        "zh-Hans": "贞子",
+        "en": "Jeongja"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chunja-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "춘자",
+        "zh-Hans": "春子",
+        "en": "Chunja"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hyesuk-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "혜숙",
+        "zh-Hans": "惠淑",
+        "en": "Hyesuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mija-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "미자",
+        "zh-Hans": "美子",
+        "en": "Mija"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sunim-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "순임",
+        "zh-Hans": "顺任",
+        "en": "Sunim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "okhui-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "옥희",
+        "zh-Hans": "玉姬",
+        "en": "Okhui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "boksun-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "복순",
+        "zh-Hans": "福顺",
+        "en": "Boksun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeonghui-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "영희",
+        "zh-Hans": "英姬",
+        "en": "Yeonghui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "cheolsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "철수",
+        "zh-Hans": "哲洙",
+        "en": "Cheolsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongho-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "영호",
+        "zh-Hans": "英浩",
+        "en": "Yeongho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sangsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "상수",
+        "zh-Hans": "相洙",
+        "en": "Sangsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jinho-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "진호",
+        "zh-Hans": "镇浩",
+        "en": "Jinho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dongjin-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "동진",
+        "zh-Hans": "东镇",
+        "en": "Dongjin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "byeongsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "병수",
+        "zh-Hans": "炳洙",
+        "en": "Byeongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gisu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "기수",
+        "zh-Hans": "基洙",
+        "en": "Gisu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jaehyeon-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "재현",
+        "zh-Hans": "在贤",
+        "en": "Jaehyeon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "myeongho-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "명호",
+        "zh-Hans": "明浩",
+        "en": "Myeongho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seongho-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "성호",
+        "zh-Hans": "成浩",
+        "en": "Seongho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jongcheol-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "종철",
+        "zh-Hans": "钟哲",
+        "en": "Jongcheol"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yongsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "용수",
+        "zh-Hans": "龙洙",
+        "en": "Yongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gwangsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "광수",
+        "zh-Hans": "光洙",
+        "en": "Gwangsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "insu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "인수",
+        "zh-Hans": "仁洙",
+        "en": "Insu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "taesu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "태수",
+        "zh-Hans": "泰洙",
+        "en": "Taesu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeongsu-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "정수",
+        "zh-Hans": "正洙",
+        "en": "Jeongsu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "miyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "미영",
+        "zh-Hans": "美英",
+        "en": "Miyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeonghui-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "정희",
+        "zh-Hans": "贞姬",
+        "en": "Jeonghui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "eunju-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "은주",
+        "zh-Hans": "恩珠",
+        "en": "Eunju"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seonyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "선영",
+        "zh-Hans": "善英",
+        "en": "Seonyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gyeongsuk-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "경숙",
+        "zh-Hans": "景淑",
+        "en": "Gyeongsuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "migyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "미경",
+        "zh-Hans": "美京",
+        "en": "Migyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongmi-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "영미",
+        "zh-Hans": "英美",
+        "en": "Yeongmi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hyegyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "혜경",
+        "zh-Hans": "惠京",
+        "en": "Hyegyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "soyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "소영",
+        "zh-Hans": "素英",
+        "en": "Soyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jiyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "지영",
+        "zh-Hans": "智英",
+        "en": "Jiyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "eungyeong-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "은경",
+        "zh-Hans": "恩京",
+        "en": "Eungyeong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "myeonghui-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "명희",
+        "zh-Hans": "明姬",
+        "en": "Myeonghui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sangmi-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "상미",
+        "zh-Hans": "相美",
+        "en": "Sangmi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "insuk-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "인숙",
+        "zh-Hans": "仁淑",
+        "en": "Insuk"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jeongmi-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "정미",
+        "zh-Hans": "正美",
+        "en": "Jeongmi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yeongnan-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "영란",
+        "zh-Hans": "英兰",
+        "en": "Yeongnan"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minjun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "민준",
+        "zh-Hans": "敏俊",
+        "en": "Minjun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seojun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "서준",
+        "zh-Hans": "瑞俊",
+        "en": "Seojun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "doyun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "도윤",
+        "zh-Hans": "道允",
+        "en": "Doyun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yejun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "예준",
+        "zh-Hans": "睿俊",
+        "en": "Yejun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "siu-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "시우",
+        "zh-Hans": "时佑",
+        "en": "Siu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hajun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "하준",
+        "zh-Hans": "河俊",
+        "en": "Hajun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jiho-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "지호",
+        "zh-Hans": "智浩",
+        "en": "Jiho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "junseo-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "준서",
+        "zh-Hans": "俊瑞",
+        "en": "Junseo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "geonu-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "건우",
+        "zh-Hans": "建佑",
+        "en": "Geonu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ujin-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "우진",
+        "zh-Hans": "佑镇",
+        "en": "Ujin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hyeonu-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "현우",
+        "zh-Hans": "贤佑",
+        "en": "Hyeonu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jihun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "지훈",
+        "zh-Hans": "智勋",
+        "en": "Jihun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minjae-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "민재",
+        "zh-Hans": "敏在",
+        "en": "Minjae"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jaewon-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "재원",
+        "zh-Hans": "在元",
+        "en": "Jaewon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seunghyeon-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "승현",
+        "zh-Hans": "承贤",
+        "en": "Seunghyeon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "taeyun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "태윤",
+        "zh-Hans": "泰允",
+        "en": "Taeyun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seoyeon-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "서연",
+        "zh-Hans": "瑞妍",
+        "en": "Seoyeon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jiu-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "지우",
+        "zh-Hans": "智友",
+        "en": "Jiu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haeun-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "하은",
+        "zh-Hans": "河恩",
+        "en": "Haeun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minseo-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "민서",
+        "zh-Hans": "敏瑞",
+        "en": "Minseo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jiyu-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "지유",
+        "zh-Hans": "智裕",
+        "en": "Jiyu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yunseo-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "윤서",
+        "zh-Hans": "允瑞",
+        "en": "Yunseo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sua-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "수아",
+        "zh-Hans": "秀娥",
+        "en": "Sua"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chaewon-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "채원",
+        "zh-Hans": "彩元",
+        "en": "Chaewon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "daeun-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "다은",
+        "zh-Hans": "多恩",
+        "en": "Daeun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yerin-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "예린",
+        "zh-Hans": "睿琳",
+        "en": "Yerin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "soyul-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "소율",
+        "zh-Hans": "昭律",
+        "en": "Soyul"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jimin-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "지민",
+        "zh-Hans": "智敏",
+        "en": "Jimin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hayun-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "하윤",
+        "zh-Hans": "河允",
+        "en": "Hayun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seoyun-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "서윤",
+        "zh-Hans": "瑞允",
+        "en": "Seoyun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yujin-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "유진",
+        "zh-Hans": "有珍",
+        "en": "Yujin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yena-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "예나",
+        "zh-Hans": "睿娜",
+        "en": "Yena"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

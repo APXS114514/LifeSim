@@ -1,0 +1,450 @@
+{
+  "id": "kp-family",
+  "scheme": "ko",
+  "kind": "family",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "kim",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 30,
+      "grade": "D",
+      "forms": {
+        "native": "김",
+        "zh-Hans": "金",
+        "en": "Kim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ri",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 28,
+      "grade": "D",
+      "forms": {
+        "native": "리",
+        "zh-Hans": "李",
+        "en": "Ri"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pak",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 26,
+      "grade": "D",
+      "forms": {
+        "native": "박",
+        "zh-Hans": "朴",
+        "en": "Pak"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "choe",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "최",
+        "zh-Hans": "崔",
+        "en": "Choe"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jong",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "정",
+        "zh-Hans": "鄭",
+        "en": "Jong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "강",
+        "zh-Hans": "姜",
+        "en": "Kang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jo",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "조",
+        "zh-Hans": "趙",
+        "en": "Jo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yun",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "윤",
+        "zh-Hans": "尹",
+        "en": "Yun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "장",
+        "zh-Hans": "張",
+        "en": "Jang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "rim",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "림",
+        "zh-Hans": "林",
+        "en": "Rim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "han",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "한",
+        "zh-Hans": "韓",
+        "en": "Han"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "o",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "오",
+        "zh-Hans": "吳",
+        "en": "O"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "so",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "서",
+        "zh-Hans": "徐",
+        "en": "So"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sin",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "신",
+        "zh-Hans": "申",
+        "en": "Sin"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kwon",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "권",
+        "zh-Hans": "權",
+        "en": "Kwon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hwang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "황",
+        "zh-Hans": "黃",
+        "en": "Hwang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "an",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "안",
+        "zh-Hans": "安",
+        "en": "An"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "song",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "송",
+        "zh-Hans": "宋",
+        "en": "Song"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ryu",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "류",
+        "zh-Hans": "柳",
+        "en": "Ryu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hong",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "홍",
+        "zh-Hans": "洪",
+        "en": "Hong"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "jon",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "전",
+        "zh-Hans": "全",
+        "en": "Jon"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ko",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "고",
+        "zh-Hans": "高",
+        "en": "Ko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mun",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "문",
+        "zh-Hans": "文",
+        "en": "Mun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "son",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "손",
+        "zh-Hans": "孫",
+        "en": "Son"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ryang",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "량",
+        "zh-Hans": "梁",
+        "en": "Ryang"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pae",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "배",
+        "zh-Hans": "裵",
+        "en": "Pae"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "paek",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "백",
+        "zh-Hans": "白",
+        "en": "Paek"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ho",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "허",
+        "zh-Hans": "許",
+        "en": "Ho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nam",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "남",
+        "zh-Hans": "南",
+        "en": "Nam"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sim",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "심",
+        "zh-Hans": "沈",
+        "en": "Sim"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ro",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "로",
+        "zh-Hans": "盧",
+        "en": "Ro"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ha",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 4,
+      "grade": "D",
+      "forms": {
+        "native": "하",
+        "zh-Hans": "河",
+        "en": "Ha"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kwak",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 3,
+      "grade": "D",
+      "forms": {
+        "native": "곽",
+        "zh-Hans": "郭",
+        "en": "Kwak"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "seong",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 3,
+      "grade": "D",
+      "forms": {
+        "native": "성",
+        "zh-Hans": "成",
+        "en": "Song"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

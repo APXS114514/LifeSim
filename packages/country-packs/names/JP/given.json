@@ -1,0 +1,1256 @@
+{
+  "id": "jp-given",
+  "scheme": "ja",
+  "kind": "given",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "ichiro-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "一郎",
+        "zh-Hans": "一郎",
+        "en": "Ichiro"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "taro-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "太郎",
+        "zh-Hans": "太郎",
+        "en": "Taro"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "masao-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "正雄",
+        "zh-Hans": "正雄",
+        "en": "Masao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kazuo-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "和夫",
+        "zh-Hans": "和夫",
+        "en": "Kazuo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kiyoshi-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "清",
+        "zh-Hans": "清",
+        "en": "Kiyoshi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shigeru-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "茂",
+        "zh-Hans": "茂",
+        "en": "Shigeru"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "isamu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "勇",
+        "zh-Hans": "勇",
+        "en": "Isamu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minoru-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "実",
+        "zh-Hans": "实",
+        "en": "Minoru"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "susumu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "進",
+        "zh-Hans": "进",
+        "en": "Susumu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kenichi-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "健一",
+        "zh-Hans": "健一",
+        "en": "Kenichi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hiroshi-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "弘",
+        "zh-Hans": "弘",
+        "en": "Hiroshi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tadao-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "忠雄",
+        "zh-Hans": "忠雄",
+        "en": "Tadao"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yukio-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "幸雄",
+        "zh-Hans": "幸雄",
+        "en": "Yukio"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "osamu-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "修",
+        "zh-Hans": "修",
+        "en": "Osamu"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haruo-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "春雄",
+        "zh-Hans": "春雄",
+        "en": "Haruo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tomio-m-c1",
+      "sex": "male",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "富夫",
+        "zh-Hans": "富夫",
+        "en": "Tomio"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hanako-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "花子",
+        "zh-Hans": "花子",
+        "en": "Hanako"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chiyo-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "千代",
+        "zh-Hans": "千代",
+        "en": "Chiyo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shizuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "静子",
+        "zh-Hans": "静子",
+        "en": "Shizuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fumiko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "文子",
+        "zh-Hans": "文子",
+        "en": "Fumiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kazuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "和子",
+        "zh-Hans": "和子",
+        "en": "Kazuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sachiko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "幸子",
+        "zh-Hans": "幸子",
+        "en": "Sachiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haruko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "春子",
+        "zh-Hans": "春子",
+        "en": "Haruko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kikuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "菊子",
+        "zh-Hans": "菊子",
+        "en": "Kikuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "matsuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "松子",
+        "zh-Hans": "松子",
+        "en": "Matsuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "miyoko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "美代子",
+        "zh-Hans": "美代子",
+        "en": "Miyoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hatsuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "初子",
+        "zh-Hans": "初子",
+        "en": "Hatsuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mitsuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "光子",
+        "zh-Hans": "光子",
+        "en": "Mitsuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sumiko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "澄子",
+        "zh-Hans": "澄子",
+        "en": "Sumiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "setsuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "節子",
+        "zh-Hans": "节子",
+        "en": "Setsuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nobuko-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "信子",
+        "zh-Hans": "信子",
+        "en": "Nobuko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sadako-f-c1",
+      "sex": "female",
+      "born": [[1880, 1935]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "定子",
+        "zh-Hans": "定子",
+        "en": "Sadako"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "akira-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "明",
+        "zh-Hans": "明",
+        "en": "Akira"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "makoto-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "誠",
+        "zh-Hans": "诚",
+        "en": "Makoto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hiroshi2-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "浩",
+        "zh-Hans": "浩",
+        "en": "Hiroshi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "takashi-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "隆",
+        "zh-Hans": "隆",
+        "en": "Takashi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ken-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "健",
+        "zh-Hans": "健",
+        "en": "Ken"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "satoru-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "悟",
+        "zh-Hans": "悟",
+        "en": "Satoru"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mamoru-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "守",
+        "zh-Hans": "守",
+        "en": "Mamoru"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tatsuya-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "達也",
+        "zh-Hans": "达也",
+        "en": "Tatsuya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "toshio-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "敏夫",
+        "zh-Hans": "敏夫",
+        "en": "Toshio"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yoshiaki-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "義明",
+        "zh-Hans": "义明",
+        "en": "Yoshiaki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hideo-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "秀男",
+        "zh-Hans": "秀男",
+        "en": "Hideo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shoichi-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "正一",
+        "zh-Hans": "正一",
+        "en": "Shoichi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kenji-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "健二",
+        "zh-Hans": "健二",
+        "en": "Kenji"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mitsuo-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "光雄",
+        "zh-Hans": "光雄",
+        "en": "Mitsuo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "akio-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "昭夫",
+        "zh-Hans": "昭夫",
+        "en": "Akio"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nobuo-m-c2",
+      "sex": "male",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "信夫",
+        "zh-Hans": "信夫",
+        "en": "Nobuo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "michiko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "美智子",
+        "zh-Hans": "美智子",
+        "en": "Michiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yoko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "洋子",
+        "zh-Hans": "洋子",
+        "en": "Yoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "keiko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "恵子",
+        "zh-Hans": "惠子",
+        "en": "Keiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yumiko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "由美子",
+        "zh-Hans": "由美子",
+        "en": "Yumiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hisako-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "久子",
+        "zh-Hans": "久子",
+        "en": "Hisako"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "akemi-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "明美",
+        "zh-Hans": "明美",
+        "en": "Akemi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tomoko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "智子",
+        "zh-Hans": "智子",
+        "en": "Tomoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "naoko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "直子",
+        "zh-Hans": "直子",
+        "en": "Naoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kyoko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "京子",
+        "zh-Hans": "京子",
+        "en": "Kyoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aiko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "愛子",
+        "zh-Hans": "爱子",
+        "en": "Aiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chie-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "千恵",
+        "zh-Hans": "千惠",
+        "en": "Chie"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shizuka-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "静香",
+        "zh-Hans": "静香",
+        "en": "Shizuka"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mari-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "真理",
+        "zh-Hans": "真理",
+        "en": "Mari"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kumiko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "久美子",
+        "zh-Hans": "久美子",
+        "en": "Kumiko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kayoko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "加代子",
+        "zh-Hans": "加代子",
+        "en": "Kayoko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "noriko-f-c2",
+      "sex": "female",
+      "born": [[1925, 1980]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "則子",
+        "zh-Hans": "则子",
+        "en": "Noriko"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "daisuke-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "大輔",
+        "zh-Hans": "大辅",
+        "en": "Daisuke"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shota-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "翔太",
+        "zh-Hans": "翔太",
+        "en": "Shota"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kenta-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "健太",
+        "zh-Hans": "健太",
+        "en": "Kenta"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "takuya-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "拓也",
+        "zh-Hans": "拓也",
+        "en": "Takuya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "naoki-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "直樹",
+        "zh-Hans": "直树",
+        "en": "Naoki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ryo-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "亮",
+        "zh-Hans": "亮",
+        "en": "Ryo"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hideki-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "秀樹",
+        "zh-Hans": "秀树",
+        "en": "Hideki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "tomoya-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "智也",
+        "zh-Hans": "智也",
+        "en": "Tomoya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuta-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "雄太",
+        "zh-Hans": "雄太",
+        "en": "Yuta"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "ren-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "蓮",
+        "zh-Hans": "莲",
+        "en": "Ren"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hiroto-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "大翔",
+        "zh-Hans": "大翔",
+        "en": "Hiroto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haruto-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "陽翔",
+        "zh-Hans": "阳翔",
+        "en": "Haruto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuto-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "悠人",
+        "zh-Hans": "悠人",
+        "en": "Yuto"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "minato-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "湊",
+        "zh-Hans": "凑",
+        "en": "Minato"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "shun-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "駿",
+        "zh-Hans": "骏",
+        "en": "Shun"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "riku-m-c3",
+      "sex": "male",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "陸",
+        "zh-Hans": "陆",
+        "en": "Riku"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "hina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "陽菜",
+        "zh-Hans": "阳菜",
+        "en": "Hina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "misaki-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "美咲",
+        "zh-Hans": "美咲",
+        "en": "Misaki"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yui-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "結衣",
+        "zh-Hans": "结衣",
+        "en": "Yui"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aya-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "彩",
+        "zh-Hans": "彩",
+        "en": "Aya"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "asuka-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "明日香",
+        "zh-Hans": "明日香",
+        "en": "Asuka"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "haruka-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "遥",
+        "zh-Hans": "遥",
+        "en": "Haruka"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "chihiro-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "千尋",
+        "zh-Hans": "千寻",
+        "en": "Chihiro"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sakura-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "桜",
+        "zh-Hans": "樱",
+        "en": "Sakura"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yumi-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "由美",
+        "zh-Hans": "由美",
+        "en": "Yumi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "megumi-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "恵",
+        "zh-Hans": "惠",
+        "en": "Megumi"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "miho-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "美穂",
+        "zh-Hans": "美穗",
+        "en": "Miho"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuina-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "結菜",
+        "zh-Hans": "结菜",
+        "en": "Yuina"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nanami-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "七海",
+        "zh-Hans": "七海",
+        "en": "Nanami"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "himari-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "陽葵",
+        "zh-Hans": "阳葵",
+        "en": "Himari"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yuka-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "優花",
+        "zh-Hans": "优花",
+        "en": "Yuka"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kaede-f-c3",
+      "sex": "female",
+      "born": [[1970, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "楓",
+        "zh-Hans": "枫",
+        "en": "Kaede"
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}

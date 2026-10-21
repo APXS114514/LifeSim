@@ -1,0 +1,1008 @@
+{
+  "id": "ru-family",
+  "scheme": "ru",
+  "kind": "family",
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "ivanov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 20,
+      "grade": "D",
+      "forms": {
+        "native": "Иванов",
+        "zh-Hans": "伊万诺夫",
+        "en": "Ivanov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Иванова",
+          "zh-Hans": "伊万诺娃",
+          "en": "Ivanova"
+        },
+        "masculine": {
+          "native": "Иванов",
+          "zh-Hans": "伊万诺夫",
+          "en": "Ivanov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "smirnov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 18,
+      "grade": "D",
+      "forms": {
+        "native": "Смирнов",
+        "zh-Hans": "斯米尔诺夫",
+        "en": "Smirnov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Смирнова",
+          "zh-Hans": "斯米尔诺娃",
+          "en": "Smirnova"
+        },
+        "masculine": {
+          "native": "Смирнов",
+          "zh-Hans": "斯米尔诺夫",
+          "en": "Smirnov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kuznetsov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 16,
+      "grade": "D",
+      "forms": {
+        "native": "Кузнецов",
+        "zh-Hans": "库兹涅佐夫",
+        "en": "Kuznetsov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Кузнецова",
+          "zh-Hans": "库兹涅佐娃",
+          "en": "Kuznetsova"
+        },
+        "masculine": {
+          "native": "Кузнецов",
+          "zh-Hans": "库兹涅佐夫",
+          "en": "Kuznetsov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "popov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 15,
+      "grade": "D",
+      "forms": {
+        "native": "Попов",
+        "zh-Hans": "波波夫",
+        "en": "Popov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Попова",
+          "zh-Hans": "波波娃",
+          "en": "Popova"
+        },
+        "masculine": {
+          "native": "Попов",
+          "zh-Hans": "波波夫",
+          "en": "Popov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vasilyev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Васильев",
+        "zh-Hans": "瓦西里耶夫",
+        "en": "Vasilyev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Васильева",
+          "zh-Hans": "瓦西里耶娃",
+          "en": "Vasilyeva"
+        },
+        "masculine": {
+          "native": "Васильев",
+          "zh-Hans": "瓦西里耶夫",
+          "en": "Vasilyev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "petrov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 14,
+      "grade": "D",
+      "forms": {
+        "native": "Петров",
+        "zh-Hans": "彼得罗夫",
+        "en": "Petrov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Петрова",
+          "zh-Hans": "彼得罗娃",
+          "en": "Petrova"
+        },
+        "masculine": {
+          "native": "Петров",
+          "zh-Hans": "彼得罗夫",
+          "en": "Petrov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sokolov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 13,
+      "grade": "D",
+      "forms": {
+        "native": "Соколов",
+        "zh-Hans": "索科洛夫",
+        "en": "Sokolov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Соколова",
+          "zh-Hans": "索科洛娃",
+          "en": "Sokolova"
+        },
+        "masculine": {
+          "native": "Соколов",
+          "zh-Hans": "索科洛夫",
+          "en": "Sokolov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "mikhaylov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Михайлов",
+        "zh-Hans": "米哈伊洛夫",
+        "en": "Mikhaylov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Михайлова",
+          "zh-Hans": "米哈伊洛娃",
+          "en": "Mikhaylova"
+        },
+        "masculine": {
+          "native": "Михайлов",
+          "zh-Hans": "米哈伊洛夫",
+          "en": "Mikhaylov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "novikov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Новиков",
+        "zh-Hans": "诺维科夫",
+        "en": "Novikov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Новикова",
+          "zh-Hans": "诺维科娃",
+          "en": "Novikova"
+        },
+        "masculine": {
+          "native": "Новиков",
+          "zh-Hans": "诺维科夫",
+          "en": "Novikov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "fedorov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 12,
+      "grade": "D",
+      "forms": {
+        "native": "Фёдоров",
+        "zh-Hans": "费奥多罗夫",
+        "en": "Fedorov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Фёдорова",
+          "zh-Hans": "费奥多罗娃",
+          "en": "Fedorova"
+        },
+        "masculine": {
+          "native": "Фёдоров",
+          "zh-Hans": "费奥多罗夫",
+          "en": "Fedorov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "morozov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 11,
+      "grade": "D",
+      "forms": {
+        "native": "Морозов",
+        "zh-Hans": "莫罗佐夫",
+        "en": "Morozov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Морозова",
+          "zh-Hans": "莫罗佐娃",
+          "en": "Morozova"
+        },
+        "masculine": {
+          "native": "Морозов",
+          "zh-Hans": "莫罗佐夫",
+          "en": "Morozov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "volkov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Волков",
+        "zh-Hans": "沃尔科夫",
+        "en": "Volkov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Волкова",
+          "zh-Hans": "沃尔科娃",
+          "en": "Volkova"
+        },
+        "masculine": {
+          "native": "Волков",
+          "zh-Hans": "沃尔科夫",
+          "en": "Volkov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "alekseev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Алексеев",
+        "zh-Hans": "阿列克谢耶夫",
+        "en": "Alekseev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Алексеева",
+          "zh-Hans": "阿列克谢耶娃",
+          "en": "Alekseeva"
+        },
+        "masculine": {
+          "native": "Алексеев",
+          "zh-Hans": "阿列克谢耶夫",
+          "en": "Alekseev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "lebedev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 10,
+      "grade": "D",
+      "forms": {
+        "native": "Лебедев",
+        "zh-Hans": "列别杰夫",
+        "en": "Lebedev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Лебедева",
+          "zh-Hans": "列别杰娃",
+          "en": "Lebedeva"
+        },
+        "masculine": {
+          "native": "Лебедев",
+          "zh-Hans": "列别杰夫",
+          "en": "Lebedev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "semenov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Семёнов",
+        "zh-Hans": "谢苗诺夫",
+        "en": "Semenov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Семёнова",
+          "zh-Hans": "谢苗诺娃",
+          "en": "Semenova"
+        },
+        "masculine": {
+          "native": "Семёнов",
+          "zh-Hans": "谢苗诺夫",
+          "en": "Semenov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "egorov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Егоров",
+        "zh-Hans": "叶戈罗夫",
+        "en": "Egorov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Егорова",
+          "zh-Hans": "叶戈罗娃",
+          "en": "Egorova"
+        },
+        "masculine": {
+          "native": "Егоров",
+          "zh-Hans": "叶戈罗夫",
+          "en": "Egorov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "pavlov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Павлов",
+        "zh-Hans": "巴甫洛夫",
+        "en": "Pavlov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Павлова",
+          "zh-Hans": "巴甫洛娃",
+          "en": "Pavlova"
+        },
+        "masculine": {
+          "native": "Павлов",
+          "zh-Hans": "巴甫洛夫",
+          "en": "Pavlov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kozlov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Козлов",
+        "zh-Hans": "科兹洛夫",
+        "en": "Kozlov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Козлова",
+          "zh-Hans": "科兹洛娃",
+          "en": "Kozlova"
+        },
+        "masculine": {
+          "native": "Козлов",
+          "zh-Hans": "科兹洛夫",
+          "en": "Kozlov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "stepanov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Степанов",
+        "zh-Hans": "斯捷潘诺夫",
+        "en": "Stepanov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Степанова",
+          "zh-Hans": "斯捷潘诺娃",
+          "en": "Stepanova"
+        },
+        "masculine": {
+          "native": "Степанов",
+          "zh-Hans": "斯捷潘诺夫",
+          "en": "Stepanov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nikolaev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 9,
+      "grade": "D",
+      "forms": {
+        "native": "Николаев",
+        "zh-Hans": "尼古拉耶夫",
+        "en": "Nikolaev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Николаева",
+          "zh-Hans": "尼古拉耶娃",
+          "en": "Nikolaeva"
+        },
+        "masculine": {
+          "native": "Николаев",
+          "zh-Hans": "尼古拉耶夫",
+          "en": "Nikolaev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "orlov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Орлов",
+        "zh-Hans": "奥尔洛夫",
+        "en": "Orlov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Орлова",
+          "zh-Hans": "奥尔洛娃",
+          "en": "Orlova"
+        },
+        "masculine": {
+          "native": "Орлов",
+          "zh-Hans": "奥尔洛夫",
+          "en": "Orlov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "andreev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Андреев",
+        "zh-Hans": "安德烈耶夫",
+        "en": "Andreev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Андреева",
+          "zh-Hans": "安德烈耶娃",
+          "en": "Andreeva"
+        },
+        "masculine": {
+          "native": "Андреев",
+          "zh-Hans": "安德烈耶夫",
+          "en": "Andreev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "makarov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Макаров",
+        "zh-Hans": "马卡罗夫",
+        "en": "Makarov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Макарова",
+          "zh-Hans": "马卡罗娃",
+          "en": "Makarova"
+        },
+        "masculine": {
+          "native": "Макаров",
+          "zh-Hans": "马卡罗夫",
+          "en": "Makarov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "nikitin",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Никитин",
+        "zh-Hans": "尼基京",
+        "en": "Nikitin"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Никитина",
+          "zh-Hans": "尼基京娜",
+          "en": "Nikitina"
+        },
+        "masculine": {
+          "native": "Никитин",
+          "zh-Hans": "尼基京",
+          "en": "Nikitin"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zakharov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Захаров",
+        "zh-Hans": "扎哈罗夫",
+        "en": "Zakharov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Захарова",
+          "zh-Hans": "扎哈罗娃",
+          "en": "Zakharova"
+        },
+        "masculine": {
+          "native": "Захаров",
+          "zh-Hans": "扎哈罗夫",
+          "en": "Zakharov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "zaytsev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Зайцев",
+        "zh-Hans": "扎伊采夫",
+        "en": "Zaytsev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Зайцева",
+          "zh-Hans": "扎伊采娃",
+          "en": "Zaytseva"
+        },
+        "masculine": {
+          "native": "Зайцев",
+          "zh-Hans": "扎伊采夫",
+          "en": "Zaytsev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "solovyov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Соловьёв",
+        "zh-Hans": "索洛维约夫",
+        "en": "Solovyov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Соловьёва",
+          "zh-Hans": "索洛维约娃",
+          "en": "Solovyova"
+        },
+        "masculine": {
+          "native": "Соловьёв",
+          "zh-Hans": "索洛维约夫",
+          "en": "Solovyov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "borisov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Борисов",
+        "zh-Hans": "鲍里索夫",
+        "en": "Borisov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Борисова",
+          "zh-Hans": "鲍里索娃",
+          "en": "Borisova"
+        },
+        "masculine": {
+          "native": "Борисов",
+          "zh-Hans": "鲍里索夫",
+          "en": "Borisov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "yakovlev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Яковлев",
+        "zh-Hans": "雅科夫列夫",
+        "en": "Yakovlev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Яковлева",
+          "zh-Hans": "雅科夫列娃",
+          "en": "Yakovleva"
+        },
+        "masculine": {
+          "native": "Яковлев",
+          "zh-Hans": "雅科夫列夫",
+          "en": "Yakovlev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "grigoryev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Григорьев",
+        "zh-Hans": "格里戈里耶夫",
+        "en": "Grigoryev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Григорьева",
+          "zh-Hans": "格里戈里耶娃",
+          "en": "Grigoryeva"
+        },
+        "masculine": {
+          "native": "Григорьев",
+          "zh-Hans": "格里戈里耶夫",
+          "en": "Grigoryev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "romanov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 8,
+      "grade": "D",
+      "forms": {
+        "native": "Романов",
+        "zh-Hans": "罗曼诺夫",
+        "en": "Romanov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Романова",
+          "zh-Hans": "罗曼诺娃",
+          "en": "Romanova"
+        },
+        "masculine": {
+          "native": "Романов",
+          "zh-Hans": "罗曼诺夫",
+          "en": "Romanov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "vorobyov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Воробьёв",
+        "zh-Hans": "沃罗比约夫",
+        "en": "Vorobyov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Воробьёва",
+          "zh-Hans": "沃罗比约娃",
+          "en": "Vorobyova"
+        },
+        "masculine": {
+          "native": "Воробьёв",
+          "zh-Hans": "沃罗比约夫",
+          "en": "Vorobyov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "sergeev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 7,
+      "grade": "D",
+      "forms": {
+        "native": "Сергеев",
+        "zh-Hans": "谢尔盖耶夫",
+        "en": "Sergeev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Сергеева",
+          "zh-Hans": "谢尔盖耶娃",
+          "en": "Sergeeva"
+        },
+        "masculine": {
+          "native": "Сергеев",
+          "zh-Hans": "谢尔盖耶夫",
+          "en": "Sergeev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kuzmin",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Кузьмин",
+        "zh-Hans": "库兹明",
+        "en": "Kuzmin"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Кузьмина",
+          "zh-Hans": "库兹明娜",
+          "en": "Kuzmina"
+        },
+        "masculine": {
+          "native": "Кузьмин",
+          "zh-Hans": "库兹明",
+          "en": "Kuzmin"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "frolov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Фролов",
+        "zh-Hans": "弗罗洛夫",
+        "en": "Frolov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Фролова",
+          "zh-Hans": "弗罗洛娃",
+          "en": "Frolova"
+        },
+        "masculine": {
+          "native": "Фролов",
+          "zh-Hans": "弗罗洛夫",
+          "en": "Frolov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "aleksandrov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 6,
+      "grade": "D",
+      "forms": {
+        "native": "Александров",
+        "zh-Hans": "亚历山德罗夫",
+        "en": "Aleksandrov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Александрова",
+          "zh-Hans": "亚历山德罗娃",
+          "en": "Aleksandrova"
+        },
+        "masculine": {
+          "native": "Александров",
+          "zh-Hans": "亚历山德罗夫",
+          "en": "Aleksandrov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "dmitriev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Дмитриев",
+        "zh-Hans": "德米特里耶夫",
+        "en": "Dmitriev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Дмитриева",
+          "zh-Hans": "德米特里耶娃",
+          "en": "Dmitrieva"
+        },
+        "masculine": {
+          "native": "Дмитриев",
+          "zh-Hans": "德米特里耶夫",
+          "en": "Dmitriev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "korolyov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Королёв",
+        "zh-Hans": "科罗廖夫",
+        "en": "Korolyov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Королёва",
+          "zh-Hans": "科罗廖娃",
+          "en": "Korolyova"
+        },
+        "masculine": {
+          "native": "Королёв",
+          "zh-Hans": "科罗廖夫",
+          "en": "Korolyov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "gusev",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Гусев",
+        "zh-Hans": "古谢夫",
+        "en": "Gusev"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Гусева",
+          "zh-Hans": "古谢娃",
+          "en": "Guseva"
+        },
+        "masculine": {
+          "native": "Гусев",
+          "zh-Hans": "古谢夫",
+          "en": "Gusev"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    },
+    {
+      "id": "kiselyov",
+      "sex": "any",
+      "born": [[1880, 2026]],
+      "weight": 5,
+      "grade": "D",
+      "forms": {
+        "native": "Киселёв",
+        "zh-Hans": "基谢廖夫",
+        "en": "Kiselyov"
+      },
+      "genderedForms": {
+        "feminine": {
+          "native": "Киселёва",
+          "zh-Hans": "基谢廖娃",
+          "en": "Kiselyova"
+        },
+        "masculine": {
+          "native": "Киселёв",
+          "zh-Hans": "基谢廖夫",
+          "en": "Kiselyov"
+        }
+      },
+      "sourceIds": ["wikidata:names", "adr:0010"]
+    }
+  ]
+}
