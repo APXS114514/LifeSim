@@ -105,6 +105,24 @@ Test Files  1 passed (1)   Tests   9 passed (9)
 130 passed (1.0m)
 ```
 
+### 提交后的复核
+
+提交 `8a3fe1a` 后又完整运行了一次 `pnpm verify`：当时机器 load average ≈ 19（另一个工作树的
+eslint 占用约 200% CPU），出现 9 个 `Test timed out in 5000ms`，集中在 CLI 与合成人生的重测试。
+代码与测试没有改动；按任务约定只重跑，不改测试或超时。随后用低并发重跑完整套件：
+
+```text
+$ pnpm exec vitest run --maxWorkers=2 --reporter=default --reporter=json --outputFile.json=test-results/vitest.json
+Test Files  93 passed (93)
+     Tests  878 passed (878)
+$ pnpm check:tests
+测试基线检查通过：878 项（基线 ≥ 150），93 个文件，无跳过。
+```
+
+同一提交的 `format:check` / `lint` / `check:data` / `typecheck` / `build` 在提交后的那次
+`pnpm verify` 中已通过（失败只发生在测试阶段）。并行负载导致的超时不是产品回归：16:08 的
+完整 `pnpm verify` 已全绿，提交后只新增/格式化了文档。
+
 ### 基线与确定性
 
 - 黄金指纹测试 `matches the recorded golden fingerprint` 通过（未更新 `golden.ts`）。
