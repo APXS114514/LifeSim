@@ -1288,3 +1288,234 @@
   text-align: end;
   font-variant-numeric: tabular-nums;
 }
+
+/* ---------- 同龄对照（M4-020：四人、生存曲线、人生方格） ---------- */
+
+.cohort-panel h2 {
+  margin: 0;
+}
+
+.cohort-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cohort-toggle:hover {
+  color: var(--color-primary-strong);
+}
+
+.cohort-toggle-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.cohort-section + .cohort-section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--color-rule);
+}
+
+.cohort-section h3 {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.cohort-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.cohort-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-paper);
+  font-size: 0.9rem;
+}
+
+.cohort-place {
+  font-weight: 650;
+}
+
+.cohort-age-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cohort-age {
+  font-weight: 650;
+}
+
+.cohort-age-unit,
+.cohort-status,
+.cohort-education,
+.cohort-employment,
+.cohort-chronic {
+  color: var(--color-text-secondary);
+}
+
+.cohort-age-unit {
+  font-size: 0.8rem;
+}
+
+.cohort-same-country {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-size: 0.75rem;
+}
+
+.survival-chart {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 0 0 var(--space-2);
+}
+
+.survival-grid-line {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.survival-axis {
+  fill: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-size: 8px;
+}
+
+.survival-line {
+  fill: none;
+  stroke: var(--color-primary-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.life-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+  gap: 3px;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.grid-cell {
+  aspect-ratio: 1;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-muted);
+}
+
+.grid-cell[data-category='life'],
+.grid-legend-item[data-category='life'] .grid-swatch {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.grid-cell[data-category='decision'],
+.grid-legend-item[data-category='decision'] .grid-swatch {
+  border-color: var(--color-primary-strong);
+  background: var(--color-primary-tint);
+}
+
+.grid-cell[data-category='education'],
+.grid-legend-item[data-category='education'] .grid-swatch {
+  border-color: var(--color-primary-strong);
+  background: var(--color-primary-strong);
+}
+
+.grid-cell[data-category='career'],
+.grid-legend-item[data-category='career'] .grid-swatch {
+  border-color: var(--color-success-ink);
+  background: var(--color-success-ink);
+}
+
+.grid-cell[data-category='health'],
+.grid-legend-item[data-category='health'] .grid-swatch {
+  border-color: var(--color-danger-ink);
+  background: var(--color-danger-ink);
+}
+
+.grid-cell[data-category='family'],
+.grid-legend-item[data-category='family'] .grid-swatch {
+  border-color: var(--color-warning-ink);
+  background: var(--color-warning-ink);
+}
+
+.grid-cell[data-category='history'],
+.grid-legend-item[data-category='history'] .grid-swatch {
+  border-color: var(--color-text-secondary);
+  background: var(--color-text-secondary);
+}
+
+.grid-cell[data-category='finance'],
+.grid-legend-item[data-category='finance'] .grid-swatch {
+  border-color: var(--color-warning);
+  background: var(--color-warning);
+}
+
+.grid-cell[data-category='other'],
+.grid-legend-item[data-category='other'] .grid-swatch {
+  border-color: var(--color-border-strong);
+  background: var(--color-border-strong);
+}
+
+.grid-cell[data-category='none'],
+.grid-legend-item[data-category='none'] .grid-swatch {
+  border-color: var(--color-border);
+  background: transparent;
+}
+
+.grid-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.76rem;
+  list-style: none;
+}
+
+.grid-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.grid-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  background: var(--color-surface-muted);
+}

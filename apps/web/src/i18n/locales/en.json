@@ -384,5 +384,48 @@
       "none": "—",
       "note": "Percentages adjust that year's probability of the event, kept within 0–1; stress and social ties use a 0–100 scale and settle at the end of the year. All of these are design assumptions, not statistical findings; focus never changes the risk of death directly."
     }
+  },
+  "cohort": {
+    "heading": "Others born that day",
+    "assumption": "Computed on this device",
+    "loading": "Calculating…",
+    "unavailable": "Cannot compute: this needs the country data for all five regions. Load them online and try again.",
+    "ageUnit": "years",
+    "four": {
+      "heading": "Four others born the same second",
+      "disclosure": "Four other people were born on your birthday; their regions are drawn with weights from the five regions’ birth counts for that year. They live automatically by the life principles in the same engine and are only advanced to your current year. What happened to them is simulated, not a statistic.",
+      "alive": "Alive",
+      "deceased": "Died",
+      "diedAt": "Died, aged {{age}}",
+      "sameCountry": "Same country as you",
+      "chronicNone": "No chronic conditions",
+      "chronicCount": "Chronic conditions: {{count}}"
+    },
+    "survival": {
+      "heading": "Survival curve",
+      "title": "Share still alive: born {{year}} in {{pack}}, both sexes combined",
+      "disclosure": "Evidence grade B: UN WPP 2024 single-age life table (both sexes combined), covering up to 2100. Method: the yearly period life table approximates the birth cohort, so the step from age a to a + 1 uses q(a) from the year birth year + a. Once birth year + a passes 2100 the curve holds the 2100 column constant and is labelled a grade D scenario; ages above 100 are treated as q = 1. This curve comes only from the life table, not from the four simulated lives above."
+    },
+    "grid": {
+      "heading": "Life in squares",
+      "life": "Birth and death",
+      "decision": "Major decisions",
+      "education": "Education",
+      "career": "Work",
+      "health": "Health",
+      "family": "Family",
+      "history": "Era",
+      "finance": "Yearly budget",
+      "other": "Other",
+      "none": "No record"
+    },
+    "employment": {
+      "child": "Child",
+      "student": "Student",
+      "not-in-labor-force": "Not in labour force",
+      "employed": "Employed",
+      "unemployed": "Unemployed",
+      "retired": "Retired"
+    }
   }
 }
