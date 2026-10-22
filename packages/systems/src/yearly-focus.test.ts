@@ -4,6 +4,7 @@ import fc from 'fast-check';
 import { describe, expect, it, vi } from 'vitest';
 import { FIXTURE_REGION } from './__fixtures__/focus-region.ts';
 import { createLifeSimulation, restoreLifeSimulation } from './module.ts';
+import { isIndependentForSettlement } from './shared.ts';
 import { DEFAULT_PRINCIPLES } from './life.ts';
 import {
   FOCUS_EFFECTS,
@@ -209,6 +210,23 @@ describe('M3-041 yearly focus', () => {
       const dies = random.chance(0.1);
       expect(sim.facts.some((fact) => fact.type === 'life.death')).toBe(dies);
     }
+  });
+
+  it('judges annual settlement independence by the year being settled (M3-012c)', () => {
+    const region = { ...REGION, rules: { ...REGION.rules, minimumWorkingAge: 16 } };
+    const actor = own(run('settlement-age', 'balanced', 0));
+    const schoolLeaver = {
+      ...actor,
+      employment: { ...actor.employment, status: 'not-in-labor-force' as const },
+    };
+    // 16 岁生日结算的是 15→16 岁那一年：这一年还不到法定工作年龄，不收生活费。
+    expect(isIndependentForSettlement(schoolLeaver, 16, region)).toBe(false);
+    expect(isIndependentForSettlement(schoolLeaver, 17, region)).toBe(true);
+    const student = {
+      ...schoolLeaver,
+      employment: { ...schoolLeaver.employment, status: 'student' as const },
+    };
+    expect(isIndependentForSettlement(student, 30, region)).toBe(false);
   });
 
   it('keeps the selected multiplier through a paused and restored university-to-job-search chain', () => {

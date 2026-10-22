@@ -10,9 +10,12 @@
 // the 150 previous facts keep their content and causes (only 48 settlement balances differ from spending).
 // User approved M3-012: education is decided by year; synthetic world has no compulsory schooling, so one
 // secondary selection fact (education.admission-failed, 1972) is added and primary-started gains details.stage.
+// M3-012c (coordinator ruling, maintainer-authorised): annual settlement now judges independence by the year
+// being settled, so the pre-working-age year is no longer settled. One 1975 settlement is removed; the next
+// two settlements flip in-debt -> solvent and all later balances are exactly +355,303. 308 -> 307 facts.
 export const GOLDEN_LIFE = {
   seed: 'golden-1',
   birthDate: '1960-03-15',
-  factCount: 308,
-  fingerprint: 'a1848a94ee1cf66c9b438a38fb71e7d4',
+  factCount: 307,
+  fingerprint: 'c058cccdc23acca81712449c0b3ef6a3',
 } as const;

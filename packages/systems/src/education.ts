@@ -3,8 +3,9 @@ import {
   scaleMinor,
   type CharacterState,
   type CurrencyVersion,
+  type HouseholdAccount,
 } from '@lifesim/content-schema';
-import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
+import { addYears, yearOf, type EventDefinition, type SimState } from '@lifesim/simulation-core';
 import { currencyLabel, readMacro, type EducationSystem, type RegionModel } from './region.ts';
 import { EVENT, PRIORITY, account, ageAt, causes, evidenceId } from './shared.ts';
 import { focusProbability } from './yearly-focus.ts';
@@ -63,8 +64,11 @@ export function educationFeeMinor(
 }
 
 /**
- * 家庭能否负担（D 级设计假设）：家境不是「贫寒」时视为家庭可以垫付（扣款仍记在家庭账户，
- * 允许为负）；家境贫寒且账户余额不足时学生无法入学。M3-014 接入家庭经济后替换这条规则。
+ * 家庭能否负担（D 级设计假设）：家境不是「贫寒」时视为家庭可以继续垫付（付款方余额可为负）；
+ * 家境贫寒时按**付款方余额之和**判断，不够就交不起。M3-014 接入家庭经济后替换这条规则。
+ *
+ * M3-012c：`balanceMinor` 由调用方传**付款方**（未独立时是在世父母）的余额合计，
+ * 不再是学生本人账户的余额——孩子不该因为上学背债（见 {@link tuitionPayers}）。
  */
 export function canAffordFee(
   origin: CharacterState['origin'],
@@ -74,6 +78,81 @@ export function canAffordFee(
   if (feeMinor <= 0) return true;
   if (origin.familyResources !== 'low') return true;
   return balanceMinor >= feeMinor;
+}
+
+/** 学费的付款方：未独立时由家庭承担，否则用本人账户。 */
+export type TuitionPayer = 'family' | 'self';
+
+export interface TuitionPayment {
+  readonly paidBy: TuitionPayer;
+  /** 付款方账户在付款后的余额合计（家庭付款时是在世父母之和）。 */
+  readonly balanceMinor: number;
+  readonly payerIds: readonly string[];
+}
+
+/**
+ * 在世父母的账户，按 `state.relationships` 里亲子关系的顺序（`family.ts` 先创建母亲、
+ * 再创建父亲）。已故父母不参与分摊。
+ */
+export function livingParentAccounts(state: SimState, actor: CharacterState): HouseholdAccount[] {
+  const accounts: HouseholdAccount[] = [];
+  for (const relationship of state.relationships) {
+    if (relationship.kind !== 'parent-child' || relationship.toId !== actor.id) continue;
+    if (relationship.fromId === actor.id) continue;
+    const parent = state.actors.find((candidate) => candidate.id === relationship.fromId);
+    if (!parent || parent.vitalStatus.kind !== 'alive') continue;
+    accounts.push(account(state, parent));
+  }
+  return accounts;
+}
+
+/**
+ * 学费从谁出（M3-012c）：自己在工作（受雇或已退休领养老金）时用本人账户；未独立
+ * （儿童、在读、还没开始工作）时由**在世父母**承担，按关系顺序平均分摊；没有在世父母时
+ * 才用本人账户。这与 M3-042「未独立时日常花费由家里承担」是同一口径——两处都只在
+ * 没有自己收入时把支出记到家庭，避免学生账户为负抬高本人发病率与死亡率。
+ */
+export function tuitionPayers(
+  state: SimState,
+  actor: CharacterState,
+): { paidBy: TuitionPayer; accounts: HouseholdAccount[] } {
+  const { status } = actor.employment;
+  if (status !== 'employed' && status !== 'retired') {
+    const parents = livingParentAccounts(state, actor);
+    if (parents.length > 0) return { paidBy: 'family', accounts: parents };
+  }
+  return { paidBy: 'self', accounts: [account(state, actor)] };
+}
+
+/** 付款方可用于支付学费的余额合计；家境贫寒时按这个数判断能否负担。 */
+export function tuitionBalanceMinor(state: SimState, actor: CharacterState): number {
+  return tuitionPayers(state, actor).accounts.reduce(
+    (sum, target) => addMinor(sum, target.balanceMinor),
+    0,
+  );
+}
+
+/** 扣学费：按关系顺序平均分摊，余数记给第一位；返回付款方付款后的余额合计。 */
+export function chargeTuition(
+  state: SimState,
+  actor: CharacterState,
+  feeMinor: number,
+): TuitionPayment {
+  if (feeMinor < 0) throw new RangeError('Tuition cannot be negative');
+  const { paidBy, accounts } = tuitionPayers(state, actor);
+  if (feeMinor > 0) {
+    const share = Math.floor(feeMinor / accounts.length);
+    const remainder = feeMinor - share * accounts.length;
+    accounts.forEach((target, index) => {
+      const amount = share + (index === 0 ? remainder : 0);
+      target.balanceMinor = addMinor(target.balanceMinor, -amount);
+    });
+  }
+  return {
+    paidBy,
+    balanceMinor: accounts.reduce((sum, target) => addMinor(sum, target.balanceMinor), 0),
+    payerIds: accounts.map((target) => target.id),
+  };
 }
 
 export interface TransitionProbability {
@@ -145,7 +224,8 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       const feeMinor = paysFees(actor)
         ? educationFeeMinor(region, actor.origin, year, 'primary', currency)
         : 0;
-      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      // 学费由家庭（在世父母）承担，只有没有父母或已有自己收入时才动本人账户（M3-012c）。
+      const balanceMinor = tuitionBalanceMinor(ctx.state, actor);
       if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
         actor.education.lastFactId = ctx.emit({
           type: 'education.cannot-afford',
@@ -161,25 +241,22 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         });
         return;
       }
-      const paid =
-        feeMinor > 0
-          ? ctx.emit({
-              type: 'education.tuition-paid',
-              outcomeCode: 'paid',
-              actorIds: [actor.id],
-              evidenceIds,
-              details: {
-                stage: 'primary',
-                feeMinor,
-                balanceMinor: addMinor(balanceMinor, -feeMinor),
-                currency: currencyLabel(currency),
-              },
-            })
-          : null;
-      if (feeMinor > 0) {
-        const owner = account(ctx.state, actor);
-        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
-      }
+      const charged = feeMinor > 0 ? chargeTuition(ctx.state, actor, feeMinor) : null;
+      const paid = charged
+        ? ctx.emit({
+            type: 'education.tuition-paid',
+            outcomeCode: 'paid',
+            actorIds: [actor.id],
+            evidenceIds,
+            details: {
+              stage: 'primary',
+              feeMinor,
+              balanceMinor: charged.balanceMinor,
+              paidBy: charged.paidBy,
+              currency: currencyLabel(currency),
+            },
+          })
+        : null;
       actor.education.enrolledIn = 'primary';
       actor.employment.status = 'student';
       actor.education.lastFactId = ctx.emit({
@@ -262,7 +339,8 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       const feeMinor = paysFees(actor)
         ? educationFeeMinor(region, actor.origin, year, 'secondary', currency)
         : 0;
-      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      // 学费由家庭（在世父母）承担，只有没有父母或已有自己收入时才动本人账户（M3-012c）。
+      const balanceMinor = tuitionBalanceMinor(ctx.state, actor);
       if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
         const unaffordable = ctx.emit({
           type: 'education.cannot-afford',
@@ -286,26 +364,23 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         });
         return;
       }
-      const paid =
-        feeMinor > 0
-          ? ctx.emit({
-              type: 'education.tuition-paid',
-              outcomeCode: 'paid',
-              actorIds: [actor.id],
-              causes: [admitted],
-              evidenceIds,
-              details: {
-                stage: 'secondary',
-                feeMinor,
-                balanceMinor: addMinor(balanceMinor, -feeMinor),
-                currency: currencyLabel(currency),
-              },
-            })
-          : null;
-      if (feeMinor > 0) {
-        const owner = account(ctx.state, actor);
-        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
-      }
+      const charged = feeMinor > 0 ? chargeTuition(ctx.state, actor, feeMinor) : null;
+      const paid = charged
+        ? ctx.emit({
+            type: 'education.tuition-paid',
+            outcomeCode: 'paid',
+            actorIds: [actor.id],
+            causes: [admitted],
+            evidenceIds,
+            details: {
+              stage: 'secondary',
+              feeMinor,
+              balanceMinor: charged.balanceMinor,
+              paidBy: charged.paidBy,
+              currency: currencyLabel(currency),
+            },
+          })
+        : null;
       actor.education.enrolledIn = 'secondary';
       actor.employment.status = 'student';
       actor.education.lastFactId = ctx.emit({
@@ -437,7 +512,8 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       const feeMinor = paysFees(actor)
         ? educationFeeMinor(region, actor.origin, year, 'tertiary', currency)
         : 0;
-      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      // 学费由家庭（在世父母）承担，只有没有父母或已有自己收入时才动本人账户（M3-012c）。
+      const balanceMinor = tuitionBalanceMinor(ctx.state, actor);
       if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
         const unaffordable = ctx.emit({
           type: 'education.cannot-afford',
@@ -456,26 +532,23 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         searchForWork(unaffordable);
         return;
       }
-      const paid =
-        feeMinor > 0
-          ? ctx.emit({
-              type: 'education.tuition-paid',
-              outcomeCode: 'paid',
-              actorIds: [actor.id],
-              causes: [admitted],
-              evidenceIds,
-              details: {
-                stage: 'tertiary',
-                feeMinor,
-                balanceMinor: addMinor(balanceMinor, -feeMinor),
-                currency: currencyLabel(currency),
-              },
-            })
-          : null;
-      if (feeMinor > 0) {
-        const owner = account(ctx.state, actor);
-        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
-      }
+      const charged = feeMinor > 0 ? chargeTuition(ctx.state, actor, feeMinor) : null;
+      const paid = charged
+        ? ctx.emit({
+            type: 'education.tuition-paid',
+            outcomeCode: 'paid',
+            actorIds: [actor.id],
+            causes: [admitted],
+            evidenceIds,
+            details: {
+              stage: 'tertiary',
+              feeMinor,
+              balanceMinor: charged.balanceMinor,
+              paidBy: charged.paidBy,
+              currency: currencyLabel(currency),
+            },
+          })
+        : null;
       actor.education.enrolledIn = 'tertiary';
       actor.employment.status = 'student';
       actor.education.lastFactId = ctx.emit({

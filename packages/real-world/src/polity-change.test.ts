@@ -1,5 +1,5 @@
 import { canonicalJson, type Simulation } from '@lifesim/simulation-core';
-import { MacroStateSchema, SYSTEMS_VERSION, restoreLifeSimulation } from '@lifesim/systems';
+import { MacroStateSchema, restoreLifeSimulation } from '@lifesim/systems';
 import { describe, expect, it } from 'vitest';
 import { createRealLifeSimulation, createRealNarrator, type RealLifeSession } from './index.ts';
 
@@ -180,7 +180,9 @@ describe('polity-change anchors in a real life', () => {
   });
 
   it('records the systems version used by the new rules', () => {
+    // 这里刻意写版本号字面量：拿快照里的版本和常量本身比较会退化成「自己等于自己」，
+    // 抓不到常量忘记提升版本、或没有写进快照的问题（M3-012c 恢复）。
     const session = ru1978Session('polity-9');
-    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe(SYSTEMS_VERSION);
+    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe('0.10.0');
   });
 });

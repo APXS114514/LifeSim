@@ -4,10 +4,15 @@ import {
   type EvidenceMeta,
   type SimEventFact,
 } from '@lifesim/content-schema';
-import { addYears, canonicalJson, type Simulation } from '@lifesim/simulation-core';
+import {
+  addYears,
+  canonicalJson,
+  type EventContext,
+  type Simulation,
+} from '@lifesim/simulation-core';
 import { describe, expect, it } from 'vitest';
 import { createLifeSimulation, restoreLifeSimulation } from './module.ts';
-import { npcBirthdayRequest, npcFactType, npcRoleOf, promoteToTier1 } from './npc.ts';
+import { npcBirthdayRequest, npcEvents, npcFactType, npcRoleOf, promoteToTier1 } from './npc.ts';
 import type { EducationSystem, RegionModel } from './region.ts';
 
 /** 夹具的 D 级学制（虚构）：数值与 `rules` 的学制常数一致。 */
@@ -168,6 +173,116 @@ describe('npc.birthday scheduling', () => {
       entityId: 'char:x:mother',
       period: 'age:31',
     });
+  });
+});
+
+describe('NPC 的入学年龄按逐年学制推导（M3-012c）', () => {
+  /** 朝鲜式改革：1972 年起入学年龄从 7 岁降到 6 岁（虚构夹具里的学制）。 */
+  const BEFORE_REFORM: EducationSystem = {
+    ...FIXTURE_EDUCATION,
+    primaryStartAge: 7,
+    primaryYears: 4,
+    secondaryYears: 3,
+    tertiaryYears: 5,
+  };
+  const AFTER_REFORM: EducationSystem = { ...BEFORE_REFORM, primaryStartAge: 6 };
+  const region: RegionModel = {
+    ...FIXTURE_REGION,
+    queries: {
+      ...FIXTURE_REGION.queries,
+      education: {
+        ...FIXTURE_REGION.queries.education,
+        systemAt: (year) => (year >= 1972 ? AFTER_REFORM : BEFORE_REFORM),
+      },
+    },
+  };
+
+  function childAt(birthDate: string) {
+    return {
+      id: 'char:protagonist:child',
+      tier: 'tier1',
+      sex: 'female',
+      name: { scheme: 'zh', family: null, given: null, patronymic: null },
+      wellbeing: { stress: 0.3 },
+      social: { ties: 0.5 },
+      skills: [],
+      birthDate,
+      birthPlaceId: 'place:fixture-urban',
+      currentResidenceId: 'place:fixture-urban',
+      politicalEntityId: 'polity:fixture',
+      citizenshipIds: ['polity:fixture'],
+      vitalStatus: { kind: 'alive' },
+      lifePrinciples: {
+        family: 0.5,
+        wealth: 0.5,
+        health: 0.5,
+        knowledge: 0.5,
+        risk: 0.5,
+        stability: 0.5,
+      },
+      origin: { settlement: 'urban', familyResources: 'middle' },
+      traits: { aptitude: 0.5 },
+      education: { completed: 'none', enrolledIn: null, lastFactId: null },
+      employment: { status: 'child', wageLevel: null, lastFactId: null },
+      health: { conditions: [] },
+      finance: { accountId: 'acct:fixture-child', lastSettlementFactId: null },
+    } as const;
+  }
+
+  /** 只跑 NPC 生日处理器，记录它排了哪些事件；随机流固定为「不发生疾病与死亡」。 */
+  function scheduledOnBirthday(at: string, age: number): readonly string[] {
+    const child = childAt('1965-07-31');
+    const state = {
+      actors: [child],
+      householdAccounts: [
+        {
+          id: 'acct:fixture-child',
+          ownerIds: [child.id],
+          currency: { code: 'FIX', version: 1 },
+          balanceMinor: 0,
+        },
+      ],
+      relationships: [],
+    };
+    const scheduled: { type: string; at: string; period: string }[] = [];
+    const ctx = {
+      at,
+      occurrence: {
+        type: EVENT.npcBirthday,
+        entityId: child.id,
+        period: `age:${age}`,
+        causeFactIds: [],
+        payload: null,
+      },
+      state,
+      random: { chance: () => false, int: () => 0, next: () => 0, weighted: () => 'middle' },
+      choice: null,
+      actor: (id: string) => {
+        if (id !== child.id) throw new Error('Unknown actor ' + id);
+        return child;
+      },
+      emit: () => 'fact:fixture',
+      schedule: (request: { type: string; at: string; period: string }) => {
+        scheduled.push(request);
+        return request;
+      },
+    } as unknown as EventContext;
+    const birthday = npcEvents(region).find((definition) => definition.type === EVENT.npcBirthday);
+    if (!birthday) throw new Error('missing npc.birthday');
+    birthday.handle(ctx);
+    return scheduled
+      .filter((request) => request.type === EVENT.primaryEntry)
+      .map((request) => `${request.at}#${request.period}`);
+  }
+
+  it('学制改革那年按推导出的入学年龄排入学，不会漏掉整届学生', () => {
+    // 1965-07-31 出生：6 岁那年（1971）学制仍要求 7 岁，7 岁那年（1972）起改为 6 岁。
+    expect(scheduledOnBirthday('1971-07-31', 6)).toEqual([]);
+    expect(scheduledOnBirthday('1972-07-31', 7)).toEqual(['1972-07-31#age:7']);
+  });
+
+  it('已经过了推导出的入学年龄就不再补排（成年父母不会被当成学龄儿童）', () => {
+    expect(scheduledOnBirthday('1973-07-31', 8)).toEqual([]);
   });
 });
 

@@ -1,9 +1,9 @@
-import type { CharacterState, HouseholdAccount } from '@lifesim/content-schema';
-import { ageOn, type EventContext, type SimState } from '@lifesim/simulation-core';
+import type { CharacterState, HouseholdAccount, ISODate } from '@lifesim/content-schema';
+import { ageOn, yearOf, type EventContext, type SimState } from '@lifesim/simulation-core';
 import type { RegionModel } from './region.ts';
 
 /** 系统规则版本：规则行为变化时提升，写入快照的 `dataPackVersions.systems`。 */
-export const SYSTEMS_VERSION = '0.9.0';
+export const SYSTEMS_VERSION = '0.10.0';
 
 export const PROTAGONIST_ID = 'char:protagonist';
 
@@ -93,6 +93,79 @@ export function hasIllness(actor: CharacterState): boolean {
 export function isIndependent(actor: CharacterState, age: number, region: RegionModel): boolean {
   const { status } = actor.employment;
   return status !== 'child' && status !== 'student' && age >= region.rules.minimumWorkingAge;
+}
+
+/** 小学入学年龄的推导上限：学制 schema 允许的最大入学年龄是 10 岁，留出余量。 */
+const MAX_PRIMARY_ENTRY_AGE = 15;
+
+/**
+ * 小学入学年龄（M3-012c）：用出生年与**逐年学制**确定性推导，取第一次满足
+ * `age >= 当年 primaryStartAge` 的那一年。学制在儿童期内变动时（例如朝鲜 1972 年把
+ * 入学年龄从 7 岁降到 6 岁），按当年的学制判断当年是否该入学，而不是用「当前年份的
+ * 入学年龄」倒推；这样主角与 NPC 都不会在学制改变那一年漏掉入学。
+ */
+export function primaryEntryAge(region: RegionModel, birthDate: ISODate): number {
+  const birthYear = yearOf(birthDate);
+  for (let age = 0; age <= MAX_PRIMARY_ENTRY_AGE; age += 1) {
+    if (age >= region.queries.education.systemAt(birthYear + age).primaryStartAge) return age;
+  }
+  throw new Error(`No primary entry age for a birth in ${birthYear}`);
+}
+
+/** 学段的年龄日历：每段从入学年龄到毕业年龄。 */
+export interface EducationStageAges {
+  readonly primaryEntry: number;
+  readonly primaryExit: number;
+  /** 中学入学年龄：小学毕业当年（小学毕业当天升学）。 */
+  readonly secondaryEntry: number;
+  readonly secondaryExit: number;
+  /** 大学入学年龄：max(中学毕业年龄, 法定工作年龄)，与 `after-secondary` 决定的排程一致。 */
+  readonly tertiaryEntry: number;
+  readonly tertiaryExit: number;
+}
+
+/**
+ * 学段的年龄日历（M3-012c）：全部用出生年与**逐年学制**确定性推导。
+ *
+ * 每段的毕业年龄 = 该段入学年龄 + **入学那年**学制规定的年数：推迟入学不缩短学制，
+ * 学制在就读期间改革也不改变已经开始的学段长度。毕业事件仍由当年的生日事件排程
+ * （携带年度重点载荷，见 `scheduleAnnualSystems`），这里只回答「哪一年毕业」。
+ *
+ * 入学年龄同样可确定：小学取 {@link primaryEntryAge}；中学在小学生毕业当天入学；
+ * 大学在 `max(中学毕业, 法定工作年龄)` 的 `after-secondary` 决定里入学。
+ */
+export function educationStageAges(region: RegionModel, birthDate: ISODate): EducationStageAges {
+  const birthYear = yearOf(birthDate);
+  const primaryEntry = primaryEntryAge(region, birthDate);
+  const primaryExit =
+    primaryEntry + region.queries.education.systemAt(birthYear + primaryEntry).primaryYears;
+  const secondaryExit =
+    primaryExit + region.queries.education.systemAt(birthYear + primaryExit).secondaryYears;
+  const tertiaryEntry = Math.max(secondaryExit, region.rules.minimumWorkingAge);
+  const tertiaryExit =
+    tertiaryEntry + region.queries.education.systemAt(birthYear + tertiaryEntry).tertiaryYears;
+  return {
+    primaryEntry,
+    primaryExit,
+    secondaryEntry: primaryExit,
+    secondaryExit,
+    tertiaryEntry,
+    tertiaryExit,
+  };
+}
+
+/**
+ * 年度结算覆盖 `[age - 1, age)` 这一年（生日当天结算过去一年，M3-012c）。
+ * 按**被结算的那一年**判断是否独立：这一年里还不到法定工作年龄的人，生活费由家里承担，
+ * 不从本人账户扣——与 M3-042「未独立时日常花费由家里承担」同一口径，只是年度结算看的是
+ * 已经过去的那一年，而通用人生事件看的是事件发生的当年。
+ */
+export function isIndependentForSettlement(
+  actor: CharacterState,
+  age: number,
+  region: RegionModel,
+): boolean {
+  return isIndependent(actor, age - 1, region);
 }
 
 /** 非空的事实 ID 列表。 */
