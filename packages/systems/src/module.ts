@@ -50,6 +50,8 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
       id: 'life.age-appropriate-status',
       check(state, at) {
         const problems: string[] = [];
+        // 入学年龄按该年的制度取（M3-012b）：不同国家与年代的学制不同。
+        const primaryStartAge = region.queries.education.systemAt(yearOf(at)).primaryStartAge;
         for (const actor of state.actors) {
           if (actor.vitalStatus.kind === 'deceased') continue;
           const age = ageOn(actor.birthDate, at);
@@ -60,7 +62,7 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
           if (status === 'retired' && age < rules.retirementAge) {
             problems.push(`${actor.id} is retired at ${age}`);
           }
-          if (status === 'student' && age < rules.primaryStartAge) {
+          if (status === 'student' && age < primaryStartAge) {
             problems.push(`${actor.id} is a student at ${age}`);
           }
         }

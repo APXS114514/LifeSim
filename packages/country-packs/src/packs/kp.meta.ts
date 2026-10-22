@@ -3,6 +3,7 @@
 // 资料局限（GDD §16）：朝鲜的货币改革细节主要来自韩国官方教育机构与国际媒体的整理，
 // 非朝鲜官方来源；2009 年改革的兑换上限、价格调整等细节在 M2 不建模。
 import type { CountryPack } from '../schema.ts';
+import { KP_EDUCATION } from './kp.education.ts';
 
 const KP_EVIDENCE_1959 = {
   grade: 'B' as const,
@@ -131,6 +132,7 @@ export const KP_METADATA: Omit<CountryPack, 'series'> = {
       '3': { 'zh-Hans': '朝鲜圆', en: 'North Korean won' },
     },
   },
+  education: KP_EDUCATION,
   anchors: [
     {
       id: 'anchor:kp-redenomination-1959',

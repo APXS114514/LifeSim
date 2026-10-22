@@ -340,3 +340,53 @@ M3-009 必须先合入，后续任务才能共享 `queries`；M3-010/011 只依�
 - M3-013 的职业枚举需要扩展（例如加入行业维度）时；
 - 规则调用点开始需要 `RegionModel` 之外的数据（例如家庭层）时；
 - 性能预算被突破或 NPC 规模改变时。
+
+## 增补（2026-10-21）：教育制度的按年接口（M3-012）
+
+> 背景：M3-012 细化实施时发现本 ADR 只定义了教育**统计指标**的查询（§2 的 `EducationQueries`），没有定义「学制随国家与年代变化」这一**规则数据**的形状与归属，导致任务无法在不新增 ADR 未定义结构的前提下落地。本节是最小充分增补，不改动前面各节的既有决定。
+
+### 决定
+
+1. **新增按年查询**（`RegionQueries.education` 扩展一个方法）：
+
+   ```ts
+   export interface EducationSystem {
+     /** 入学年龄（小学一年级开始的周岁）。 */
+     primaryStartAge: number;
+     /** 各级修业年限（年）。 */
+     primaryYears: number;
+     secondaryYears: number;
+     tertiaryYears: number;
+     /** 义务教育年限；0 表示该年没有义务教育。 */
+     compulsoryYears: number;
+     /** 升学考试：没有考试，或有考试与基础通过率（0—1）。 */
+     entranceExam: { kind: 'none' } | { kind: 'exam'; passBase: number };
+     /** 学费与杂费占当年生活费的比例（0 = 免学费）；只作**名义**金额，不折算。 */
+     feeShare: number;
+     /** 该条目的证据等级与来源（D 级设计假设也必须写明）。 */
+     grade: 'C' | 'D';
+     sourceIds: readonly string[];
+   }
+
+   export interface EducationQueries {
+     // …既有两个统计方法不变…
+     /** 该年的学制；没有国别来源时返回 D 级设计假设，界面必须披露。 */
+     systemAt(year: number): EducationSystem;
+   }
+   ```
+
+2. **数据归属**：学制是**规则数据**而不是统计序列，放在国家包（`packages/country-packs`）里按年份分段的 `education` 小节，由 `real-world` 适配器读成 `systemAt`。它**不是** `StatSeries`、不进 `DataRegistry` 的回退链，也不占用 `Indicator` 枚举。
+3. **合成地区与测试夹具**：用 D 级默认实现（与现有 `RegionRules` 常数等价），保证合成人生与既有夹具的行为不变；因此 `packages/synthetic-world` 与 `packages/systems/src/__fixtures__` 必须同步实现新成员（允许修改）。
+4. **证据等级**：能引用已登记教育法规来源的年份为 C；没有来源的年份写 D 级设计假设并**如实列进缺口表**，不得冒充统计。朝鲜（KP）允许 C/D 混用并在披露中说明。
+5. **零缺口时也不得编造**：某国某年缺少依据时，允许退回「该国该年代最近一条有依据的学制」并标 D，但必须在披露与缺口表里写明。
+
+### 学费与购买力（与 Q14 的边界）
+
+- M3-012 **只按名义金额**记账（`feeShare × 当年生活费`，整数最小单位），不使用 `prices.toRealMinor`。
+- CPI 折算与 `toRealMinor` 的修订归 **M3-014 / Q14**；本 ADR 增补不预先实现第二套折算。
+- §4 的回退表增补一行：`education-tuition-share` —— 缺失时用 D 级比例假设，事实标 D，界面提示「设计假设」。
+
+### 兼容与版本
+
+- 在 `EducationQueries` 上加方法是**接口扩展**：所有 `RegionModel` 实现（`real-world`、`synthetic-world`、`systems` 的测试夹具）都要实现，属 M3-012 允许的改动面。
+- M3-012 提升 `SYSTEMS_VERSION`；教育行为的年代差异会改变事实，**黄金指纹一次性更新**并由维护者批准；不得为了让测试通过而调整阈值。

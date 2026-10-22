@@ -1,6 +1,7 @@
 import type { CharacterState } from '@lifesim/content-schema';
 import {
   addYears,
+  yearOf,
   type DecisionOption,
   type EventContext,
   type EventDefinition,
@@ -96,11 +97,14 @@ export function scheduleAnnualSystems(
 ): void {
   const { rules } = region;
   const { education, employment } = actor;
+  // 入学年龄与各级年限按「国家 + 年份」取（M3-012b）；用 >= 以免制度在某一年改变后
+  // 整届学生错过事件。合成地区的 systemAt 是常数，所以合成人生的排程与旧常数一致。
+  const system = region.queries.education.systemAt(yearOf(ctx.at));
   const educationAge = {
-    primaryExit: rules.primaryStartAge + rules.primaryYears,
-    secondaryExit: rules.primaryStartAge + rules.primaryYears + rules.secondaryYears,
+    primaryExit: system.primaryStartAge + system.primaryYears,
+    secondaryExit: system.primaryStartAge + system.primaryYears + system.secondaryYears,
     tertiaryExit:
-      rules.primaryStartAge + rules.primaryYears + rules.secondaryYears + rules.tertiaryYears,
+      system.primaryStartAge + system.primaryYears + system.secondaryYears + system.tertiaryYears,
   };
   const sameDay = (type: string, because: readonly string[] = []) => {
     ctx.schedule({
@@ -114,16 +118,17 @@ export function scheduleAnnualSystems(
   };
   if (isIndependent(actor, age, region)) sameDay(EVENT.settle);
   if (
-    age === rules.primaryStartAge &&
+    age >= system.primaryStartAge &&
     education.completed === 'none' &&
-    education.enrolledIn === null
+    education.enrolledIn === null &&
+    education.lastFactId === null
   )
     sameDay(EVENT.primaryEntry);
-  if (education.enrolledIn === 'primary' && age === educationAge.primaryExit)
+  if (education.enrolledIn === 'primary' && age >= educationAge.primaryExit)
     sameDay(EVENT.primaryExit, causes(education.lastFactId));
-  if (education.enrolledIn === 'secondary' && age === educationAge.secondaryExit)
+  if (education.enrolledIn === 'secondary' && age >= educationAge.secondaryExit)
     sameDay(EVENT.secondaryExit, causes(education.lastFactId));
-  if (education.enrolledIn === 'tertiary' && age === educationAge.tertiaryExit)
+  if (education.enrolledIn === 'tertiary' && age >= educationAge.tertiaryExit)
     sameDay(EVENT.tertiaryExit, causes(education.lastFactId));
   const { status } = employment;
   if (age >= rules.retirementAge) {

@@ -187,6 +187,22 @@ function fixturePack(): CountryPack {
         '3': { 'zh-Hans': '测试币三', en: 'Test currency three' },
       },
     },
+    education: [
+      {
+        validFrom: 1950,
+        validTo: null,
+        primaryStartAge: 7,
+        primaryYears: 6,
+        secondaryYears: 3,
+        tertiaryYears: 4,
+        compulsoryYears: 9,
+        entranceExam: { kind: 'none' },
+        feeShare: 0,
+        grade: 'D',
+        sourceIds,
+        note: '测试夹具（虚构），不是任何国家的学制',
+      },
+    ],
     anchors: [
       {
         id: 'anchor:test-redenomination-1970',

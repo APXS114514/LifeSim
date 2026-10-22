@@ -91,6 +91,22 @@ function fixturePack(packId: BirthRegionId, births: number, urban = 0.6): Countr
       initialVersion: 1,
       versionNames: { '1': { 'zh-Hans': '测试币', en: 'Test currency' } },
     },
+    education: [
+      {
+        validFrom: 1950,
+        validTo: null,
+        primaryStartAge: 7,
+        primaryYears: 6,
+        secondaryYears: 3,
+        tertiaryYears: 4,
+        compulsoryYears: 9,
+        entranceExam: { kind: 'none' },
+        feeShare: 0,
+        grade: 'D',
+        sourceIds,
+        note: '测试夹具（虚构），不是任何国家的学制',
+      },
+    ],
     anchors: [],
     breakpoints: [],
     series: [

@@ -118,6 +118,26 @@ describe('bilingual narrative of synthetic lives', () => {
       seen.add(fact.templateId);
       for (const locale of SUPPORTED_LOCALES) realNarrator.render(fact, locale);
     }
+    // M3-012b：考试、录取与学费随国家与年代变化，只有真实国家包会出现这些事实。
+    // 固定一组跨年代、跨国家的真实人生，保证新增的教育模板都被覆盖（不是随机抽样）。
+    for (const country of ['CN', 'JP', 'KR', 'RU', 'KP'] as const) {
+      for (const year of [1950, 1965, 1975, 1985, 2000]) {
+        for (const index of [0, 1, 2]) {
+          const session = createRealLifeSimulation({
+            seed: `coverage-era-${country}-${year}-${index}`,
+            region: country,
+            year,
+            birthDate: `${year}-${String(1 + (index % 9)).padStart(2, '0')}-10`,
+          });
+          session.simulation.advanceTo(FOREVER);
+          const eraNarrator = createRealNarrator(session.pack, session.birth.birthDate);
+          for (const fact of session.simulation.facts) {
+            seen.add(fact.templateId);
+            for (const locale of SUPPORTED_LOCALES) eraNarrator.render(fact, locale);
+          }
+        }
+      }
+    }
     expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
     expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);
   }, 20_000);
@@ -306,8 +326,9 @@ describe('protagonist projection (M3-011)', () => {
       }),
     ).toEqual({
       // M3-042 批准：日常花费改变结算余额（与治疗选择），既有事实的类型与因果不变。
-      hash: '1d9720c5920e325b625a7c830e3010961943cf255e5f081a9cc82a03de328560',
-      entries: 23275,
+      // M3-012 批准：中学选拔与大学入学新增教育事实（admitted / admission-failed / enrolled）。
+      hash: '42ffa9899c6479ea9799478410630c7b07e768f6930db80080554c609a154da9',
+      entries: 23623,
     });
     // 1950 年起出生：覆盖 1970 年币制改革之前的人生。这里只取主角本人的事实，
     // 因为 actor 为空的事实里会新增「已故 NPC 存款换算」——本任务要求的新事实。
@@ -320,8 +341,8 @@ describe('protagonist projection (M3-011)', () => {
       }),
     ).toEqual({
       // M3-042 批准：21838 条（−33）= settlement −30、treatment-started −2、illness-onset −1、treatment-declined +1。
-      hash: 'a0c040d4ed3f723aa85f729309c59cb1570fb5606559c347043b1cb098318a44',
-      entries: 21838,
+      hash: 'f59d07f9d02899d234da6f337aa78e6b362263c0fcebeb0d9e1a2f0e1c48fbf1',
+      entries: 22155,
     });
   }, 120_000);
 });

@@ -235,5 +235,38 @@ export function validateCountryPack(pack: unknown): string[] {
     }
   }
 
+  // 规则 14：教育制度分段按年份递增、互不重叠，各年只有一个学制在生效。
+  for (const [index, segment] of value.education.entries()) {
+    const previous = value.education[index - 1];
+    if (previous) {
+      const previousEnd = previous.validTo ?? Number.POSITIVE_INFINITY;
+      if (segment.validFrom <= previousEnd) {
+        problems.push(
+          `教育制度分段 ${previous.validFrom}–${previous.validTo ?? '∞'} 与 ${segment.validFrom} 重叠或未按年份递增`,
+        );
+      }
+    }
+  }
+
+  // 规则 15：义务教育年限不能超过小学 + 中学的修业年限。
+  for (const segment of value.education) {
+    if (segment.compulsoryYears > segment.primaryYears + segment.secondaryYears) {
+      problems.push(
+        `教育制度 ${segment.validFrom}–${segment.validTo ?? '∞'} 的义务教育年限超过小学 + 中学年限`,
+      );
+    }
+  }
+
+  // 规则 16：证据等级必须诚实——D 级写明缺口说明，C 级引用已登记的非 ADR 来源。
+  for (const segment of value.education) {
+    const where = `教育制度 ${segment.validFrom}–${segment.validTo ?? '∞'}`;
+    if (segment.grade === 'D' && !segment.note) {
+      problems.push(`${where} 是 D 级设计假设，必须在 note 写明缺口`);
+    }
+    if (segment.grade === 'C' && !segment.sourceIds.some((id) => !id.startsWith('adr:'))) {
+      problems.push(`${where} 标为 C 级，但没有引用已登记的教育法规来源`);
+    }
+  }
+
   return problems;
 }
