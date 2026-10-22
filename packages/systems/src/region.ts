@@ -162,10 +162,6 @@ export type RegionTable =
   'population' | 'mortality' | 'illness' | 'education' | 'labor' | 'prices' | 'history';
 
 export interface RegionRules {
-  primaryStartAge: number;
-  primaryYears: number;
-  secondaryYears: number;
-  tertiaryYears: number;
   minimumWorkingAge: number;
   retirementAge: number;
   /** 养老金占同学历当年工资的比例。 */

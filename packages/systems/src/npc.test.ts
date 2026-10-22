@@ -15,7 +15,7 @@ import { createLifeSimulation, restoreLifeSimulation } from './module.ts';
 import { npcBirthdayRequest, npcEvents, npcFactType, npcRoleOf, promoteToTier1 } from './npc.ts';
 import type { EducationSystem, RegionModel } from './region.ts';
 
-/** 夹具的 D 级学制（虚构）：数值与 `rules` 的学制常数一致。 */
+/** 夹具的 D 级学制（虚构）：M3-012d 起学制只由 `systemAt` 提供。 */
 const FIXTURE_EDUCATION: EducationSystem = {
   primaryStartAge: 6,
   primaryYears: 6,
@@ -64,10 +64,6 @@ const FIXTURE_REGION: RegionModel = {
   anchors: [],
   initialMacro: { economyPhase: 'normal', currency: { code: 'FIX', version: 1 } },
   rules: {
-    primaryStartAge: 6,
-    primaryYears: 6,
-    secondaryYears: 6,
-    tertiaryYears: 4,
     minimumWorkingAge: 15,
     retirementAge: 60,
     pensionRate: 0.5,

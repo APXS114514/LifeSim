@@ -38,12 +38,13 @@ import {
 import { realRegionNames } from './names.ts';
 import type { Simulation } from '@lifesim/simulation-core';
 
-/** 可玩切片的规则基线（ADR-0006）。M3 接入真实数据后替换。 */
+/**
+ * 可玩切片的规则基线（ADR-0006）。M3 接入真实数据后替换。
+ *
+ * M3-012d：学制（入学年龄与各级年限）已经按国家与年份由国家包的 `education` 小节提供，
+ * 经 `queries.education.systemAt` 读取；这里不再保留旧的 7/6/3/4 常数，避免出现第二套学制。
+ */
 export const REAL_RULES: RegionRules = {
-  primaryStartAge: 7,
-  primaryYears: 6,
-  secondaryYears: 3,
-  tertiaryYears: 4,
   minimumWorkingAge: 16,
   retirementAge: 60,
   pensionRate: 0.75,

@@ -4,7 +4,9 @@ import type {
   SimEventFact,
   SimulationSnapshot,
 } from '@lifesim/content-schema';
-import { addDays, ageOn } from '@lifesim/simulation-core';
+import { addDays, ageOn, yearOf } from '@lifesim/simulation-core';
+import { stageIsCompulsory } from './education.ts';
+import type { EducationQueries } from './region.ts';
 
 /** 只读派生：不保存到角色、不影响规则或抽样。以下权重均为 D 级设计假设，非统计值。 */
 export const HEALTH_ILLNESS_WEIGHT = { untreated: 0.3, treated: 0.12 } as const;
@@ -57,6 +59,25 @@ const NEGATIVE_EVENTS = new Set([
   'education.admission-failed',
 ]);
 
+/**
+ * 录取是否算正面经历（M3-012d）：**义务教育阶段内的录取不算**——它是制度保证的学位，
+ * 不是竞争性结果。只有非义务教育阶段（高中阶段的竞争性录取、大学录取）才计入。
+ *
+ * 判定需要该年的学制（EducationQueries.systemAt）；调用方不传时保持旧口径（计入），
+ * 以便测试夹具与历史快照仍能派生指标。段信息缺失时同样保持旧口径。
+ */
+function admittedIsPositive(fact: SimEventFact, education?: EducationQueries): boolean {
+  const stage = fact.details?.['stage'];
+  if (stage !== 'secondary') return true;
+  if (education === undefined) return true;
+  return !stageIsCompulsory(education.systemAt(yearOf(fact.at)), stage);
+}
+
+/** 大学入学考试失败算负面经历（M3-012d）；其他阶段的考试失败不在此列。 */
+function isTertiaryExamFailure(fact: SimEventFact): boolean {
+  return fact.type === 'education.exam-failed' && fact.details?.['stage'] === 'tertiary';
+}
+
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
@@ -104,6 +125,7 @@ export function deriveIncome(
 export function deriveIndicators(
   snapshot: SimulationSnapshot,
   facts: readonly SimEventFact[],
+  education?: EducationQueries,
 ): IndicatorValues {
   const protagonist = protagonistOf(snapshot);
   const age = ageOn(protagonist.birthDate, snapshot.at);
@@ -161,9 +183,14 @@ export function deriveIndicators(
   for (const fact of facts) {
     if (!fact.actorIds.includes(protagonist.id) || fact.at < recentStart || fact.at > snapshot.at)
       continue;
-    if (POSITIVE_EVENTS.has(fact.type)) eventBalance += 1;
+    if (POSITIVE_EVENTS.has(fact.type)) {
+      // 义务教育内的录取不增加幸福（M3-012d）。
+      if (fact.type !== 'education.admitted' || admittedIsPositive(fact, education))
+        eventBalance += 1;
+    }
     if (
       NEGATIVE_EVENTS.has(fact.type) ||
+      isTertiaryExamFailure(fact) ||
       (fact.type === 'finance.settlement' && fact.outcomeCode === 'in-debt')
     )
       eventBalance -= 1;

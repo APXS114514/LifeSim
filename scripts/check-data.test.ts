@@ -5,6 +5,7 @@ import { SourceRecordSchema } from '../packages/content-schema/src/index.ts';
 import { describe, expect, it } from 'vitest';
 import type { CountryPack } from '../packages/country-packs/src/index.ts';
 import {
+  checkEducation,
   checkNameTables,
   checkPackSources,
   renderSourcesMarkdown,
@@ -215,6 +216,111 @@ describe('checkPackSources', () => {
     expect(output).toContain('来源登记检查通过');
   });
 });
+/** 测试夹具，非真实国家包：一条教育制度分段。 */
+const educationSegment = {
+  validFrom: 1950,
+  validTo: null,
+  primaryStartAge: 6,
+  primaryYears: 6,
+  secondaryYears: 3,
+  tertiaryYears: 4,
+  compulsoryYears: 9,
+  entranceExam: { kind: 'none' as const },
+  feeShare: 0,
+  grade: 'D' as const,
+  sourceIds: ['adr:0007'],
+  note: 'fixture',
+};
+
+const educationPack = (segment: unknown) => ({
+  manifest: { packId: 'CN' },
+  education: [segment],
+});
+
+describe('checkEducation（M3-012d）', () => {
+  it('accepts a D-grade segment that cites adr:0007 and has a note', () => {
+    expect(checkEducation([educationPack(educationSegment)] as never, [], ['0007'])).toEqual([]);
+  });
+
+  it('rejects a D-grade segment without adr:0007', () => {
+    const problems = checkEducation(
+      [educationPack({ ...educationSegment, sourceIds: ['un-wpp:2024'] })] as never,
+      [{ ...allowedSource }],
+      ['0007'],
+    );
+    expect(problems.some((problem) => problem.includes('必须引用 adr:0007'))).toBe(true);
+  });
+
+  it('rejects a segment without a note', () => {
+    const problems = checkEducation(
+      [educationPack({ ...educationSegment, note: ' ' })] as never,
+      [],
+      ['0007'],
+    );
+    expect(problems.some((problem) => problem.includes('缺少说明'))).toBe(true);
+  });
+
+  it('rejects a C-grade segment that only cites an ADR', () => {
+    const problems = checkEducation(
+      [
+        educationPack({
+          ...educationSegment,
+          grade: 'C',
+          note: undefined,
+          sourceIds: ['adr:0007'],
+        }),
+      ] as never,
+      [],
+      ['0007'],
+    );
+    expect(problems.some((problem) => problem.includes('没有引用已登记的非 ADR 来源'))).toBe(true);
+  });
+
+  it('rejects a C-grade segment whose non-ADR source is not registered', () => {
+    const problems = checkEducation(
+      [
+        educationPack({
+          ...educationSegment,
+          grade: 'C',
+          sourceIds: ['missing:education-law'],
+        }),
+      ] as never,
+      [],
+      ['0007'],
+    );
+    expect(problems.some((problem) => problem.includes('missing:education-law'))).toBe(true);
+  });
+
+  it('accepts a C-grade segment backed by a registered non-ADR source', () => {
+    expect(
+      checkEducation(
+        [educationPack({ ...educationSegment, grade: 'C', sourceIds: ['un-wpp:2024'] })] as never,
+        [{ ...allowedSource }],
+        ['0007'],
+      ),
+    ).toEqual([]);
+  });
+
+  it('rejects an unregistered source even on a D-grade segment', () => {
+    const problems = checkEducation(
+      [educationPack({ ...educationSegment, sourceIds: ['adr:0007', 'missing:law'] })] as never,
+      [],
+      ['0007'],
+    );
+    expect(problems.some((problem) => problem.includes('missing:law'))).toBe(true);
+  });
+
+  it('passes every committed country pack', async () => {
+    const { PACKS } = await import('../packages/country-packs/src/index.ts');
+    const raw: unknown = JSON.parse(readFileSync(join(root, 'data/sources.json'), 'utf8'));
+    const records = (raw as unknown[]).map((record) => SourceRecordSchema.parse(record));
+    const adrNumbers = readdirSync(join(root, 'docs/adr'))
+      .filter((name) => /^\d{4}-[^/]+\.md$/.test(name))
+      .map((name) => name.slice(0, 4));
+    expect(checkEducation(Object.values(PACKS), records, adrNumbers)).toEqual([]);
+  });
+});
+
 /** 测试夹具：一张来源未登记的姓名表；只在测试期间写到磁盘，用完删除。 */
 const fixtureNamesDir = join(root, 'packages/country-packs/names/fixture-pack');
 

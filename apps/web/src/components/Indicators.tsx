@@ -16,7 +16,7 @@ export function Indicators({ session, locale }: { session: GameSession; locale: 
   const snapshot = session.simulation.snapshot();
   const actor = snapshot.actors.find((candidate) => candidate.id === snapshot.activeCharacterId);
   if (!actor) throw new Error('Snapshot has no active character');
-  const values = deriveIndicators(snapshot, session.facts);
+  const values = deriveIndicators(snapshot, session.facts, session.region.queries.education);
   const income = deriveIncome(snapshot, session.facts);
   const macro = MacroStateSchema.parse(snapshot.world);
   const currency = `${macro.currency.code}-${macro.currency.version}`;
