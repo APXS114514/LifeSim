@@ -8,6 +8,8 @@ import { addYears, canonicalJson, fromDayNumber, toDayNumber } from '@lifesim/si
 import {
   afterSecondaryDecisionKey,
   createLifeSimulation,
+  lifeEventCatalog,
+  lifeEventType,
   restoreLifeSimulation,
   yearlyFocusDecisionKey,
 } from '@lifesim/systems';
@@ -229,6 +231,10 @@ describe('NPC narrative (M3-011)', () => {
   }, 20_000);
 });
 describe('protagonist projection (M3-011)', () => {
+  const LIFE_EVENT_TYPES = new Set(
+    lifeEventCatalog().map((prototype) => lifeEventType(prototype.id)),
+  );
+
   /**
    * 主角投影：只取 `actorIds` 全部是主角（或为空）的事实，把（日期、类型、结果、details）
    * 按序拼接后取 SHA-256。基线值是在实现之前、干净工作区上测得的——NPC 的加入不得改变它。
@@ -262,6 +268,17 @@ describe('protagonist projection (M3-011)', () => {
           expect(fact.details['decidedBy']).toBe('principles');
           continue;
         }
+        // M3-042 adds general life-event prototype facts and their non-major choices. They are
+        // design assumptions with no data source; validate that here and keep them out of the legacy
+        // projection, which still locks every pre-existing outcome.
+        if (
+          LIFE_EVENT_TYPES.has(fact.type) ||
+          (fact.type === 'decision.made' &&
+            LIFE_EVENT_TYPES.has(String(fact.details?.['decision']).replace(/\.choice$/, '')))
+        ) {
+          expect(fact.evidenceIds).toEqual([]);
+          continue;
+        }
         // M3-043 deliberately adds sex; validate it separately while retaining every legacy field.
         // The original projection hashes and entry counts remain unchanged.
         const details = { ...fact.details };
@@ -288,7 +305,8 @@ describe('protagonist projection (M3-011)', () => {
         includeEmptyActorFacts: true,
       }),
     ).toEqual({
-      hash: '767d9d8f6bb58e71a139a6d5d20fbfde98624775789260d6ecebf2e9cdad7b6c',
+      // M3-042 批准：日常花费改变结算余额（与治疗选择），既有事实的类型与因果不变。
+      hash: '1d9720c5920e325b625a7c830e3010961943cf255e5f081a9cc82a03de328560',
       entries: 23275,
     });
     // 1950 年起出生：覆盖 1970 年币制改革之前的人生。这里只取主角本人的事实，
@@ -301,8 +319,9 @@ describe('protagonist projection (M3-011)', () => {
         includeEmptyActorFacts: false,
       }),
     ).toEqual({
-      hash: '917dffbd45d8a0141daee603b1ea7291e56bd168d41dfd031e779bffaa6408fc',
-      entries: 21871,
+      // M3-042 批准：21838 条（−33）= settlement −30、treatment-started −2、illness-onset −1、treatment-declined +1。
+      hash: 'a0c040d4ed3f723aa85f729309c59cb1570fb5606559c347043b1cb098318a44',
+      entries: 21838,
     });
   }, 120_000);
 });
