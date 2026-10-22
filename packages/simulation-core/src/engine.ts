@@ -19,7 +19,8 @@ import {
   type SimulationEngine,
 } from './contract.ts';
 import { SimulationError, type SimulationErrorCode } from './errors.ts';
-import { canonicalJson, cloneJson, jsonEqual, type JsonValue } from './json.ts';
+import { DraftTransaction } from './draft.ts';
+import { canonicalJson, cloneJson, type JsonValue } from './json.ts';
 import { chooseByPrinciples } from './policy.ts';
 import { RNG_ALGORITHM, deriveStream, type RandomStream } from './random.ts';
 import {
@@ -588,7 +589,9 @@ export class Simulation implements SimulationEngine {
     if (!spec) throw this.#error('handler-failed', 'Not a decision event', occurrence);
     const actorId = spec.actorId(occurrence);
     const actor = context.actor(actorId);
-    const options = spec.options(this.#optionsView(occurrence, context.state));
+    // 决定在处理器之前结算，此刻草稿还没有任何写入，与已提交状态相同；
+    // 直接用已提交状态做丢弃式拷贝，避免穿过代理复制整份状态（ADR-0011 第 6 条：拷贝与纯函数检查不变）。
+    const options = spec.options(this.#optionsView(occurrence, this.#state));
     const recorded = this.#decisions.get(occurrence.key);
     const preset = this.#presets.get(occurrence.key);
 
@@ -670,32 +673,57 @@ export class Simulation implements SimulationEngine {
       return [];
     }
 
-    const draft = cloneJson(this.#state);
-    const { context, facts, scheduled } = this.#makeContext(occurrence, definition, draft);
+    // 处理器在按需复制的草稿上工作（ADR-0011）：没写过的分支与已提交状态共享引用。
+    const transaction = new DraftTransaction(this.#state);
     try {
-      if (definition.decision)
-        context.choice = this.#resolveChoice(occurrence, definition, context);
-      definition.handle(context);
-    } catch (error) {
-      if (error instanceof SimulationError) throw error;
-      const message = error instanceof Error ? error.message : String(error);
-      throw this.#error('handler-failed', message, occurrence, { cause: error });
+      const { context, facts, scheduled } = this.#makeContext(
+        occurrence,
+        definition,
+        transaction.root,
+      );
+      try {
+        if (definition.decision)
+          context.choice = this.#resolveChoice(occurrence, definition, context);
+        definition.handle(context);
+      } catch (error) {
+        if (error instanceof SimulationError) throw error;
+        const message = error instanceof Error ? error.message : String(error);
+        throw this.#error('handler-failed', message, occurrence, { cause: error });
+      }
+
+      const committed = transaction.commit();
+      const next = committed.state;
+      this.#verify(occurrence, next, facts);
+      // 原有的 schema 与不变量检查先跑（保持原来的错误码），再拒绝它们覆盖不到的非 JSON 值。
+      if (committed.problem !== null) {
+        throw this.#error('handler-failed', committed.problem, occurrence);
+      }
+      return this.#commit(occurrence, next, facts, scheduled, dayCount);
+    } finally {
+      transaction.close();
     }
+  }
 
-    this.#verify(occurrence, draft, facts);
-
-    this.#state = draft;
+  /** 校验通过后整体提交：状态、队列、已处理键、日志、时钟一起前进。 */
+  #commit(
+    occurrence: Occurrence,
+    next: SimState,
+    facts: SimEventFact[],
+    scheduled: readonly Occurrence[],
+    dayCount: number,
+  ): SimEventFact[] {
+    this.#state = next;
     this.#queue.shift();
     this.#processed.add(occurrence.key);
     this.#presets.delete(occurrence.key);
-    for (const next of scheduled) this.#queue.insert(next);
+    for (const followUp of scheduled) this.#queue.insert(followUp);
     for (const fact of facts) freezeFact(fact);
     this.#journal.push(...facts);
     this.#lastSequence += facts.length;
     this.#clock = occurrence.at;
     this.#dayCounter = { at: occurrence.at, count: dayCount };
 
-    const protagonist = draft.actors.find((actor) => actor.id === this.activeCharacterId);
+    const protagonist = next.actors.find((actor) => actor.id === this.activeCharacterId);
     if (protagonist?.vitalStatus.kind === 'deceased') {
       this.#ended = true;
       this.#queue.clear();
@@ -708,7 +736,8 @@ export class Simulation implements SimulationEngine {
    * 提交前检查：事实结构、角色与账户结构、时间与生死约束、各系统的不变量。
    *
    * 已提交的状态都校验过（创建时为空，恢复时整份快照经过 schema 解析），而 schema 校验只取决于值本身，
-   * 所以与提交前逐字段相同的角色和账户不必再解析一遍；只解析本事件新增或改动的（M3-035）。
+   * 所以本事件没有改动的角色和账户不必再解析一遍；只解析新增或改动的（M3-035）。
+   * 按需复制的草稿（ADR-0011）让「没改动」可以按引用判断：没写过的分支与已提交状态是同一个对象。
    * 这样每个事件的校验成本取决于它改了多少角色，而不是一局里有多少 NPC。
    * 关系图有数组级规则（去重、亲子无环），所以只要本事件改了任何关系，就整体再校验一次（M3-036）。
    */
@@ -722,7 +751,7 @@ export class Simulation implements SimulationEngine {
     const actorsBefore = new Map(this.#state.actors.map((actor) => [actor.id, actor]));
     for (const actor of draft.actors) {
       const before = actorsBefore.get(actor.id);
-      if (before && jsonEqual(before, actor)) continue;
+      if (before === actor) continue;
       const parsed = CharacterStateSchema.safeParse(actor);
       if (!parsed.success) violations.push(`actor ${actor.id}: ${parsed.error.message}`);
       if (before?.vitalStatus.kind === 'deceased' && actor.vitalStatus.kind !== 'deceased') {
@@ -734,11 +763,11 @@ export class Simulation implements SimulationEngine {
     );
     for (const account of draft.householdAccounts) {
       const before = accountsBefore.get(account.id);
-      if (before && jsonEqual(before, account)) continue;
+      if (before === account) continue;
       const parsed = HouseholdAccountSchema.safeParse(account);
       if (!parsed.success) violations.push(`account ${account.id}: ${parsed.error.message}`);
     }
-    if (!jsonEqual(this.#state.relationships, draft.relationships)) {
+    if (this.#state.relationships !== draft.relationships) {
       const parsed = RelationshipsSchema.safeParse(draft.relationships);
       if (!parsed.success) violations.push(`relationships: ${parsed.error.message}`);
     }

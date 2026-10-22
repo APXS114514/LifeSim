@@ -1,0 +1,42 @@
+{
+  "benchmark": "lifesim-m1-synthetic-life",
+  "command": "pnpm bench --lives 1000",
+  "engineVersion": "0.1.0",
+  "dataPackVersions": {
+    "ZZ-SYN": "synthetic-1",
+    "systems": "0.7.0"
+  },
+  "seeds": "bench-0 … bench-999",
+  "machine": {
+    "node": "v24.21.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M5",
+    "cpuCount": 10,
+    "memoryGiB": 16
+  },
+  "timing": {
+    "totalMs": 4330.9,
+    "perLifeMs": {
+      "p50": 4.256,
+      "p95": 5.054,
+      "p99": 5.402,
+      "max": 10.005
+    },
+    "livesPerSecond": 230.9,
+    "factsPerSecond": 38607
+  },
+  "workload": {
+    "lives": 1000,
+    "facts": 167201,
+    "meanFactsPerLife": 167.2,
+    "meanSnapshotBytes": 23420,
+    "meanAgeAtDeath": 76.4,
+    "fingerprint": "84432c86f0fa2a5718f2ed242660a7f7"
+  },
+  "budget": {
+    "reference": "GDD §14.3：无逐帧展示的 80 年模拟，桌面 ≤ 5000 ms（建议目标，非已测承诺）",
+    "worstLifeMs": 10.005,
+    "withinDesktopBudget": true
+  }
+}

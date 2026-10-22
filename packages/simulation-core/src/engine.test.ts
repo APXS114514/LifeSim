@@ -17,6 +17,7 @@ import {
   companionId,
   createToySimulation,
   focusKey,
+  makeActor,
   toyModules,
   type TrapKind,
 } from './__fixtures__/toy-world.ts';
@@ -24,6 +25,7 @@ import { addYears } from './calendar.ts';
 import { Simulation } from './engine.ts';
 import { SimulationError } from './errors.ts';
 import { canonicalJson } from './json.ts';
+import type { SimulationModule, SimState } from './types.ts';
 
 const forever = { targetDate: FAR_FUTURE, stopAtMajorDecision: false, maxWorkUnits: 1_000_000 };
 
@@ -564,5 +566,126 @@ describe('preset choices and pause policy (ADR-0008, M3-037A)', () => {
       ),
       { numRuns: 40 },
     );
+  });
+});
+
+describe('copy-on-write transactions in the kernel (ADR-0011)', () => {
+  type Probe = 'leak' | 'nan' | 'nan-and-invalid';
+  /** 处理器留在外面的引用：草稿里的角色与状态，以及它自己新建后放进状态的对象。 */
+  interface Leaked {
+    actor?: { currentResidenceId: string };
+    state?: SimState;
+    own?: { note: string };
+  }
+
+  /** 夹具：出生后第二天跑一次 `probe.write`，按 payload 做不同的写入。 */
+  function probeSimulation(probe: Probe, leaked: Leaked = {}): Simulation {
+    const module: SimulationModule = {
+      id: 'probe',
+      events: [
+        {
+          type: 'probe.birth',
+          version: 1,
+          priority: 0,
+          handle(ctx) {
+            ctx.state.actors.push(makeActor(TOY_ACTOR, ctx.at));
+            ctx.emit({ type: 'probe.born', outcomeCode: 'born', actorIds: [TOY_ACTOR] });
+            ctx.schedule({
+              type: 'probe.write',
+              at: '1970-06-16',
+              entityId: TOY_ACTOR,
+              period: 'write',
+              payload: probe,
+            });
+          },
+        },
+        {
+          type: 'probe.write',
+          version: 1,
+          priority: 0,
+          handle(ctx) {
+            const actor = ctx.actor(TOY_ACTOR);
+            switch (ctx.occurrence.payload) {
+              case 'leak': {
+                const own = { note: 'kept' };
+                ctx.state.world = { own };
+                actor.currentResidenceId = 'place:moved';
+                leaked.actor = actor;
+                leaked.state = ctx.state;
+                leaked.own = own;
+                break;
+              }
+              case 'nan':
+                ctx.state.world = { counter: Number.NaN };
+                break;
+              case 'nan-and-invalid':
+                ctx.state.world = { counter: Number.NaN };
+                actor.education = { completed: 'none', enrolledIn: 'tertiary', lastFactId: null };
+                break;
+              default:
+                break;
+            }
+            ctx.emit({ type: 'probe.wrote', outcomeCode: 'wrote', actorIds: [TOY_ACTOR] });
+          },
+        },
+      ],
+    };
+    return Simulation.create({
+      seed: 'probe',
+      modules: [module],
+      genesis: { type: 'probe.birth', at: '1970-06-15', entityId: TOY_ACTOR, payload: null },
+      activeCharacterId: TOY_ACTOR,
+      dataPackVersions: { TOY: '1' },
+    });
+  }
+
+  function failureOf(simulation: Simulation): SimulationError {
+    let error: unknown;
+    try {
+      simulation.advanceTo({ ...forever, targetDate: '1970-06-17' });
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toBeInstanceOf(SimulationError);
+    return error as SimulationError;
+  }
+
+  it('leaves no handler-held reference able to change committed state', () => {
+    const leaked: Leaked = {};
+    const simulation = probeSimulation('leak', leaked);
+    simulation.advanceTo({ ...forever, targetDate: '1970-06-17' });
+    const committed = canonicalJson(simulation.snapshot());
+    expect(simulation.snapshot().world).toEqual({ own: { note: 'kept' } });
+    expect(simulation.snapshot().actors[0]?.currentResidenceId).toBe('place:moved');
+    // 草稿在事务关闭时被撤销：再读写都报错。
+    expect(() => {
+      if (leaked.actor) leaked.actor.currentResidenceId = 'place:after-commit';
+    }).toThrow(TypeError);
+    expect(() => leaked.state?.actors).toThrow(TypeError);
+    // 处理器自己新建的对象在提交时被复制：之后再改它，已提交的状态不受影响。
+    expect(leaked.own).toBeDefined();
+    if (leaked.own) leaked.own.note = 'changed';
+    expect(canonicalJson(simulation.snapshot())).toBe(committed);
+  });
+
+  it('rejects a non-JSON value after the regular checks and rolls the event back', () => {
+    const simulation = probeSimulation('nan');
+    const before = canonicalJson(simulation.snapshot());
+    const failure = failureOf(simulation);
+    expect(failure.code).toBe('handler-failed');
+    expect(failure.message).toContain('Non-finite number at $.world.counter');
+    expect(failure.context.eventKey).toBeTruthy();
+    expect(simulation.snapshot().world).toEqual({});
+    expect(canonicalJson(simulation.snapshot())).toBe(before);
+    // 事件仍在队首，重试得到同样的错误。
+    expect(failureOf(simulation).code).toBe('handler-failed');
+  });
+
+  it('keeps the original error code when a schema violation comes with a non-JSON value', () => {
+    const simulation = probeSimulation('nan-and-invalid');
+    const failure = failureOf(simulation);
+    expect(failure.code).toBe('invariant-violation');
+    expect(failure.details.join('\n')).toContain('Enrolled in tertiary');
+    expect(simulation.snapshot().world).toEqual({});
   });
 });
