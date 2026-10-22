@@ -31,6 +31,8 @@
   --color-warning-ink: #8a5a12;
   --color-danger: #d45b66;
   --color-danger-ink: #b23a47;
+  --color-daily: #8a7bc8;
+  --color-daily-ink: #5a4a96;
 
   --color-focus: #12658a;
   --color-guilloche: rgba(18, 101, 138, 0.07);
@@ -98,6 +100,8 @@
     --color-warning-ink: #f0c27a;
     --color-danger: #e2737d;
     --color-danger-ink: #ff9aa3;
+    --color-daily: #a897e6;
+    --color-daily-ink: #cbbcff;
 
     --color-focus: #8fdcff;
     --color-guilloche: rgba(143, 220, 255, 0.06);

@@ -58,6 +58,8 @@ const PAIRS: readonly [string, string, number][] = [
   ['--color-success-ink', '--color-surface', 4.5],
   ['--color-warning-ink', '--color-surface', 4.5],
   ['--color-danger-ink', '--color-surface', 4.5],
+  ['--color-daily-ink', '--color-surface', 4.5],
+  ['--color-daily-ink', '--color-surface-muted', 4.5],
   ['--color-border-strong', '--color-surface', 3],
   ['--color-text-faint', '--color-surface', 3],
 ];

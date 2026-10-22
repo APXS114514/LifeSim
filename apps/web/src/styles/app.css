@@ -995,6 +995,10 @@
   color: var(--color-success-ink);
 }
 
+.fact-daily .fact-icon {
+  color: var(--color-daily-ink);
+}
+
 .fact-life .fact-text,
 .fact-decision .fact-text {
   font-weight: 650;
@@ -1421,8 +1425,10 @@
 
 .life-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+  /* 手机窄屏（含 320px 与 390—430px）每行不超过 10 格；宽屏也不超过 10 格，格子不会大到失真。 */
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 3px;
+  max-width: 420px;
   margin: 0 0 var(--space-3);
   padding: 0;
   list-style: none;
@@ -1475,6 +1481,12 @@
 .grid-legend-item[data-category='history'] .grid-swatch {
   border-color: var(--color-text-secondary);
   background: var(--color-text-secondary);
+}
+
+.grid-cell[data-category='daily'],
+.grid-legend-item[data-category='daily'] .grid-swatch {
+  border-color: var(--color-daily);
+  background: var(--color-daily);
 }
 
 .grid-cell[data-category='finance'],

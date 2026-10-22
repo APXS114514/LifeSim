@@ -1,10 +1,10 @@
 import { loadRequiredPacks } from '@lifesim/country-packs';
-import type { EMPLOYMENT_STATUSES, Locale } from '@lifesim/content-schema';
+import type { EMPLOYMENT_STATUSES, ISODate, Locale } from '@lifesim/content-schema';
 import { LIFE_NARRATIVE } from '@lifesim/systems';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cohort, describeCohortMember, type CohortView } from '../game/cohort.ts';
-import { buildLifeGrid, type GridCategory } from '../game/life-grid.ts';
+import { buildLifeGrid, GRID_CATEGORIES, revealedGridInput } from '../game/life-grid.ts';
 import { buildSurvivalCurve } from '../game/survival.ts';
 import type { GameSession } from '../game/session.ts';
 
@@ -12,27 +12,13 @@ import type { GameSession } from '../game/session.ts';
  * 同龄对照（M4-020）：同一秒出生的四个人、生存曲线与人生方格。
  *
  * 三块都是只读的对照信息，全部在本机算：不推进玩家这一局、不写存档、不写偏好、不进时间线。
- * 面板默认折叠，展开时才建 `Cohort` 并一次性推进到玩家时钟，之后只在玩家时钟变化时跟进。
+ * 面板默认折叠，展开时才建 `Cohort` 并一次性推进到当前揭示日期，之后只在揭示进度变化时跟进。
  */
 
 type PanelStatus = 'collapsed' | 'loading' | 'ready' | 'unavailable';
 
 /** 就业状态的显示键与底层契约同一来源。 */
 type EmploymentStatus = (typeof EMPLOYMENT_STATUSES)[number];
-
-/** 方格图例的顺序与着色一致。 */
-const GRID_CATEGORIES: readonly GridCategory[] = [
-  'life',
-  'decision',
-  'education',
-  'career',
-  'health',
-  'family',
-  'history',
-  'finance',
-  'other',
-  'none',
-];
 
 const CHART_WIDTH = 320;
 const CHART_HEIGHT = 168;
@@ -54,20 +40,30 @@ function chartY(survived: number): number {
   return CHART_TOP + (1 - survived) * height;
 }
 
-export function CohortPanel({ session, locale }: { session: GameSession; locale: Locale }) {
+export function CohortPanel({
+  session,
+  locale,
+  visibleCount,
+  revealDate,
+}: {
+  session: GameSession;
+  locale: Locale;
+  /** 时间线当前已揭示的事实条数；方格与四人都不能越过它。 */
+  visibleCount: number;
+  /** 年进度条显示的日期（≤ 权威时钟）；四人推进与方格年份都以它为准。 */
+  revealDate: ISODate;
+}) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<PanelStatus>('collapsed');
   const [cohort, setCohort] = useState<Cohort | null>(null);
 
-  const clock = session.clock;
   const seed = session.request.seed;
   const birthDate = session.birth.birthDate;
   const packId = session.birth.packId;
   const region = session.region;
   const facts = session.facts;
   const birthYear = Number(birthDate.slice(0, 4));
-  const currentYear = Number(clock.slice(0, 4));
   const seriesEndYear = region.evidence.mortality.yearRange[1];
 
   /** 展开那一刻才加载所需的国别数据并建出四个人；折叠时不创建。 */
@@ -79,7 +75,7 @@ export function CohortPanel({ session, locale }: { session: GameSession; locale:
     void loadRequiredPacks('random')
       .then(() => {
         const created = new Cohort({ seed, birthDate });
-        created.advanceTo(clock);
+        created.advanceTo(revealDate);
         setCohort(created);
         setStatus('ready');
       })
@@ -88,26 +84,31 @@ export function CohortPanel({ session, locale }: { session: GameSession; locale:
       });
   }
 
-  // 每次渲染都把四个人补到玩家时钟；已到达或玩家时钟后退时是幂等空操作，所以不触发额外渲染。
+  // 每次渲染都把四个人补到「已揭示」的日期；已到达或日期后退时是幂等空操作。
+  // 用揭示日期而不是权威时钟：播放动画时不能提前显示他们下一年的状态或去世格（M4-020b）。
   const views = useMemo(() => {
     if (cohort === null) return [];
-    cohort.advanceTo(clock);
-    return cohort.members.map((member) => describeCohortMember(member, clock, packId));
-  }, [cohort, clock, packId]);
+    cohort.advanceTo(revealDate);
+    return cohort.members.map((member) => describeCohortMember(member, revealDate, packId));
+  }, [cohort, revealDate, packId]);
 
-  // 折叠时不读快照；展开后按权威时钟取去世年份（尚在世为 null）。
-  let deathYear: number | null = null;
-  if (open) {
-    const snapshot = session.simulation.snapshot();
-    const protagonist = snapshot.actors.find((actor) => actor.id === snapshot.activeCharacterId);
-    if (protagonist?.vitalStatus.kind === 'deceased') {
-      deathYear = Number(protagonist.vitalStatus.deathDate.slice(0, 4));
-    }
-  }
+  // 方格只读时间线已经揭示的事实；去世格也要等死亡事实揭示后才出现。
+  const revealed = useMemo(
+    () => revealedGridInput({ facts, visibleCount, revealDate }),
+    [facts, visibleCount, revealDate],
+  );
 
   const grid = useMemo(
-    () => (open ? buildLifeGrid({ birthYear, deathYear, currentYear, facts }) : []),
-    [open, birthYear, deathYear, currentYear, facts],
+    () =>
+      open
+        ? buildLifeGrid({
+            birthYear,
+            deathYear: revealed.deathYear,
+            currentYear: revealed.currentYear,
+            facts: revealed.facts,
+          })
+        : [],
+    [open, birthYear, revealed],
   );
 
   const curve = useMemo(

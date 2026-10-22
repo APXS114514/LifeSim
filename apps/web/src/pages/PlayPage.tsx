@@ -316,6 +316,8 @@ export function PlayPage({
             key={session.request.seed + '|' + session.birth.birthDate}
             session={session}
             locale={locale}
+            visibleCount={view.visibleCount}
+            revealDate={view.date}
           />
 
           <Timeline
