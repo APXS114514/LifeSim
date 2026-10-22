@@ -8,7 +8,20 @@ import { addYears, canonicalJson, type Simulation } from '@lifesim/simulation-co
 import { describe, expect, it } from 'vitest';
 import { createLifeSimulation, restoreLifeSimulation } from './module.ts';
 import { npcBirthdayRequest, npcFactType, npcRoleOf, promoteToTier1 } from './npc.ts';
-import type { RegionModel } from './region.ts';
+import type { EducationSystem, RegionModel } from './region.ts';
+
+/** 夹具的 D 级学制（虚构）：数值与 `rules` 的学制常数一致。 */
+const FIXTURE_EDUCATION: EducationSystem = {
+  primaryStartAge: 6,
+  primaryYears: 6,
+  secondaryYears: 6,
+  tertiaryYears: 4,
+  compulsoryYears: 0,
+  entranceExam: { kind: 'none' },
+  feeShare: 0,
+  grade: 'D',
+  sourceIds: ['fixture:m3-011'],
+};
 import { EVENT } from './shared.ts';
 
 const FOREVER = { targetDate: '2200-01-01', stopAtMajorDecision: false, maxWorkUnits: 1_000_000 };
@@ -73,7 +86,11 @@ const FIXTURE_REGION: RegionModel = {
     evidenceFor: () => METADATA,
   },
   queries: {
-    education: { secondaryEnrollmentRate: () => null, upperSecondaryCompletionRate: () => null },
+    education: {
+      secondaryEnrollmentRate: () => null,
+      upperSecondaryCompletionRate: () => null,
+      systemAt: () => FIXTURE_EDUCATION,
+    },
     labor: { participationRate: () => null, agricultureShare: () => null },
     prices: { cpi: () => null, toRealMinor: (nominalMinor) => nominalMinor },
     health: { outOfPocketShare: () => null, expenditurePerCapitaUsd: () => null },

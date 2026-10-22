@@ -37,9 +37,39 @@ export interface RegionTables {
   evidenceFor(indicator: Indicator): EvidenceMeta;
 }
 
+/**
+ * 教育制度（ADR-0007 2026-10-21 增补）：某一年的学制、升学考试与学费规则。
+ *
+ * 它是**规则数据**而不是统计序列：不进 `DataRegistry` 的回退链，也不占用 `Indicator` 枚举。
+ * 金额只作**名义**比例，不做 CPI 折算（折算归 M3-014 / Q14）。
+ */
+export interface EducationSystem {
+  /** 入学年龄（小学一年级开始的周岁）。 */
+  readonly primaryStartAge: number;
+  /** 各级修业年限（年）：小学、中学、高等。 */
+  readonly primaryYears: number;
+  readonly secondaryYears: number;
+  readonly tertiaryYears: number;
+  /** 义务教育年限；0 表示该年没有义务教育。 */
+  readonly compulsoryYears: number;
+  /** 升学考试：没有考试，或有考试与基础通过率（0—1）。 */
+  readonly entranceExam:
+    { readonly kind: 'none' } | { readonly kind: 'exam'; readonly passBase: number };
+  /**
+   * 非义务教育阶段的年度学费与杂费占当年生活费的比例（0 表示学费全免）。
+   * 义务教育年限内一律按 0 计；比例只作名义金额，不折算。
+   */
+  readonly feeShare: number;
+  /** 该条目的证据等级：有已登记教育法规来源为 C，没有来源的设计假设为 D。 */
+  readonly grade: 'C' | 'D';
+  readonly sourceIds: readonly string[];
+}
+
 export interface EducationQueries {
   secondaryEnrollmentRate(year: number, settlement: Origin['settlement']): DataValue | null;
   upperSecondaryCompletionRate(year: number, settlement: Origin['settlement']): DataValue | null;
+  /** 该年的学制；没有国别来源时返回 D 级设计假设（界面必须披露）。 */
+  systemAt(year: number): EducationSystem;
 }
 
 export interface LaborQueries {

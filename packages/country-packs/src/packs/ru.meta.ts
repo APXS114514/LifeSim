@@ -5,6 +5,7 @@
 // 1992—1993 年苏联卢布按 1:1 换成俄罗斯卢布，不是重定值，仍属币制版本 2。
 import type { HistoricalAnchor } from '@lifesim/content-schema';
 import type { CountryPack } from '../schema.ts';
+import { RU_EDUCATION } from './ru.education.ts';
 
 const RU_EVIDENCE = (year: number) => ({
   grade: 'A' as const,
@@ -201,6 +202,7 @@ export const RU_METADATA: Omit<CountryPack, 'series'> = {
       '3': { 'zh-Hans': '俄罗斯卢布', en: 'Russian ruble' },
     },
   },
+  education: RU_EDUCATION,
   anchors: (
     [
       {

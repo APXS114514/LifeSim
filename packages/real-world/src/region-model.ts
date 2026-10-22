@@ -21,12 +21,14 @@ import {
   selectBirth,
   type BirthContext,
   type CountryPack,
+  type EducationSegment,
 } from '@lifesim/country-packs';
 import type { DataRegistry } from '@lifesim/data-registry';
 import {
   createLifeSimulation,
   type DataQuality,
   type DataValue,
+  type EducationSystem,
   type RegionEffects,
   type RegionModel,
   type RegionQueries,
@@ -157,6 +159,56 @@ function tableEvidence(pack: CountryPack): Record<keyof RegionModel['evidence'],
   };
 }
 
+/**
+ * 按年份选出教育制度分段（ADR-0007 增补）：命中就返回原条目；没有分段覆盖该年时，
+ * 退回「最近一条有依据的学制」并把证据降为 D 级（增补 §决定 5）。同距离时取较早的分段，
+ * 保证同一输入在任何平台都得到同一结果。
+ */
+export function educationSegmentAt(
+  segments: readonly EducationSegment[],
+  year: number,
+): { segment: EducationSegment; exact: boolean } {
+  const first = segments[0];
+  if (!first) throw new Error('Education segments are empty');
+  const distance = (segment: EducationSegment): number => {
+    if (year < segment.validFrom) return segment.validFrom - year;
+    if (segment.validTo !== null && year > segment.validTo) return year - segment.validTo;
+    return 0;
+  };
+  let best = first;
+  let bestDistance = distance(first);
+  for (const segment of segments) {
+    const current = distance(segment);
+    if (
+      current < bestDistance ||
+      (current === bestDistance && segment.validFrom < best.validFrom)
+    ) {
+      best = segment;
+      bestDistance = current;
+    }
+  }
+  return { segment: best, exact: bestDistance === 0 };
+}
+
+/** 把分段映射成规则可消费的学制；借用相邻年代的分段时把证据等级降到 D。 */
+export function educationSystemAt(
+  segments: readonly EducationSegment[],
+  year: number,
+): EducationSystem {
+  const { segment, exact } = educationSegmentAt(segments, year);
+  return {
+    primaryStartAge: segment.primaryStartAge,
+    primaryYears: segment.primaryYears,
+    secondaryYears: segment.secondaryYears,
+    tertiaryYears: segment.tertiaryYears,
+    compulsoryYears: segment.compulsoryYears,
+    entranceExam: segment.entranceExam,
+    feeShare: segment.feeShare,
+    grade: exact ? segment.grade : 'D',
+    sourceIds: [...segment.sourceIds],
+  };
+}
+
 export interface RealRegionOptions {
   /** 出生地；省略时用该国的其他城镇人口池。 */
   placeId?: string;
@@ -253,6 +305,7 @@ export function createRealRegion(
       secondaryEnrollmentRate: (year) => tables.value('education-enrollment-secondary', year),
       upperSecondaryCompletionRate: (year) =>
         tables.value('education-completion-upper-secondary', year),
+      systemAt: (year) => educationSystemAt(pack.education, year),
     },
     labor: {
       participationRate: (year) => tables.value('labor-force-participation', year),

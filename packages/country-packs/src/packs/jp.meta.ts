@@ -5,6 +5,7 @@
 // - 冲绳在 1972-05-15 之前由美国管理；M2 不单列冲绳，人口池地点按日本处理。
 import type { HistoricalAnchor } from '@lifesim/content-schema';
 import type { CountryPack } from '../schema.ts';
+import { JP_EDUCATION } from './jp.education.ts';
 
 /** 日本国家包。 */
 export const JP_METADATA: Omit<CountryPack, 'series'> = {
@@ -148,6 +149,7 @@ export const JP_METADATA: Omit<CountryPack, 'series'> = {
     initialVersion: 1,
     versionNames: { '1': { 'zh-Hans': '日元', en: 'Japanese yen' } },
   },
+  education: JP_EDUCATION,
   anchors: (
     [
       ['anchor:jp-recession-1973', '1973-11-01', 'recession', 1973],
