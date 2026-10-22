@@ -509,10 +509,16 @@ export class Simulation implements SimulationEngine {
     };
   }
 
-  #makeContext(occurrence: Occurrence, definition: EventDefinition, draft: SimState) {
+  #makeContext(
+    occurrence: Occurrence,
+    definition: EventDefinition,
+    draft: SimState,
+    transaction: DraftTransaction,
+  ) {
     const facts: SimEventFact[] = [];
     const scheduled: Occurrence[] = [];
-    const scheduledKeys = new Set<string>();
+    /** 已安排事件的幂等键；只有真的安排了事件才分配（多数事件不安排或只安排一个）。 */
+    let scheduledKeys: Set<string> | null = null;
     // 随机流按需派生：多数事件不抽样，而派生一次要算 128 位散列并构造 sfc32 生成器。
     // 派生只取决于（根种子，事件幂等键），与读它的时机无关，所以结果不变。
     let random: RandomStream | null = null;
@@ -535,7 +541,19 @@ export class Simulation implements SimulationEngine {
       },
       choice: null,
       actor: (id: string): CharacterState => {
-        const actor = draft.actors.find((candidate) => candidate.id === id);
+        const list = draft.actors as readonly CharacterState[];
+        // 角色列表没被写过时，先在已提交的原始数组上按值找到下标，再只把那一个包成草稿。
+        // 直接 find 会让每个被跳过的候选也生成草稿代理（每局约 800 个多余节点）。
+        const committed = transaction.committedBaseOf(list) as readonly CharacterState[] | null;
+        if (committed !== null) {
+          for (let index = 0; index < committed.length; index++) {
+            const candidate = committed[index];
+            if (candidate !== undefined && candidate.id === id)
+              return list[index] as CharacterState;
+          }
+          throw fail('handler-failed', `Unknown actor ${id}`);
+        }
+        const actor = list.find((candidate) => candidate.id === id);
         if (!actor) throw fail('handler-failed', `Unknown actor ${id}`);
         return actor;
       },
@@ -569,16 +587,18 @@ export class Simulation implements SimulationEngine {
             `Cannot schedule ${request.type} in the past (${request.at})`,
           );
         }
-        const target = this.#definition(request.type, {
-          seed: this.seed,
-          eventKey: occurrence.key,
-          at: occurrence.at,
-        });
+        // 直接查注册表：成功路径上不构造只为报错而存在的上下文对象。
+        // 报错上下文与 #definition 逐字相同（种子、事件键、日期）。
+        const target = this.#registry.get(request.type);
+        if (!target) {
+          throw this.#error('unknown-event', `No definition for ${request.type}`, occurrence);
+        }
         const key = occurrenceKey(request.type, request.entityId, request.period);
         if (this.#processed.has(key) || key === occurrence.key) {
           throw fail('duplicate-event-key', `Event ${key} was already processed (event cycle)`);
         }
-        if (this.#queue.has(key) || scheduledKeys.has(key)) return; // 幂等：已在队列中
+        // 幂等：已在队列中。scheduledKeys 只在真的安排过事件后才存在。
+        if (this.#queue.has(key) || (scheduledKeys !== null && scheduledKeys.has(key))) return;
         if (scheduled.length >= this.#limits.maxSchedulesPerEvent) {
           throw fail(
             'too-many-schedules',
@@ -608,7 +628,7 @@ export class Simulation implements SimulationEngine {
           causeFactIds,
           depth,
         });
-        scheduledKeys.add(key);
+        (scheduledKeys ??= new Set()).add(key);
       },
     };
     return { context, facts, scheduled };
@@ -714,6 +734,7 @@ export class Simulation implements SimulationEngine {
         occurrence,
         definition,
         transaction.root,
+        transaction,
       );
       try {
         if (definition.decision)
