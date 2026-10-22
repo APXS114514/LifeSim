@@ -390,4 +390,3 @@ M3-009 必须先合入，后续任务才能共享 `queries`；M3-010/011 只依�
 
 - 在 `EducationQueries` 上加方法是**接口扩展**：所有 `RegionModel` 实现（`real-world`、`synthetic-world`、`systems` 的测试夹具）都要实现，属 M3-012 允许的改动面。
 - M3-012 提升 `SYSTEMS_VERSION`；教育行为的年代差异会改变事实，**黄金指纹一次性更新**并由维护者批准；不得为了让测试通过而调整阈值。
-
