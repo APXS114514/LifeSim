@@ -1,6 +1,13 @@
 import { canonicalJson } from '@lifesim/simulation-core';
 import { describe, expect, it, vi } from 'vitest';
-import { COHORT_SIZE, Cohort, advanceCohortSimulation, cohortRequest } from './cohort.ts';
+import {
+  COHORT_SIZE,
+  Cohort,
+  advanceCohortSimulation,
+  advanceCohortStep,
+  cohortRequest,
+  needsCohortAdvance,
+} from './cohort.ts';
 import { GameSession } from './session.ts';
 
 const FIXED_BIRTH_DATE = '1978-05-04';
@@ -109,6 +116,54 @@ describe('the four born that day', () => {
     // 玩家时钟后退时也是空操作（内核会拒绝日期回退）。
     cohort.advanceTo('1985-05-04');
     expect(cohort.members.map((member) => member.simulation.facts.length)).toEqual(before);
+  }, 60_000);
+
+  it('advancing one year per frame matches one uninterrupted advance', () => {
+    const input = { seed: 'cohort-stepwise', birthDate: FIXED_BIRTH_DATE };
+    const target = '2000-05-04';
+    const oneShot = new Cohort(input);
+    oneShot.advanceTo(target);
+
+    const stepwise = new Cohort(input);
+    let rounds = 0;
+    do {
+      for (const member of stepwise.members) {
+        advanceCohortStep(member, target);
+        expect(member.simulation.clock <= target).toBe(true);
+      }
+      rounds += 1;
+      if (rounds > 200) throw new Error('Stepwise cohort advance did not converge');
+    } while (stepwise.members.some((member) => needsCohortAdvance(member, target)));
+
+    for (let index = 0; index < COHORT_SIZE; index += 1) {
+      const member = oneShot.members[index];
+      const twin = stepwise.members[index];
+      if (!member || !twin) throw new Error('Cohort lost a member');
+      expect(canonicalJson(twin.simulation.snapshot())).toBe(
+        canonicalJson(member.simulation.snapshot()),
+      );
+      expect(canonicalFacts(twin)).toBe(canonicalFacts(member));
+    }
+  }, 60_000);
+
+  it('settles the birth day even when the target is already the current clock', () => {
+    const input = { seed: 'cohort-birth-settle', birthDate: FIXED_BIRTH_DATE };
+    const oneShot = new Cohort(input);
+    oneShot.advanceTo(FIXED_BIRTH_DATE);
+
+    const stepwise = new Cohort(input);
+    for (const member of stepwise.members) advanceCohortStep(member, FIXED_BIRTH_DATE);
+
+    for (let index = 0; index < COHORT_SIZE; index += 1) {
+      const member = oneShot.members[index];
+      const twin = stepwise.members[index];
+      if (!member || !twin) throw new Error('Cohort lost a member');
+      expect(twin.simulation.clock).toBe(FIXED_BIRTH_DATE);
+      expect(canonicalJson(twin.simulation.snapshot())).toBe(
+        canonicalJson(member.simulation.snapshot()),
+      );
+      expect(canonicalFacts(twin)).toBe(canonicalFacts(member));
+    }
   }, 60_000);
 
   it('stops advancing a member who has died', () => {

@@ -114,3 +114,25 @@ export function buildSurvivalCurve(input: {
     truncatedAt,
   };
 }
+
+/** 画图用的分段：观测期用实线、情景期用虚线，缺数据时在最末点打标记。 */
+export interface SurvivalChartSegments {
+  /** 观测期（含 WPP 的 projected 年份，等级 B）。 */
+  readonly observed: readonly SurvivalPoint[];
+  /** 情景段；第一点重复观测期最后一点作为连接锚点，没有情景时为空。 */
+  readonly scenario: readonly SurvivalPoint[];
+  /** 数据缺口前最后一个已知点；没有缺口时为 null。 */
+  readonly missingPoint: SurvivalPoint | null;
+}
+
+export function survivalChartSegments(curve: SurvivalCurve): SurvivalChartSegments {
+  const observed = curve.points.filter((point) => point.method === 'period-table');
+  const scenario = curve.points.filter((point) => point.method === 'scenario-hold-last');
+  const anchor = observed[observed.length - 1] ?? null;
+  const last = curve.points[curve.points.length - 1] ?? null;
+  return {
+    observed,
+    scenario: anchor !== null && scenario.length > 0 ? [anchor, ...scenario] : scenario,
+    missingPoint: curve.truncatedAt === null ? null : last,
+  };
+}
