@@ -176,7 +176,7 @@ const characterStateIssues = (character: CharacterState): CharacterStateIssue[] 
 /**
  * 角色状态的跨字段违规说明；空数组表示通过。
  *
- * `CharacterStateSchema` 在字段校验之后跑的就是这两条规则里的同一份实现（单一来源）；
+ * `CharacterStateSchema` 在字段校验之后跑的就是这里的同一份实现（单一来源）；
  * 内核按「本事件改过哪些字段」复用字段校验结果时，用它把跨字段规则补上。
  */
 export function characterStateViolations(character: CharacterState): string[] {
