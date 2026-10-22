@@ -7,3 +7,5 @@ export * from './narrative.ts';
 export * from './summary.ts';
 export * from './indicators.ts';
 export * from './yearly-focus.ts';
+export * from './life-events.ts';
+export * from './life-events-catalog.ts';

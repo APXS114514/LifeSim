@@ -169,13 +169,19 @@
     "recommended": "按人生原则建议：{{option}}",
     "types": {
       "choice.after-secondary": "中学毕业后的选择",
-      "choice.treatment": "是否治疗"
+      "choice.treatment": "是否治疗",
+      "life.hobby-found.choice": "新找到的爱好",
+      "life.learn-skill.choice": "学一门手艺"
     },
     "options": {
       "apply-university": "报考大学",
       "start-work": "直接工作",
       "treat": "接受治疗",
-      "forgo": "不接受治疗"
+      "forgo": "不接受治疗",
+      "pursue": "认真投入",
+      "casual": "偶尔玩玩",
+      "finish": "坚持学完",
+      "give-up": "不再学下去"
     },
     "ineligible": {
       "unaffordable": "负担不起",

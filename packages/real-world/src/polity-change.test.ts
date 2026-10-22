@@ -181,6 +181,6 @@ describe('polity-change anchors in a real life', () => {
 
   it('records the systems version used by the new rules', () => {
     const session = ru1978Session('polity-9');
-    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe('0.7.0');
+    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe('0.8.0');
   });
 });

@@ -169,13 +169,19 @@
     "recommended": "Life principles recommend: {{option}}",
     "types": {
       "choice.after-secondary": "After secondary school",
-      "choice.treatment": "Whether to seek treatment"
+      "choice.treatment": "Whether to seek treatment",
+      "life.hobby-found.choice": "A new hobby",
+      "life.learn-skill.choice": "Learning a skill"
     },
     "options": {
       "apply-university": "Apply to university",
       "start-work": "Start working",
       "treat": "Seek treatment",
-      "forgo": "Go without treatment"
+      "forgo": "Go without treatment",
+      "pursue": "Take it seriously",
+      "casual": "Keep it casual",
+      "finish": "See it through",
+      "give-up": "Stop learning"
     },
     "ineligible": {
       "unaffordable": "Unaffordable",

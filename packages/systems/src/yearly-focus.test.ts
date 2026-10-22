@@ -131,9 +131,12 @@ describe('M3-041 yearly focus', () => {
     const birth = own(run('defaults', 'family', 0));
     expect(birth.wellbeing.stress).toBe(0.3);
     expect(birth.social.ties).toBe(0.5);
+    // M3-042 的通用人生事件在同一年也会改压力与社交联系，且不受重点影响（抽样按原型、实体、年份隔离）；
+    // 所以与同一种子的「均衡」对照，差值恰好是「家庭与人际」的年度增量（压力 −0.01、联系 +0.03）。
     const afterYear = own(run('defaults', 'family', 1));
-    expect(afterYear.wellbeing.stress).toBeCloseTo(0.29);
-    expect(afterYear.social.ties).toBeCloseTo(0.53);
+    const balancedYear = own(run('defaults', 'balanced', 1));
+    expect(afterYear.wellbeing.stress - balancedYear.wellbeing.stress).toBeCloseTo(-0.01);
+    expect(afterYear.social.ties - balancedYear.social.ties).toBeCloseTo(0.03);
   });
 
   it('clamps repeated fine-state changes and leaves every NPC unchanged', () => {
