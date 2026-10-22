@@ -3,7 +3,7 @@ import { ageOn, type EventContext, type SimState } from '@lifesim/simulation-cor
 import type { RegionModel } from './region.ts';
 
 /** 系统规则版本：规则行为变化时提升，写入快照的 `dataPackVersions.systems`。 */
-export const SYSTEMS_VERSION = '0.8.0';
+export const SYSTEMS_VERSION = '0.9.0';
 
 export const PROTAGONIST_ID = 'char:protagonist';
 

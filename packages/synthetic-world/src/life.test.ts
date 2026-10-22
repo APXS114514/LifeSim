@@ -281,7 +281,12 @@ describe('the major decision after secondary school', () => {
     expect(decision?.details).toMatchObject({ option: 'start-work', decidedBy: 'player' });
     const afterDecision = work.facts.filter((fact) => fact.at === '1993-09-01');
     expect(afterDecision.some((fact) => fact.type.startsWith('career.'))).toBe(true);
-    expect(work.facts.some((fact) => fact.type === 'education.admitted')).toBe(false);
+    // M3-012b：admitted 现在同时记录中学与大学录取；这里断言的是「没有大学录取」。
+    expect(
+      work.facts.some(
+        (fact) => fact.type === 'education.admitted' && fact.details?.['stage'] === 'tertiary',
+      ),
+    ).toBe(false);
 
     const university = startLife(seed, birthDate, { decisions: { [key]: 'apply-university' } });
     university.advanceTo(FOREVER);

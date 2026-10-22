@@ -8,9 +8,11 @@
 // User approved M3-041: 65 yearly-focus audits added; 85 previous facts preserve content and causes.
 // User approved M3-042: 20 life-event prototypes add 150 prototype facts + 7 non-major choices;
 // the 150 previous facts keep their content and causes (only 48 settlement balances differ from spending).
+// User approved M3-012: education is decided by year; synthetic world has no compulsory schooling, so one
+// secondary selection fact (education.admission-failed, 1972) is added and primary-started gains details.stage.
 export const GOLDEN_LIFE = {
   seed: 'golden-1',
   birthDate: '1960-03-15',
-  factCount: 307,
-  fingerprint: 'bd77b163672cd6f299e60c2f6060a866',
+  factCount: 308,
+  fingerprint: 'a1848a94ee1cf66c9b438a38fb71e7d4',
 } as const;

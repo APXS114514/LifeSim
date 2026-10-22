@@ -123,10 +123,16 @@ export const LIFE_NARRATIVE = {
         'not-enrolled': '没有上学。',
         'primary-completed': '小学毕业。',
         'secondary-started': '升入中学。',
-        'left-school': '小学毕业后没有继续上学。',
+        'left-school': '没有继续上学。',
         'secondary-completed': '中学毕业。',
-        admitted: '考上了大学。',
-        'admission-failed': '没有考上大学。',
+        // M3-012b：资格考试、录取、入学与学费分开记录。
+        'exam-passed': '通过了{{stage}}升学考试。',
+        'exam-failed': '没有通过{{stage}}升学考试。',
+        admitted: '被{{stage}}录取。',
+        'admission-failed': '没有被{{stage}}录取。',
+        enrolled: '办理了{{stage}}入学。',
+        'tuition-paid': '缴纳{{stage}}学费 {{feeMinor}}（{{currency}}），余额 {{balanceMinor}}。',
+        'cannot-afford': '交不起{{stage}}的学费 {{feeMinor}}（{{currency}}），没能入学。',
         'tertiary-completed': '大学毕业。',
       },
       career: {
@@ -187,6 +193,7 @@ export const LIFE_NARRATIVE = {
       decidedBy: { player: '本人选择', preset: '按预设', principles: '按人生原则' },
       role: { mother: '母亲', father: '父亲', relative: '亲属' },
       education: { none: '未受教育', primary: '小学', secondary: '中学', tertiary: '大学' },
+      stage: { primary: '小学', secondary: '中学', tertiary: '大学' },
       otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
       // M3-042：爱好与技能的显示文字（D 级设计假设）。
       hobby: { chess: '下棋', books: '读书', singing: '唱歌', painting: '画画', fishing: '钓鱼' },
@@ -318,10 +325,18 @@ export const LIFE_NARRATIVE = {
         'not-enrolled': 'Never started school.',
         'primary-completed': 'Finished primary school.',
         'secondary-started': 'Went on to secondary school.',
-        'left-school': 'Left school after primary.',
+        'left-school': 'Did not continue schooling.',
         'secondary-completed': 'Finished secondary school.',
-        admitted: 'Was admitted to university.',
-        'admission-failed': 'Was not admitted to university.',
+        // M3-012b: exams, admission, enrolment and fees are recorded separately.
+        'exam-passed': 'Passed the {{stage}} entrance exam.',
+        'exam-failed': 'Failed the {{stage}} entrance exam.',
+        admitted: 'Was admitted to {{stage}}.',
+        'admission-failed': 'Was not admitted to {{stage}}.',
+        enrolled: 'Enrolled in {{stage}}.',
+        'tuition-paid':
+          'Paid {{feeMinor}} ({{currency}}) in {{stage}} fees; balance {{balanceMinor}}.',
+        'cannot-afford':
+          'Could not afford the {{stage}} fee of {{feeMinor}} ({{currency}}) and did not enrol.',
         'tertiary-completed': 'Graduated from university.',
       },
       career: {
@@ -398,6 +413,7 @@ export const LIFE_NARRATIVE = {
         secondary: 'secondary',
         tertiary: 'university',
       },
+      stage: { primary: 'primary school', secondary: 'secondary school', tertiary: 'university' },
       otherPlace: { 'other-urban': 'other urban areas', 'other-rural': 'other rural areas' },
       // M3-042：爱好与技能的显示文字（D 级设计假设）。
       hobby: {
