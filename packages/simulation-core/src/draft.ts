@@ -42,6 +42,7 @@ function isObject(value: unknown): value is object {
 
 export class DraftTransaction {
   readonly #nodes = new WeakMap<object, DraftNode>();
+  readonly #revokers: (() => void)[] = [];
   /** 处理器拿到的状态草稿。 */
   readonly root: SimState;
   #problem: string | null = null;
@@ -63,21 +64,25 @@ export class DraftTransaction {
   }
 
   /**
-   * 关闭草稿：代理陷阱从此一律抛 TypeError。处理器留下的草稿引用因此改不到任何东西。
+   * 撤销全部代理；之后对草稿的任何读写都会抛 TypeError。
    *
-   * 这里用一个关闭标志，而不是 Proxy.revocable 的 revoke：撤销代理要为每个草稿节点记一个回收函数
-   * （一局人生约 6,000 个节点），关闭时再逐个调用；关闭标志只在陷阱入口多一次私有字段读取。
+   * 用 Proxy.revocable 而不是「普通 Proxy + 关闭标志」：撤销会切断「代理 → 陷阱闭包 → 事务」这条引用，
+   * 处理器若留下一个草稿引用，也不会把整棵草稿树连带留住（实测尾部延迟差一倍）。
    */
   close(): void {
+    if (this.#closed) return;
     this.#closed = true;
+    for (const revoke of this.#revokers) revoke();
+    this.#revokers.length = 0;
   }
 
   // ---------------------------------------------------------------------------
 
   #draftOf(base: object, parent: DraftNode | null): object {
     const node: DraftNode = { base, copy: null, modified: false, parent, assigned: null };
-    const proxy = new Proxy(base, this.#handler(node));
+    const { proxy, revoke } = Proxy.revocable(base, this.#handler(node));
     this.#nodes.set(proxy, node);
+    this.#revokers.push(revoke);
     return proxy;
   }
 
@@ -128,7 +133,6 @@ export class DraftTransaction {
   #handler(node: DraftNode): ProxyHandler<object> {
     return {
       get: (_target, key, receiver) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
         const source = node.copy ?? node.base;
         if (typeof key === 'symbol' || !Object.hasOwn(source, key)) {
           return Reflect.get(source, key, receiver) as unknown;
@@ -136,13 +140,11 @@ export class DraftTransaction {
         return this.#read(node, key);
       },
       set: (_target, key, value) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
         if (typeof key === 'symbol') throw new TypeError('Symbol keys are not allowed in state');
         this.#write(node, key, value);
         return true;
       },
       deleteProperty: (_target, key) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
         if (typeof key === 'symbol') throw new TypeError('Symbol keys are not allowed in state');
         const source = node.copy ?? node.base;
         if (!Object.hasOwn(source, key)) return true;
@@ -152,23 +154,15 @@ export class DraftTransaction {
         return true;
       },
       defineProperty: (_target, key, descriptor) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
         if (typeof key === 'symbol' || !('value' in descriptor)) {
           throw new TypeError('Only plain data properties are allowed in state');
         }
         this.#write(node, key, descriptor.value);
         return true;
       },
-      has: (_target, key) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
-        return key in (node.copy ?? node.base);
-      },
-      ownKeys: () => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
-        return Reflect.ownKeys(node.copy ?? node.base);
-      },
+      has: (_target, key) => key in (node.copy ?? node.base),
+      ownKeys: () => Reflect.ownKeys(node.copy ?? node.base),
       getOwnPropertyDescriptor: (_target, key) => {
-        if (this.#closed) throw new TypeError('Simulation draft is closed');
         const descriptor = Reflect.getOwnPropertyDescriptor(node.copy ?? node.base, key);
         if (descriptor && typeof key === 'string' && isObject(descriptor.value)) {
           descriptor.value = this.#read(node, key);
