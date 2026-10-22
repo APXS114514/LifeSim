@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArchiveCard, Field, FieldGrid, Panel } from '../components/Archive.tsx';
+import { CohortPanel } from '../components/CohortPanel.tsx';
 import { ReflectionCard } from '../components/ReflectionCard.tsx';
 import { planReflection } from '../game/reflections.ts';
 import { DecisionCard } from '../components/DecisionCard.tsx';
@@ -309,6 +310,13 @@ export function PlayPage({
               />
             </>
           )}
+
+          {/* 换一局就重新算：面板状态（展开/已建出的四人）不能跨到下一局。 */}
+          <CohortPanel
+            key={session.request.seed + '|' + session.birth.birthDate}
+            session={session}
+            locale={locale}
+          />
 
           <Timeline
             session={session}
