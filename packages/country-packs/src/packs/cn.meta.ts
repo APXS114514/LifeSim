@@ -4,6 +4,7 @@
 // 1997-03-14 全国人大批准设立重庆直辖市，1997-06-18 正式挂牌。本包以 1997-06-18 作为
 // 新行政单位的生效日；批准日记录在此，供维护者复核（M2-017 的待核实项）。
 import type { CountryPack } from '../schema.ts';
+import { CN_EDUCATION } from './cn.education.ts';
 
 /** 中国大陆国家包。 */
 export const CN_METADATA: Omit<CountryPack, 'series'> = {
@@ -173,6 +174,7 @@ export const CN_METADATA: Omit<CountryPack, 'series'> = {
       '2': { 'zh-Hans': '人民币', en: 'Renminbi' },
     },
   },
+  education: CN_EDUCATION,
   anchors: [
     {
       id: 'anchor:cn-redenomination-1955',

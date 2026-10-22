@@ -2,6 +2,7 @@
 //
 // 已知简化：朝鲜战争期间首尔曾两度被占领，M2 不作为政体变化处理（留给 M3 的历史事件）。
 import type { CountryPack } from '../schema.ts';
+import { KR_EDUCATION } from './kr.education.ts';
 
 const KR_EVIDENCE = (year: number) => ({
   grade: 'A' as const,
@@ -167,6 +168,7 @@ export const KR_METADATA: Omit<CountryPack, 'series'> = {
       '3': { 'zh-Hans': '韩元', en: 'Won' },
     },
   },
+  education: KR_EDUCATION,
   anchors: [
     {
       id: 'anchor:kr-redenomination-1953',

@@ -1,5 +1,31 @@
 import type { EvidenceMeta } from '@lifesim/content-schema';
-import type { RegionModel } from '../region.ts';
+import type { EducationSystem, RegionModel, RegionRules } from '../region.ts';
+
+/** 夹具的学制常数：`systemAt` 与 `rules` 同源，保证夹具行为与旧常数等价。 */
+const FIXTURE_RULES: RegionRules = {
+  primaryStartAge: 6,
+  primaryYears: 6,
+  secondaryYears: 6,
+  tertiaryYears: 4,
+  minimumWorkingAge: 15,
+  retirementAge: 60,
+  pensionRate: 0.5,
+  treatmentAvailableFrom: 1965,
+  treatmentAnnualCostShare: 0.2,
+};
+
+/** 夹具的 D 级学制（虚构）：无义务教育、无升学考试、不收学费。 */
+const FIXTURE_EDUCATION: EducationSystem = {
+  primaryStartAge: FIXTURE_RULES.primaryStartAge,
+  primaryYears: FIXTURE_RULES.primaryYears,
+  secondaryYears: FIXTURE_RULES.secondaryYears,
+  tertiaryYears: FIXTURE_RULES.tertiaryYears,
+  compulsoryYears: 0,
+  entranceExam: { kind: 'none' },
+  feeShare: 0,
+  grade: 'D',
+  sourceIds: ['fixture:m3-011'],
+};
 
 const METADATA: EvidenceMeta = {
   grade: 'D',
@@ -32,17 +58,7 @@ export const FIXTURE_REGION: RegionModel = {
   },
   anchors: [],
   initialMacro: { economyPhase: 'normal', currency: { code: 'FIX', version: 1 } },
-  rules: {
-    primaryStartAge: 6,
-    primaryYears: 6,
-    secondaryYears: 6,
-    tertiaryYears: 4,
-    minimumWorkingAge: 15,
-    retirementAge: 60,
-    pensionRate: 0.5,
-    treatmentAvailableFrom: 1965,
-    treatmentAnnualCostShare: 0.2,
-  },
+  rules: FIXTURE_RULES,
   effects: {
     illnessHiringFactor: 0.6,
     illnessJobLossFactor: 2,
@@ -60,7 +76,11 @@ export const FIXTURE_REGION: RegionModel = {
     evidenceFor: () => METADATA,
   },
   queries: {
-    education: { secondaryEnrollmentRate: () => null, upperSecondaryCompletionRate: () => null },
+    education: {
+      secondaryEnrollmentRate: () => null,
+      upperSecondaryCompletionRate: () => null,
+      systemAt: () => FIXTURE_EDUCATION,
+    },
     labor: { participationRate: () => null, agricultureShare: () => null },
     prices: { cpi: () => null, toRealMinor: (nominalMinor) => nominalMinor },
     health: { outOfPocketShare: () => null, expenditurePerCapitaUsd: () => null },

@@ -11,8 +11,10 @@ import { syntheticFamilyName, syntheticGivenName } from './names.ts';
 import { expDet, lnDet } from '@lifesim/simulation-core';
 import type {
   DataValue,
+  EducationSystem,
   RegionModel,
   RegionQueries,
+  RegionRules,
   RegionTable,
   RegionTables,
 } from '@lifesim/systems';
@@ -162,11 +164,41 @@ const SYNTHETIC_TABLES: RegionTables = {
   evidenceFor: (indicator) => EVIDENCE[TABLE_FOR[indicator]],
 };
 
+/**
+ * 合成地区的学制基线（D 级设计假设，ADR-0003）。`systemAt` 与 `rules` 引用同一组常数，
+ * 保证「按年查询学制」与旧的学制常数**完全等价**：合成人生与黄金指纹不因 M3-012 的接口变化而改变。
+ */
+const SYNTHETIC_RULES: RegionRules = {
+  primaryStartAge: 6,
+  primaryYears: 6,
+  secondaryYears: 6,
+  tertiaryYears: 4,
+  minimumWorkingAge: 15,
+  retirementAge: 60,
+  pensionRate: 0.5,
+  treatmentAvailableFrom: 1965,
+  treatmentAnnualCostShare: 0.2,
+};
+
+/** 合成地区的 D 级学制：没有义务教育与升学考试，也不收学费（与旧行为等价）。 */
+const SYNTHETIC_EDUCATION: EducationSystem = {
+  primaryStartAge: SYNTHETIC_RULES.primaryStartAge,
+  primaryYears: SYNTHETIC_RULES.primaryYears,
+  secondaryYears: SYNTHETIC_RULES.secondaryYears,
+  tertiaryYears: SYNTHETIC_RULES.tertiaryYears,
+  compulsoryYears: 0,
+  entranceExam: { kind: 'none' },
+  feeShare: 0,
+  grade: 'D',
+  sourceIds: ['adr:0003'],
+};
+
 const SYNTHETIC_QUERIES: RegionQueries = {
   education: {
     secondaryEnrollmentRate: (year) => syntheticValue('education-enrollment-secondary', year),
     upperSecondaryCompletionRate: (year) =>
       syntheticValue('education-completion-upper-secondary', year),
+    systemAt: () => SYNTHETIC_EDUCATION,
   },
   labor: {
     participationRate: (year) => syntheticValue('labor-force-participation', year),
@@ -201,17 +233,7 @@ export const syntheticRegion: RegionModel = {
     },
     patronymic: () => null,
   },
-  rules: {
-    primaryStartAge: 6,
-    primaryYears: 6,
-    secondaryYears: 6,
-    tertiaryYears: 4,
-    minimumWorkingAge: 15,
-    retirementAge: 60,
-    pensionRate: 0.5,
-    treatmentAvailableFrom: 1965,
-    treatmentAnnualCostShare: 0.2,
-  },
+  rules: SYNTHETIC_RULES,
   effects: {
     illnessHiringFactor: 0.6,
     illnessJobLossFactor: 2,
