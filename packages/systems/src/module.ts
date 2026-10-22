@@ -20,6 +20,8 @@ import { healthEvents } from './health.ts';
 import { historyEvents } from './history.ts';
 import { identityEvents } from './identity.ts';
 import { lifeEvents } from './life.ts';
+import { LIFE_EVENT_CATALOG } from './life-events-catalog.ts';
+import { lifeEventDefinitions, type LifeEventPrototype } from './life-events.ts';
 import { npcEvents } from './npc.ts';
 import { yearlyFocusEvents } from './yearly-focus.ts';
 import { MacroStateSchema, type RegionModel } from './region.ts';
@@ -109,11 +111,17 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
   ];
 }
 
-export function lifeModule(region: RegionModel): SimulationModule {
+export interface LifeModuleOptions {
+  /** 只供测试注入通用人生事件目录（M3-042）；`createLifeSimulation` 不暴露它。 */
+  lifeEventCatalog?: readonly LifeEventPrototype[];
+}
+
+export function lifeModule(region: RegionModel, options: LifeModuleOptions = {}): SimulationModule {
+  const catalog = options.lifeEventCatalog ?? LIFE_EVENT_CATALOG;
   return {
     id: 'life',
     events: [
-      ...lifeEvents(region),
+      ...lifeEvents(region, catalog),
       ...yearlyFocusEvents(region),
       ...identityEvents(region),
       ...historyEvents(region),
@@ -122,6 +130,7 @@ export function lifeModule(region: RegionModel): SimulationModule {
       ...careerEvents(region),
       ...financeEvents(region),
       ...healthEvents(region),
+      ...lifeEventDefinitions(region, catalog),
     ],
     invariants: lifeInvariants(region),
   };

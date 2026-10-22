@@ -3,7 +3,7 @@ import { ageOn, type EventContext, type SimState } from '@lifesim/simulation-cor
 import type { RegionModel } from './region.ts';
 
 /** 系统规则版本：规则行为变化时提升，写入快照的 `dataPackVersions.systems`。 */
-export const SYSTEMS_VERSION = '0.7.0';
+export const SYSTEMS_VERSION = '0.8.0';
 
 export const PROTAGONIST_ID = 'char:protagonist';
 
@@ -53,6 +53,9 @@ export const PRIORITY = {
   career: 40,
   health: 50,
   treatment: 55,
+  /** M3-042：通用人生事件排在治疗之后，读到当天各系统结算后的状态；有选择的原型第二段紧随其后。 */
+  lifeEvent: 60,
+  lifeEventDecision: 61,
 } as const;
 
 /** 事实 `evidenceIds` 里引用的地区数据表，例如 `ZZ-SYN/mortality`。 */

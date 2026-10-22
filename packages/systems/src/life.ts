@@ -8,6 +8,8 @@ import {
 import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import { z } from 'zod';
 import { createBirthFamily } from './family.ts';
+import { LIFE_EVENT_CATALOG } from './life-events-catalog.ts';
+import { scheduleLifeEventYear, type LifeEventPrototype } from './life-events.ts';
 import { npcBirthdayRequest, npcFactType, npcRoleOf } from './npc.ts';
 import { writeMacro, type MacroState, type RegionModel } from './region.ts';
 import { EVENT, PRIORITY, accountIdFor, ageAt, ageFromPeriod, evidenceId } from './shared.ts';
@@ -46,7 +48,10 @@ export function macroAtBirth(region: RegionModel, birthDate: ISODate): MacroStat
   return macro;
 }
 
-export function lifeEvents(region: RegionModel): EventDefinition[] {
+export function lifeEvents(
+  region: RegionModel,
+  catalog: readonly LifeEventPrototype[] = LIFE_EVENT_CATALOG,
+): EventDefinition[] {
   const birth: EventDefinition = {
     type: EVENT.birth,
     version: 1,
@@ -136,7 +141,7 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
     },
   };
 
-  /** 每个生日先安排后台重点决定，决定结算后再排当年系统事项。 */
+  /** 每个生日先安排后台重点决定，决定结算后再排当年系统事项；通用人生事件的链条也从生日启动（M3-042）。 */
   const birthday: EventDefinition = {
     type: EVENT.birthday,
     version: 1,
@@ -156,6 +161,7 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
         entityId: actor.id,
         period: `age:${age + 1}`,
       });
+      scheduleLifeEventYear(ctx, actor, age, catalog);
     },
   };
 

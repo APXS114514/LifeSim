@@ -6,9 +6,11 @@
  * 为了让测试通过而改这里，等于删除了确定性测试。
  */
 // User approved M3-041: 65 yearly-focus audits added; 85 previous facts preserve content and causes.
+// User approved M3-042: 20 life-event prototypes add 150 prototype facts + 7 non-major choices;
+// the 150 previous facts keep their content and causes (only 48 settlement balances differ from spending).
 export const GOLDEN_LIFE = {
   seed: 'golden-1',
   birthDate: '1960-03-15',
-  factCount: 150,
-  fingerprint: '3d7f9e96b48679d1ef3f96c1795804e0',
+  factCount: 307,
+  fingerprint: 'bd77b163672cd6f299e60c2f6060a866',
 } as const;

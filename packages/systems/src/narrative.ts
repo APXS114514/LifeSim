@@ -13,6 +13,98 @@ export const LIFE_NARRATIVE = {
       life: {
         birth: '出生在{{place}}的一个{{settlement}}家庭，家境{{familyResources}}。',
         death: '{{age}} 岁去世（{{cause}}）。',
+        // M3-042：通用人生事件原型（D 级设计假设，文案原创）。
+        'early-childhood': {
+          'at-home': '在家的日子：吃饭、睡觉，家里人多照看着。',
+          errand: '跟着家里人出门办事，走了很远的路。',
+          'sick-day': '发了一场小病，家里人轮流照看。',
+        },
+        'first-words': { spoke: '开口说出了第一个词。' },
+        'first-steps': { walked: '迈出了第一步。' },
+        'family-time': {
+          meal: '一家人一起吃饭。',
+          holiday: '逢年过节，一家人聚在一起。',
+          radio: '一家人围着收音机听节目。',
+          chore: '跟着家里人做家务。',
+        },
+        'neighborhood-play': {
+          yard: '和邻居家的孩子一起玩。',
+          field: '在田边地头和邻家的孩子一起跑。',
+          street: '在巷子里和邻家的孩子一起玩。',
+        },
+        'first-playmate': { met: '交到了第一个朋友，常常一起玩。' },
+        'school-days': {
+          class: '上课、写作业，学校里的日子过得规律。',
+          exam: '期末考了一回，成绩还过得去。',
+          'sports-day': '参加了学校的运动会。',
+          'self-study': '没有上学，跟着家里人认了几个字。',
+          'left-school': '已经离开学校，跟着家里人学着做事。',
+        },
+        'teen-life': {
+          confide: '有心事的时候，和相熟的同学聊了很久。',
+          sports: '下课后打球、跑步，身体结实起来。',
+          reading: '借到一本旧书，翻来覆去看了好几遍。',
+        },
+        'daily-routine': {
+          commute: '每天按点出门、按点回家，日子被工作填满。',
+          classes: '在课堂与自习之间来回，一年过得很快。',
+          seeking: '一直在找活干，能挣钱的事都问过一遍。',
+          'at-home': '留在家里操持日常，日子过得紧。',
+          'sick-leave': '身体不太爽利，请了长假在家养着。',
+        },
+        'household-affairs': {
+          repairs: '家里修修补补，花了一笔钱：{{costMinor}}（{{currency}}）。',
+          'neighbor-help': '邻里之间互相搭把手。',
+          budget: '把一年的收支算了又算，日子得精打细算。',
+        },
+        'rest-and-recover': {
+          rest: '把节奏放慢，好好歇了一阵。',
+          holiday: '出去走了一趟，花了 {{costMinor}}（{{currency}}）。',
+        },
+        'friend-contact': {
+          visit: '老朋友来串门，聊了一下午。',
+          meal: '和朋友在外面吃了一顿饭，花了 {{costMinor}}（{{currency}}）。',
+        },
+        'retired-days': {
+          walks: '退休后每天出门散步，路线固定。',
+          garden: '在院子里种了些花草菜蔬，天天照看。',
+          chess: '常和同龄人下棋，输赢都不在意。',
+        },
+        'old-age-reflection': {
+          memories: '翻起旧事，想起了很多年前的日子。',
+          photo: '看旧照片，一张一张认过去。',
+        },
+        'great-age-days': {
+          'slow-days': '日子过得很慢，多半时间坐着晒太阳。',
+          'family-visits': '家里人常来看望，屋里热闹了一阵。',
+        },
+        'hobby-found': {
+          found: '找到一件愿意长期做下去的爱好：{{hobby}}。',
+          choice: {
+            pursue: '决定把闲暇时间投进这项爱好。',
+            casual: '只是偶尔玩玩，不当正事。',
+          },
+        },
+        'learn-skill': {
+          finished: '花时间学会了一项手艺：{{skill}}，花了 {{costMinor}}（{{currency}}）。',
+          'gave-up': '试着学了{{skill}}，后来没能坚持。',
+          choice: {
+            finish: '决定把它学完。',
+            'give-up': '决定不再学下去。',
+          },
+        },
+        'minor-mishap': {
+          fall: '摔了一跤，好在只是皮外伤，花了 {{costMinor}}（{{currency}}）。',
+          'lost-item': '丢了一件随身的东西，花了 {{costMinor}}（{{currency}}）补上。',
+          burn: '做饭时烫了手，花了 {{costMinor}}（{{currency}}）买药。',
+        },
+        'write-letters': {
+          sent: '给远方的亲友写了一封信，花了 {{costMinor}}（{{currency}}）邮资。',
+          received: '收到一封远方来的信，读了好几遍。',
+        },
+        reunion: {
+          met: '多年没见的同学约着聚了一次，花了 {{costMinor}}（{{currency}}）。',
+        },
       },
       history: {
         redenomination: '全国实行货币重定值，旧币 {{divisor}} 元兑换新币 1 元。',
@@ -96,6 +188,15 @@ export const LIFE_NARRATIVE = {
       role: { mother: '母亲', father: '父亲', relative: '亲属' },
       education: { none: '未受教育', primary: '小学', secondary: '中学', tertiary: '大学' },
       otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
+      // M3-042：爱好与技能的显示文字（D 级设计假设）。
+      hobby: { chess: '下棋', books: '读书', singing: '唱歌', painting: '画画', fishing: '钓鱼' },
+      skill: {
+        'bicycle-repair': '修自行车',
+        sewing: '缝纫',
+        woodwork: '木工',
+        cooking: '做饭',
+        abacus: '打算盘',
+      },
     },
   },
   en: {
@@ -103,6 +204,100 @@ export const LIFE_NARRATIVE = {
       life: {
         birth: 'Born into a {{settlement}} family of {{familyResources}} means in {{place}}.',
         death: 'Died at {{age}} ({{cause}}).',
+        // M3-042：通用人生事件原型（D 级设计假设，文案原创）。
+        'early-childhood': {
+          'at-home': 'Days at home: meals, naps, and family keeping watch.',
+          errand: 'Went out on errands with family and walked a long way.',
+          'sick-day': 'A short illness; family took turns keeping watch.',
+        },
+        'first-words': { spoke: 'Said the first word.' },
+        'first-steps': { walked: 'Took the first steps.' },
+        'family-time': {
+          meal: 'Ate a meal together with family.',
+          holiday: 'The family gathered for a holiday.',
+          radio: 'The family gathered around the radio.',
+          chore: 'Helped with chores around the home.',
+        },
+        'neighborhood-play': {
+          yard: 'Played with the children from next door.',
+          field: 'Ran with neighbouring children along the fields.',
+          street: 'Played in the lane with neighbouring children.',
+        },
+        'first-playmate': { met: 'Made a first friend and played together often.' },
+        'school-days': {
+          class: 'Classes and homework: school days settled into a routine.',
+          exam: 'Sat the end-of-term exams; the results were passable.',
+          'sports-day': 'Took part in the school sports day.',
+          'self-study': 'Did not attend school; learned a little reading at home.',
+          'left-school': 'Out of school now; learned to help with the work at home.',
+        },
+        'teen-life': {
+          confide: 'Talked for a long time with a classmate about what was on the mind.',
+          sports: 'Played ball and ran after class; grew stronger.',
+          reading: 'Borrowed an old book and read it over and over.',
+        },
+        'daily-routine': {
+          commute: 'Left and came home on schedule; work filled the days.',
+          classes: 'Between lectures and study, the year passed quickly.',
+          seeking: 'Kept looking for work and asked about every opening.',
+          'at-home': 'Stayed at home keeping the household going; money was tight.',
+          'sick-leave': 'Unwell, and took a long leave at home.',
+        },
+        'household-affairs': {
+          repairs: 'Repairs around the home cost {{costMinor}} ({{currency}}).',
+          'neighbor-help': 'Neighbours lent each other a hand.',
+          budget: "Went over the year's budget again and again.",
+        },
+        'rest-and-recover': {
+          rest: 'Slowed down and rested for a while.',
+          holiday: 'Took a trip; it cost {{costMinor}} ({{currency}}).',
+        },
+        'friend-contact': {
+          visit: 'An old friend came by and stayed talking all afternoon.',
+          meal: 'Ate out with a friend; it cost {{costMinor}} ({{currency}}).',
+        },
+        'retired-days': {
+          walks: 'After retirement, a daily walk along a fixed route.',
+          garden: 'Grew flowers and vegetables in the yard and tended them daily.',
+          chess: 'Played chess often with people of the same age, win or lose.',
+        },
+        'old-age-reflection': {
+          memories: 'Looked back and remembered days from long ago.',
+          photo: 'Went through old photographs one by one.',
+        },
+        'great-age-days': {
+          'slow-days': 'Days passed slowly, mostly sitting in the sun.',
+          'family-visits': 'Family visited often; the house was lively for a while.',
+        },
+        'hobby-found': {
+          found: 'Found a hobby worth keeping up: {{hobby}}.',
+          choice: {
+            pursue: 'Decided to put spare time into the hobby.',
+            casual: 'Kept it as an occasional pastime.',
+          },
+        },
+        'learn-skill': {
+          finished:
+            'Took the time to learn a skill — {{skill}} — at a cost of {{costMinor}} ({{currency}}).',
+          'gave-up': 'Tried to learn {{skill}} but did not keep it up.',
+          choice: {
+            finish: 'Decided to see the course through.',
+            'give-up': 'Decided to stop learning it.',
+          },
+        },
+        'minor-mishap': {
+          fall: 'Took a fall; only bruises, and {{costMinor}} ({{currency}}) to treat.',
+          'lost-item':
+            'Lost something carried every day; {{costMinor}} ({{currency}}) to replace it.',
+          burn: 'Burned a hand while cooking; {{costMinor}} ({{currency}}) for medicine.',
+        },
+        'write-letters': {
+          sent: 'Wrote a letter to relatives far away; postage was {{costMinor}} ({{currency}}).',
+          received: 'A letter arrived from far away and was read several times.',
+        },
+        reunion: {
+          met: 'Classmates who had not met for years got together; it cost {{costMinor}} ({{currency}}).',
+        },
       },
       history: {
         redenomination:
@@ -204,6 +399,21 @@ export const LIFE_NARRATIVE = {
         tertiary: 'university',
       },
       otherPlace: { 'other-urban': 'other urban areas', 'other-rural': 'other rural areas' },
+      // M3-042：爱好与技能的显示文字（D 级设计假设）。
+      hobby: {
+        chess: 'chess',
+        books: 'reading',
+        singing: 'singing',
+        painting: 'painting',
+        fishing: 'fishing',
+      },
+      skill: {
+        'bicycle-repair': 'bicycle repair',
+        sewing: 'sewing',
+        woodwork: 'woodwork',
+        cooking: 'cooking',
+        abacus: 'the abacus',
+      },
     },
   },
 } satisfies Record<Locale, unknown>;
