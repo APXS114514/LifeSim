@@ -68,6 +68,14 @@ export const LIFE_NARRATIVE = {
           '已故{{role}}的存款随币制改革换算：{{beforeMinor}}（{{fromCurrency}}）→ {{afterMinor}}（{{toCurrency}}）。',
       },
       choice: {
+        'yearly-focus': {
+          balanced: '这一年以均衡为重点（{{decidedBy}}；效果为设计假设）。',
+          study: '这一年以学习为重点（{{decidedBy}}；效果为设计假设）。',
+          work: '这一年以工作为重点（{{decidedBy}}；效果为设计假设）。',
+          health: '这一年以健康为重点（{{decidedBy}}；效果为设计假设）。',
+          family: '这一年以家庭与人际为重点（{{decidedBy}}；效果为设计假设）。',
+          leisure: '这一年以休闲为重点（{{decidedBy}}；效果为设计假设）。',
+        },
         'after-secondary': {
           'apply-university': '中学毕业后决定报考大学（{{decidedBy}}）。',
           'start-work': '中学毕业后决定直接工作（{{decidedBy}}）。',
@@ -84,7 +92,7 @@ export const LIFE_NARRATIVE = {
       level: { none: '无学历', primary: '小学', secondary: '中学', tertiary: '大学' },
       cause: { illness: '慢性病', other: '其他原因' },
       phase: { normal: '经济正常', recession: '经济衰退中' },
-      decidedBy: { player: '本人选择', principles: '按人生原则' },
+      decidedBy: { player: '本人选择', preset: '按预设', principles: '按人生原则' },
       role: { mother: '母亲', father: '父亲', relative: '亲属' },
       education: { none: '未受教育', primary: '小学', secondary: '中学', tertiary: '大学' },
       otherPlace: { 'other-urban': '其他城镇地区', 'other-rural': '其他农村地区' },
@@ -161,6 +169,15 @@ export const LIFE_NARRATIVE = {
           treat: 'Chose to seek treatment ({{decidedBy}}).',
           forgo: 'Chose not to seek treatment ({{decidedBy}}).',
         },
+        'yearly-focus': {
+          balanced: 'Focused on balance this year ({{decidedBy}}; effects are design assumptions).',
+          study: 'Focused on study this year ({{decidedBy}}; effects are design assumptions).',
+          work: 'Focused on work this year ({{decidedBy}}; effects are design assumptions).',
+          health: 'Focused on health this year ({{decidedBy}}; effects are design assumptions).',
+          family:
+            'Focused on family and relationships this year ({{decidedBy}}; effects are design assumptions).',
+          leisure: 'Focused on leisure this year ({{decidedBy}}; effects are design assumptions).',
+        },
       },
     },
     enums: {
@@ -174,7 +191,11 @@ export const LIFE_NARRATIVE = {
       },
       cause: { illness: 'chronic illness', other: 'other causes' },
       phase: { normal: 'normal economy', recession: 'during a recession' },
-      decidedBy: { player: "player's choice", principles: 'by life principles' },
+      decidedBy: {
+        player: "player's choice",
+        preset: 'by preset',
+        principles: 'by life principles',
+      },
       role: { mother: 'mother', father: 'father', relative: 'relative' },
       education: {
         none: 'no schooling',

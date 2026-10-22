@@ -21,6 +21,7 @@ import { historyEvents } from './history.ts';
 import { identityEvents } from './identity.ts';
 import { lifeEvents } from './life.ts';
 import { npcEvents } from './npc.ts';
+import { yearlyFocusEvents } from './yearly-focus.ts';
 import { MacroStateSchema, type RegionModel } from './region.ts';
 import { EVENT, PROTAGONIST_ID, SYSTEMS_VERSION } from './shared.ts';
 
@@ -113,6 +114,7 @@ export function lifeModule(region: RegionModel): SimulationModule {
     id: 'life',
     events: [
       ...lifeEvents(region),
+      ...yearlyFocusEvents(region),
       ...identityEvents(region),
       ...historyEvents(region),
       ...npcEvents(region),

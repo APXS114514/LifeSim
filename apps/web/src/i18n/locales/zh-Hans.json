@@ -164,7 +164,7 @@
     "retry": "重试读取"
   },
   "decision": {
-    "eyebrow": "重大决定",
+    "eyebrow": "人生决定",
     "heading": "现在怎么选？",
     "recommended": "按人生原则建议：{{option}}",
     "types": {
@@ -180,7 +180,8 @@
     "ineligible": {
       "unaffordable": "负担不起",
       "not-yet-available": "这个年代还不能获得治疗"
-    }
+    },
+    "basedOn": "建议主要考虑：{{reasons}}。"
   },
   "time": {
     "heading": "时间控制",
@@ -322,5 +323,24 @@
     "updateAvailable": "有新版本，准备好后可刷新更新。",
     "updateWhenOnline": "联网后可更新，当前进度可继续离线游玩。",
     "applyUpdate": "刷新以更新"
+  },
+  "principles": {
+    "heading": "人生原则",
+    "hint": "设置自动选择时重视的方向；数值无需加总为 1，开局后保持不变。",
+    "separator": "、",
+    "labels": {
+      "family": "亲情",
+      "wealth": "财富",
+      "health": "健康",
+      "knowledge": "知识",
+      "risk": "风险",
+      "stability": "稳定"
+    }
+  },
+  "intervention": {
+    "heading": "介入策略",
+    "major": "只在重大决定暂停",
+    "all": "所有决定都暂停",
+    "hint": "继续前可调整；此设置决定何时由你选择，年度重点等后台决定始终自动结算。"
   }
 }

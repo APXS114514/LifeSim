@@ -20,7 +20,7 @@ import { TimeControl, timerScheduler } from '../game/time-control.ts';
 import { baseYearMsForLifeLength, yearDurationMs } from '../game/year-pacing.ts';
 import { CharacterCreationPage } from '../pages/CharacterCreationPage.tsx';
 import { PlayPage } from '../pages/PlayPage.tsx';
-import type { BirthRegionId, CharacterSex, Locale } from '@lifesim/content-schema';
+import type { BirthRegionId, CharacterSex, Locale, LifePrinciples } from '@lifesim/content-schema';
 
 type GameState = { session: GameSession; revision: number };
 type SaveIssue = Extract<SaveLoadResult, { kind: 'failed' }>;
@@ -54,6 +54,7 @@ async function prepareSession(
 ): Promise<GameSession> {
   await loadRequiredPacks(request.region, progress);
   const created = GameSession.create(request);
+  created.setPausePolicy(loadPreferences().pauseOn ?? 'major');
   created.settleBirthDay();
   return created;
 }
@@ -94,6 +95,7 @@ export function App() {
       .then((result) => {
         if (cancelled) return;
         if (result.kind === 'loaded') {
+          result.session.setPausePolicy(loadPreferences().pauseOn ?? 'major');
           setGame({ session: result.session, revision: 0 });
           setRestored(pending === null);
           if (pending) {
@@ -152,6 +154,7 @@ export function App() {
   }, [session]);
 
   function changePreferences(next: Preferences): void {
+    session?.setPausePolicy(next.pauseOn ?? 'major');
     savePreferences(next);
     setPrefs(next);
   }
@@ -160,6 +163,7 @@ export function App() {
     region: BirthRegionId | 'random';
     year: number | 'random';
     sex?: CharacterSex;
+    principles?: LifePrinciples;
   }): void {
     if (issue || busy || packError) return;
     const seed = createSessionSeed();
@@ -201,6 +205,8 @@ export function App() {
       setProgress({ completed, total });
     })
       .then((result) => {
+        if (result.kind === 'loaded')
+          result.session.setPausePolicy(loadPreferences().pauseOn ?? 'major');
         setIssue(result.kind === 'failed' ? result : null);
         setGame(result.kind === 'loaded' ? { session: result.session, revision: 0 } : null);
         setRestored(result.kind === 'loaded');

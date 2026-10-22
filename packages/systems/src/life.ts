@@ -10,16 +10,7 @@ import { z } from 'zod';
 import { createBirthFamily } from './family.ts';
 import { npcBirthdayRequest, npcFactType, npcRoleOf } from './npc.ts';
 import { writeMacro, type MacroState, type RegionModel } from './region.ts';
-import {
-  EVENT,
-  PRIORITY,
-  accountIdFor,
-  ageAt,
-  ageFromPeriod,
-  causes,
-  evidenceId,
-  isIndependent,
-} from './shared.ts';
+import { EVENT, PRIORITY, accountIdFor, ageAt, ageFromPeriod, evidenceId } from './shared.ts';
 
 export const DEFAULT_PRINCIPLES: LifePrinciples = {
   family: 0.5,
@@ -56,14 +47,6 @@ export function macroAtBirth(region: RegionModel, birthDate: ISODate): MacroStat
 }
 
 export function lifeEvents(region: RegionModel): EventDefinition[] {
-  const { rules } = region;
-  const educationAge = {
-    primaryExit: rules.primaryStartAge + rules.primaryYears,
-    secondaryExit: rules.primaryStartAge + rules.primaryYears + rules.secondaryYears,
-    tertiaryExit:
-      rules.primaryStartAge + rules.primaryYears + rules.secondaryYears + rules.tertiaryYears,
-  };
-
   const birth: EventDefinition = {
     type: EVENT.birth,
     version: 1,
@@ -153,7 +136,7 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
     },
   };
 
-  /** 每个生日（含出生当天的 0 岁）安排当年要结算的事项，再安排下一个生日。 */
+  /** 每个生日先安排后台重点决定，决定结算后再排当年系统事项。 */
   const birthday: EventDefinition = {
     type: EVENT.birthday,
     version: 1,
@@ -161,49 +144,12 @@ export function lifeEvents(region: RegionModel): EventDefinition[] {
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const age = ageFromPeriod(ctx.occurrence.period);
-      const { education, employment } = actor;
-      const sameDay = (type: string, because: readonly string[] = []) => {
-        ctx.schedule({
-          type,
-          at: ctx.at,
-          entityId: actor.id,
-          period: `age:${age}`,
-          causes: because,
-        });
-      };
-
-      if (isIndependent(actor, age, region)) sameDay(EVENT.settle);
-
-      if (
-        age === rules.primaryStartAge &&
-        education.completed === 'none' &&
-        education.enrolledIn === null
-      ) {
-        sameDay(EVENT.primaryEntry);
-      }
-      if (education.enrolledIn === 'primary' && age === educationAge.primaryExit) {
-        sameDay(EVENT.primaryExit, causes(education.lastFactId));
-      }
-      if (education.enrolledIn === 'secondary' && age === educationAge.secondaryExit) {
-        sameDay(EVENT.secondaryExit, causes(education.lastFactId));
-      }
-      if (education.enrolledIn === 'tertiary' && age === educationAge.tertiaryExit) {
-        sameDay(EVENT.tertiaryExit, causes(education.lastFactId));
-      }
-
-      const { status } = employment;
-      if (age >= rules.retirementAge) {
-        if (status !== 'retired' && status !== 'student') {
-          sameDay(EVENT.retirement, causes(employment.lastFactId));
-        }
-      } else if (age >= rules.minimumWorkingAge) {
-        if (status === 'employed') sameDay(EVENT.jobReview, causes(employment.lastFactId));
-        else if (status !== 'student') {
-          sameDay(EVENT.jobSearch, causes(employment.lastFactId ?? education.lastFactId));
-        }
-      }
-
-      sameDay(EVENT.healthCheck);
+      ctx.schedule({
+        type: EVENT.yearlyFocus,
+        at: ctx.at,
+        entityId: actor.id,
+        period: `age:${age}`,
+      });
       ctx.schedule({
         type: EVENT.birthday,
         at: addYears(actor.birthDate, age + 1),

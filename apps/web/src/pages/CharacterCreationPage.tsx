@@ -5,7 +5,10 @@ import {
   isSelectableBirthYear,
   type BirthRegionId,
   type CharacterSex,
+  type LifePrinciples,
+  LIFE_PRINCIPLE_KEYS,
 } from '@lifesim/content-schema';
+import { DEFAULT_PRINCIPLES } from '@lifesim/systems';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArchiveCard } from '../components/Archive.tsx';
@@ -70,12 +73,18 @@ export function CharacterCreationPage({
   busy = false,
 }: {
   busy?: boolean;
-  onStart: (choice: { region: RegionChoice; year: number | 'random'; sex?: CharacterSex }) => void;
+  onStart: (choice: {
+    region: RegionChoice;
+    year: number | 'random';
+    sex?: CharacterSex;
+    principles: LifePrinciples;
+  }) => void;
 }) {
   const { t } = useTranslation();
   const ids = { regionHint: useId(), yearHint: useId(), yearError: useId(), start: useId() };
 
   const [sex, setSex] = useState<CharacterSex | 'random'>('random');
+  const [principles, setPrinciples] = useState<LifePrinciples>({ ...DEFAULT_PRINCIPLES });
   const [region, setRegion] = useState<RegionChoice>('random');
   const [yearMode, setYearMode] = useState<YearMode>('random');
   const [yearText, setYearText] = useState('1978');
@@ -130,6 +139,7 @@ export function CharacterCreationPage({
           onStart({
             region,
             year: yearMode === 'random' ? 'random' : Number(yearText),
+            principles,
             ...(sex === 'random' ? {} : { sex }),
           });
         }}
@@ -232,7 +242,7 @@ export function CharacterCreationPage({
             )}
           </fieldset>
 
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>{t('creation.sex.legend')}</legend>
             <div className="choices">
               {(['random', 'female', 'male'] as const).map((value) => (
@@ -250,6 +260,32 @@ export function CharacterCreationPage({
             </div>
             <p className="hint">{t('creation.sex.hint')}</p>
           </fieldset>
+
+          <details className="principles-editor">
+            <summary>{t('principles.heading')}</summary>
+            <p className="hint">{t('principles.hint')}</p>
+            <fieldset disabled={busy} aria-label={t('principles.heading')}>
+              <div className="principle-inputs">
+                {LIFE_PRINCIPLE_KEYS.map((key) => (
+                  <label key={key}>
+                    <span>{t(`principles.labels.${key}`)}</span>
+                    <input
+                      type="range"
+                      aria-label={t(`principles.labels.${key}`)}
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={principles[key]}
+                      onChange={(event) =>
+                        setPrinciples({ ...principles, [key]: Number(event.target.value) })
+                      }
+                    />
+                    <output aria-hidden="true">{principles[key].toFixed(2)}</output>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </details>
 
           <div className="summary" aria-live="polite">
             <span className="summary-label">{t('creation.summary.label')}</span>

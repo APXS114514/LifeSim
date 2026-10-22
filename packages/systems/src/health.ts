@@ -6,6 +6,7 @@ import {
   type EventDefinition,
 } from '@lifesim/simulation-core';
 import { currencyLabel, readMacro, type RegionModel } from './region.ts';
+import { focusProbability } from './yearly-focus.ts';
 import {
   EVENT,
   PRIORITY,
@@ -40,7 +41,7 @@ export function healthEvents(region: RegionModel): EventDefinition[] {
 
       if (!hasIllness(actor)) {
         const onsetP = region.illnessOnsetP(year, age) * (poor ? effects.povertyIllnessFactor : 1);
-        if (ctx.random.chance(onsetP)) {
+        if (ctx.random.chance(focusProbability(ctx, onsetP, 'onset'))) {
           const factId = ctx.emit({
             type: 'health.illness-onset',
             outcomeCode: 'chronic',
@@ -51,6 +52,7 @@ export function healthEvents(region: RegionModel): EventDefinition[] {
           actor.health.conditions.push({ id: 'chronic', onset: ctx.at, treated: false, factId });
           ctx.schedule({
             type: EVENT.treatment,
+            payload: ctx.occurrence.payload,
             at: ctx.at,
             entityId: actor.id,
             period: `age:${age}`,

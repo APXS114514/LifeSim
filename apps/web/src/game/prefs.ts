@@ -1,4 +1,5 @@
 import type { ReflectionPrefs } from './reflections.ts';
+import type { PausePolicy } from '@lifesim/simulation-core';
 import { PACE_MULTIPLIERS, type PaceMultiplier } from './year-pacing.ts';
 
 export const PREFS_KEY = 'lifesim.prefs.v1';
@@ -10,6 +11,7 @@ export interface Preferences {
   lifeLengthMinutes: LifeLengthMinutes;
   pace: PaceMultiplier;
   reflections: ReflectionPrefs;
+  pauseOn?: PausePolicy;
 }
 
 export interface PrefsStorage {
@@ -49,6 +51,7 @@ function normalize(prefs: Preferences): Preferences {
     version: 1,
     lifeLengthMinutes: prefs.lifeLengthMinutes,
     pace: prefs.pace,
+    ...(prefs.pauseOn === 'major' || prefs.pauseOn === 'all' ? { pauseOn: prefs.pauseOn } : {}),
     reflections: {
       enabled: typeof prefs.reflections?.enabled === 'boolean' ? prefs.reflections.enabled : true,
       skipDuringAutoPlay:

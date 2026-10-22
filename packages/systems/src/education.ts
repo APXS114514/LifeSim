@@ -1,6 +1,7 @@
 import { yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import type { RegionModel } from './region.ts';
 import { EVENT, PRIORITY, ageAt, causes, evidenceId } from './shared.ts';
+import { focusProbability } from './yearly-focus.ts';
 
 /**
  * 教育路径（GDD §8.2 的最小版本）：小学入学 → 小学毕业与是否升中学 → 中学毕业后的重大决定
@@ -16,7 +17,15 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const year = yearOf(ctx.at);
-      if (ctx.random.chance(region.primaryEnrollmentP(year, actor.origin.settlement))) {
+      if (
+        ctx.random.chance(
+          focusProbability(
+            ctx,
+            region.primaryEnrollmentP(year, actor.origin.settlement),
+            'education',
+          ),
+        )
+      ) {
         actor.education.enrolledIn = 'primary';
         actor.employment.status = 'student';
         actor.education.lastFactId = ctx.emit({
@@ -52,7 +61,11 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         actorIds: [actor.id],
         evidenceIds: evidence,
       });
-      if (ctx.random.chance(region.secondaryContinuationP(year, actor.origin))) {
+      if (
+        ctx.random.chance(
+          focusProbability(ctx, region.secondaryContinuationP(year, actor.origin), 'education'),
+        )
+      ) {
         actor.education.enrolledIn = 'secondary';
         actor.employment.status = 'student';
         actor.education.lastFactId = ctx.emit({
@@ -92,6 +105,7 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       actor.education.lastFactId = completed;
       ctx.schedule({
         type: EVENT.afterSecondary,
+        payload: ctx.occurrence.payload,
         at: ctx.at,
         entityId: actor.id,
         period: `age:${ageAt(actor, ctx)}`,
@@ -131,6 +145,7 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       const searchForWork = (because: string) => {
         ctx.schedule({
           type: EVENT.jobSearch,
+          payload: ctx.occurrence.payload,
           at: ctx.at,
           entityId: actor.id,
           period: `age:${ageAt(actor, ctx)}`,
@@ -142,7 +157,15 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         return;
       }
       const year = yearOf(ctx.at);
-      if (ctx.random.chance(region.universityAdmissionP(year, actor.traits.aptitude))) {
+      if (
+        ctx.random.chance(
+          focusProbability(
+            ctx,
+            region.universityAdmissionP(year, actor.traits.aptitude),
+            'education',
+          ),
+        )
+      ) {
         actor.education.enrolledIn = 'tertiary';
         actor.employment.status = 'student';
         actor.education.lastFactId = ctx.emit({
@@ -185,6 +208,7 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       actor.education.lastFactId = completed;
       ctx.schedule({
         type: EVENT.jobSearch,
+        payload: ctx.occurrence.payload,
         at: ctx.at,
         entityId: actor.id,
         period: `age:${ageAt(actor, ctx)}`,

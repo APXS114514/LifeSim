@@ -6,3 +6,4 @@ export * from './npc.ts';
 export * from './narrative.ts';
 export * from './summary.ts';
 export * from './indicators.ts';
+export * from './yearly-focus.ts';

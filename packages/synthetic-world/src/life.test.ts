@@ -274,7 +274,10 @@ describe('the major decision after secondary school', () => {
     work.advanceTo({ ...FOREVER, stopAtMajorDecision: true });
     work.decide(key, 'start-work');
     work.advanceTo(FOREVER);
-    const decision = work.facts.find((fact) => fact.type === 'decision.made');
+    const decision = work.facts.find(
+      (fact) =>
+        fact.type === 'decision.made' && fact.details?.['decision'] === EVENT.afterSecondary,
+    );
     expect(decision?.details).toMatchObject({ option: 'start-work', decidedBy: 'player' });
     const afterDecision = work.facts.filter((fact) => fact.at === '1993-09-01');
     expect(afterDecision.some((fact) => fact.type.startsWith('career.'))).toBe(true);
@@ -305,7 +308,10 @@ describe('the major decision after secondary school', () => {
       stability: 0.9,
     };
     const { facts } = wholeLife(seed, birthDate, { principles: pragmatic });
-    const decision = facts.find((fact) => fact.type === 'decision.made');
+    const decision = facts.find(
+      (fact) =>
+        fact.type === 'decision.made' && fact.details?.['decision'] === EVENT.afterSecondary,
+    );
     expect(decision?.details).toMatchObject({ option: 'start-work', decidedBy: 'principles' });
   });
 });

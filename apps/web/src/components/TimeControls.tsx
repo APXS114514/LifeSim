@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameSession } from '../game/session.ts';
 import type { TimeControl } from '../game/time-control.ts';
+import type { PausePolicy } from '@lifesim/simulation-core';
 import { LIFE_LENGTH_MINUTES, type LifeLengthMinutes, type Preferences } from '../game/prefs.ts';
 import { PACE_MULTIPLIERS, type PaceMultiplier } from '../game/year-pacing.ts';
 import type { YearRevealView } from '../game/year-reveal.ts';
@@ -159,6 +160,21 @@ export function TimeControls({
       </div>
 
       {!session.isEnded && <YearProgress view={view} total={session.facts.length} />}
+      <label className="time-speed intervention-policy">
+        <span>{t('intervention.heading')}</span>
+        <select
+          aria-label={t('intervention.heading')}
+          value={prefs.pauseOn ?? 'major'}
+          disabled={state !== 'paused'}
+          onChange={(event) =>
+            onPrefsChange({ ...prefs, pauseOn: event.target.value as PausePolicy })
+          }
+        >
+          <option value="major">{t('intervention.major')}</option>
+          <option value="all">{t('intervention.all')}</option>
+        </select>
+      </label>
+      <p className="hint">{t('intervention.hint')}</p>
 
       {state !== 'ended' && (
         <div className="time-finish">

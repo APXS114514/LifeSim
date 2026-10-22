@@ -1,6 +1,7 @@
 import { yearOf, type EventDefinition } from '@lifesim/simulation-core';
 import { readMacro, type RegionModel } from './region.ts';
 import { EVENT, PRIORITY, causes, evidenceId, untreatedIllness } from './shared.ts';
+import { focusProbability } from './yearly-focus.ts';
 
 /**
  * 就业（GDD §8.2 的最小版本）：求职、年度失业风险、退休。
@@ -29,7 +30,7 @@ export function careerEvents(region: RegionModel): EventDefinition[] {
         recession,
         illness?.factId,
       );
-      if (ctx.random.chance(p)) {
+      if (ctx.random.chance(focusProbability(ctx, p, 'hiring'))) {
         actor.employment = {
           status: 'employed',
           wageLevel: actor.education.completed,
@@ -71,7 +72,7 @@ export function careerEvents(region: RegionModel): EventDefinition[] {
       const p =
         region.jobLossP(yearOf(ctx.at), macro.economyPhase) *
         (illness ? region.effects.illnessJobLossFactor : 1);
-      if (!ctx.random.chance(p)) return;
+      if (!ctx.random.chance(focusProbability(ctx, p, 'jobLoss'))) return;
       actor.employment = {
         status: 'unemployed',
         wageLevel: null,

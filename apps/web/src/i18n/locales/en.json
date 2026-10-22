@@ -164,7 +164,7 @@
     "retry": "Try loading again"
   },
   "decision": {
-    "eyebrow": "Major decision",
+    "eyebrow": "Life decision",
     "heading": "What will you choose?",
     "recommended": "Life principles recommend: {{option}}",
     "types": {
@@ -180,7 +180,8 @@
     "ineligible": {
       "unaffordable": "Unaffordable",
       "not-yet-available": "Treatment is not available in this era"
-    }
+    },
+    "basedOn": "Main considerations: {{reasons}}."
   },
   "time": {
     "heading": "Time controls",
@@ -322,5 +323,24 @@
     "updateAvailable": "A new version is available. Refresh when you are ready.",
     "updateWhenOnline": "Connect to update. You can continue your life offline.",
     "applyUpdate": "Refresh to update"
+  },
+  "principles": {
+    "heading": "Life principles",
+    "hint": "Choose what matters in automatic decisions. Values do not need to total 1 and stay fixed for this life.",
+    "separator": ", ",
+    "labels": {
+      "family": "Family",
+      "wealth": "Wealth",
+      "health": "Health",
+      "knowledge": "Knowledge",
+      "risk": "Risk",
+      "stability": "Stability"
+    }
+  },
+  "intervention": {
+    "heading": "Intervention policy",
+    "major": "Pause at major decisions",
+    "all": "Pause at all decisions",
+    "hint": "Change before continuing. This setting determines when you choose; background choices such as yearly focus resolve automatically."
   }
 }

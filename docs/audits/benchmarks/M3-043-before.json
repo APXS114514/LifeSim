@@ -1,0 +1,42 @@
+{
+  "benchmark": "lifesim-m1-synthetic-life",
+  "command": "pnpm bench --lives 1000",
+  "engineVersion": "0.1.0",
+  "dataPackVersions": {
+    "ZZ-SYN": "synthetic-1",
+    "systems": "0.5.0"
+  },
+  "seeds": "bench-0 … bench-999",
+  "machine": {
+    "node": "v24.21.0",
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cpuCount": 5,
+    "memoryGiB": 33.3
+  },
+  "timing": {
+    "totalMs": 9702.4,
+    "perLifeMs": {
+      "p50": 9.388,
+      "p95": 12.743,
+      "p99": 16.415,
+      "max": 39.951
+    },
+    "livesPerSecond": 103.1,
+    "factsPerSecond": 9258
+  },
+  "workload": {
+    "lives": 1000,
+    "facts": 89825,
+    "meanFactsPerLife": 89.8,
+    "meanSnapshotBytes": 19073,
+    "meanAgeAtDeath": 76.4,
+    "fingerprint": "848396d3b83da2151340529087ea64b4"
+  },
+  "budget": {
+    "reference": "GDD §14.3：无逐帧展示的 80 年模拟，桌面 ≤ 5000 ms（建议目标，非已测承诺）",
+    "worstLifeMs": 39.951,
+    "withinDesktopBudget": true
+  }
+}

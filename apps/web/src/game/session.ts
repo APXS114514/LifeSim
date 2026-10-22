@@ -22,6 +22,7 @@ import {
   type AdvanceResult,
   type AdvanceStopReason,
   type PendingDecision,
+  type PausePolicy,
   type Simulation,
 } from '@lifesim/simulation-core';
 import {
@@ -84,6 +85,7 @@ export class GameSession {
   facts: SimEventFact[];
   pending: PendingDecision | null;
   #reflections: readonly ReflectionRecord[];
+  #pauseOn: PausePolicy = 'major';
 
   private constructor(options: GameSessionOptions) {
     this.#reflections = parseReflections(options.reflections);
@@ -150,6 +152,12 @@ export class GameSession {
     if (next === this.#reflections) return false;
     this.#reflections = next;
     return true;
+  }
+
+  /** UI preference only; changing the pause policy neither advances nor changes a save. */
+  setPausePolicy(policy: PausePolicy): void {
+    this.#pauseOn = policy;
+    this.pending = this.#pendingAtClock();
   }
 
   get isEnded(): boolean {
@@ -223,12 +231,18 @@ export class GameSession {
 
   /** 自动按人生原则选完所有重大决定，直到死亡；用于“直接模拟至结局”。 */
   finish(): void {
-    for (let round = 0; round < MAX_ROUNDS && !this.isEnded; round += 1) {
-      if (this.pending) {
-        this.simulation.decide(this.pending.key, this.pending.recommended.optionId);
-        this.pending = null;
+    const previousPolicy = this.#pauseOn;
+    this.setPausePolicy('major');
+    try {
+      for (let round = 0; round < MAX_ROUNDS && !this.isEnded; round += 1) {
+        if (this.pending) {
+          this.simulation.decide(this.pending.key, this.pending.recommended.optionId);
+          this.pending = null;
+        }
+        this.advanceToNextDecision();
       }
-      this.advanceToNextDecision();
+    } finally {
+      this.setPausePolicy(previousPolicy);
     }
   }
 
@@ -259,7 +273,7 @@ export class GameSession {
    * （`pending.at <= clock`）时显示决定卡，否则会在错误的日期让玩家选择（M3-040）。
    */
   #pendingAtClock(): PendingDecision | null {
-    const pending = this.simulation.pendingDecision();
+    const pending = this.simulation.pendingDecision(this.#pauseOn);
     if (!pending || pending.at > this.simulation.clock) return null;
     return pending;
   }
@@ -274,6 +288,7 @@ export class GameSession {
         result = this.simulation.advanceTo({
           targetDate,
           stopAtMajorDecision: true,
+          pauseOn: this.#pauseOn,
           maxWorkUnits: MAX_WORK_PER_ROUND,
         });
       } finally {

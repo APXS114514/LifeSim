@@ -9,6 +9,7 @@ import {
   afterSecondaryDecisionKey,
   createLifeSimulation,
   restoreLifeSimulation,
+  yearlyFocusDecisionKey,
 } from '@lifesim/systems';
 import { createRealLifeSimulation, createRealNarrator } from '@lifesim/real-world';
 import fc from 'fast-check';
@@ -91,6 +92,16 @@ describe('bilingual narrative of synthetic lives', () => {
         seen.add(fact.templateId);
         for (const locale of SUPPORTED_LOCALES) narrator.render(fact, locale);
       }
+    }
+    // New focus templates need explicit presets as well as the unchanged 200-life sample.
+    const focused = createLifeSimulation({ seed: 'golden-1', region, birthDate: '1960-03-15' });
+    focused.preset(yearlyFocusDecisionKey(1), 'family');
+    focused.preset(yearlyFocusDecisionKey(2), 'leisure');
+    focused.preset(yearlyFocusDecisionKey(6), 'study');
+    focused.advanceTo({ ...FOREVER, targetDate: '1967-03-15' });
+    for (const fact of focused.facts) {
+      seen.add(fact.templateId);
+      for (const locale of SUPPORTED_LOCALES) narrator.render(fact, locale);
     }
     // 政体更替只存在于真实国家包（合成地区没有 polity-change 锚点）：用一局 RU 人生补齐模板覆盖。
     const real = createRealLifeSimulation({
@@ -244,6 +255,13 @@ describe('protagonist projection (M3-011)', () => {
         const own = fact.actorIds.length === 1 && fact.actorIds[0] === 'char:protagonist';
         const empty = fact.actorIds.length === 0;
         if (!own && !(options.includeEmptyActorFacts && empty)) continue;
+        // M3-041 adds background focus audit facts. The legacy projection still locks every
+        // pre-existing outcome; focus behavior and complete journals have separate coverage.
+        if (fact.type === 'decision.made' && fact.details?.['decision'] === 'choice.yearly-focus') {
+          expect(fact.outcomeCode).toBe('balanced');
+          expect(fact.details['decidedBy']).toBe('principles');
+          continue;
+        }
         // M3-043 deliberately adds sex; validate it separately while retaining every legacy field.
         // The original projection hashes and entry counts remain unchanged.
         const details = { ...fact.details };

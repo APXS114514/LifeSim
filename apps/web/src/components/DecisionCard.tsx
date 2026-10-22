@@ -29,6 +29,15 @@ export function DecisionCard({
       <p className="hint decision-recommend">
         {t('decision.recommended', { option: recommended })}
       </p>
+      {pending.recommended.reasons.length > 0 && (
+        <p className="hint">
+          {t('decision.basedOn', {
+            reasons: pending.recommended.reasons
+              .map((reason) => t(`principles.labels.${reason}`))
+              .join(t('principles.separator')),
+          })}
+        </p>
+      )}
       <div className="decision-options">
         {pending.options.map((option, index) => {
           const label = t('decision.options.' + option.id, { defaultValue: option.id });
