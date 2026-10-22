@@ -125,6 +125,64 @@ export const SkillSchema = z.strictObject({
 });
 export type Skill = z.infer<typeof SkillSchema>;
 
+/** 角色状态的跨字段规则：学历与就业互相一致、技能不早于出生、死亡日期不早于出生。 */
+interface CharacterStateIssue {
+  message: string;
+  path: readonly (string | number)[];
+}
+
+const characterStateIssues = (character: CharacterState): CharacterStateIssue[] => {
+  const issues: CharacterStateIssue[] = [];
+  const { vitalStatus, education, employment } = character;
+  const skillIds = new Set<string>();
+  character.skills.forEach((skill, index) => {
+    if (skillIds.has(skill.id))
+      issues.push({ message: 'Duplicate skill id', path: ['skills', index, 'id'] });
+    skillIds.add(skill.id);
+    if (compareISODate(skill.since, character.birthDate) < 0)
+      issues.push({ message: 'Skill cannot precede birth', path: ['skills', index, 'since'] });
+  });
+  if (
+    vitalStatus.kind === 'deceased' &&
+    compareISODate(vitalStatus.deathDate, character.birthDate) < 0
+  ) {
+    issues.push({
+      message: 'deathDate cannot precede birthDate',
+      path: ['vitalStatus', 'deathDate'],
+    });
+  }
+  if (education.enrolledIn && education.completed !== PREREQUISITE[education.enrolledIn]) {
+    issues.push({
+      message: `Enrolled in ${education.enrolledIn} without completing ${PREREQUISITE[education.enrolledIn]}`,
+      path: ['education'],
+    });
+  }
+  if ((employment.status === 'student') !== (education.enrolledIn !== null)) {
+    issues.push({
+      message: 'Employment status "student" must match being enrolled',
+      path: ['employment', 'status'],
+    });
+  }
+  const paid = employment.status === 'employed' || employment.status === 'retired';
+  if (paid !== (employment.wageLevel !== null)) {
+    issues.push({
+      message: 'wageLevel is set exactly when employed or retired',
+      path: ['employment', 'wageLevel'],
+    });
+  }
+  return issues;
+};
+
+/**
+ * 角色状态的跨字段违规说明；空数组表示通过。
+ *
+ * `CharacterStateSchema` 在字段校验之后跑的就是这两条规则里的同一份实现（单一来源）；
+ * 内核按「本事件改过哪些字段」复用字段校验结果时，用它把跨字段规则补上。
+ */
+export function characterStateViolations(character: CharacterState): string[] {
+  return characterStateIssues(character).map((issue) => issue.message);
+}
+
 export const CharacterStateSchema = z
   .strictObject({
     id: EntityIdSchema,
@@ -149,54 +207,8 @@ export const CharacterStateSchema = z
     finance: FinanceStateSchema,
   })
   .superRefine((character, ctx) => {
-    const { vitalStatus, education, employment } = character;
-    const skillIds = new Set<string>();
-    character.skills.forEach((skill, index) => {
-      if (skillIds.has(skill.id))
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Duplicate skill id',
-          path: ['skills', index, 'id'],
-        });
-      skillIds.add(skill.id);
-      if (compareISODate(skill.since, character.birthDate) < 0)
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Skill cannot precede birth',
-          path: ['skills', index, 'since'],
-        });
-    });
-    if (
-      vitalStatus.kind === 'deceased' &&
-      compareISODate(vitalStatus.deathDate, character.birthDate) < 0
-    ) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'deathDate cannot precede birthDate',
-        path: ['vitalStatus', 'deathDate'],
-      });
-    }
-    if (education.enrolledIn && education.completed !== PREREQUISITE[education.enrolledIn]) {
-      ctx.addIssue({
-        code: 'custom',
-        message: `Enrolled in ${education.enrolledIn} without completing ${PREREQUISITE[education.enrolledIn]}`,
-        path: ['education'],
-      });
-    }
-    if ((employment.status === 'student') !== (education.enrolledIn !== null)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Employment status "student" must match being enrolled',
-        path: ['employment', 'status'],
-      });
-    }
-    const paid = employment.status === 'employed' || employment.status === 'retired';
-    if (paid !== (employment.wageLevel !== null)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'wageLevel is set exactly when employed or retired',
-        path: ['employment', 'wageLevel'],
-      });
+    for (const issue of characterStateIssues(character)) {
+      ctx.addIssue({ code: 'custom', message: issue.message, path: [...issue.path] });
     }
   });
 export type CharacterState = z.infer<typeof CharacterStateSchema>;

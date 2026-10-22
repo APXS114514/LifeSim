@@ -24,12 +24,27 @@ import { LIFE_EVENT_CATALOG } from './life-events-catalog.ts';
 import { lifeEventDefinitions, type LifeEventPrototype } from './life-events.ts';
 import { npcEvents } from './npc.ts';
 import { yearlyFocusEvents } from './yearly-focus.ts';
-import { MacroStateSchema, type RegionModel } from './region.ts';
+import { MacroStateSchema, type MacroState, type RegionModel } from './region.ts';
 import { EVENT, PROTAGONIST_ID, SYSTEMS_VERSION } from './shared.ts';
 
 /** 跨系统的状态不变量：每个事件提交前都会检查（GDD §7：不能出现未成年人退休等矛盾）。 */
 export function lifeInvariants(region: RegionModel): Invariant[] {
   const { rules } = region;
+  /**
+   * 宏观状态按引用缓存：内核保证提交后的状态不再就地修改，所以同一份 `world` 对象的取值与合法性
+   * 只取决于它自己，解析一次就够（一局人生里宏观状态只在历史锚点处改变）。
+   * 缓存随本模块实例存活，不跨局共享。
+   */
+  const macroCache = new WeakMap<object, MacroState | null>();
+  const readMacroOnce = (world: unknown): MacroState | null => {
+    if (typeof world !== 'object' || world === null) return null;
+    const cached = macroCache.get(world);
+    if (cached !== undefined) return cached;
+    const parsed = MacroStateSchema.safeParse(world);
+    const macro = parsed.success ? parsed.data : null;
+    macroCache.set(world, macro);
+    return macro;
+  };
   return [
     {
       id: 'life.age-appropriate-status',
@@ -55,10 +70,10 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
     {
       id: 'life.currency-version',
       check(state) {
-        const parsed = MacroStateSchema.safeParse(state.world);
-        if (!parsed.success) return state.actors.length > 0 ? ['world macro state is invalid'] : [];
+        const macro = readMacroOnce(state.world);
+        if (macro === null) return state.actors.length > 0 ? ['world macro state is invalid'] : [];
         return state.householdAccounts
-          .filter((account) => !sameCurrency(account.currency, parsed.data.currency))
+          .filter((account) => !sameCurrency(account.currency, macro.currency))
           .map((account) => `${account.id} still holds an outdated currency version`);
       },
     },
