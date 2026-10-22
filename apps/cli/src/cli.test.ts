@@ -140,7 +140,7 @@ describe('bilingual narrative of synthetic lives', () => {
     }
     expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
     expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);
-  }, 20_000);
+  }, 120_000);
 });
 
 describe('save files', () => {

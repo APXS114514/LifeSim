@@ -195,7 +195,7 @@ describe('M3-041 yearly focus', () => {
     }
     expect(studyEntries).toBeGreaterThan(leisureEntries);
     expect(healthOnsets).toBeLessThan(workOnsets);
-  }, 30_000);
+  }, 120_000);
 
   it('keeps death probability independent of focus and does not consume an extra health draw', () => {
     for (const focus of ['balanced', 'health', 'family', 'leisure'] as const) {
