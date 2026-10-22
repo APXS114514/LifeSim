@@ -1,6 +1,6 @@
-import { canonicalJson, Simulation } from '@lifesim/simulation-core';
+import { canonicalJson, SchedulerStateSchema, Simulation } from '@lifesim/simulation-core';
 import { describe, expect, it, vi } from 'vitest';
-import { GameSession, parseGameSave } from './session.ts';
+import { FOCUS_PRESET_MAX_AGE, GameSession, parseGameSave } from './session.ts';
 
 const request = {
   seed: 'ui-0',
@@ -415,4 +415,164 @@ it('keeps authoritative facts, clock and snapshots byte-identical with or withou
   b.finish();
   expect(canonicalJson(a.facts)).toBe(canonicalJson(b.facts));
   expect(canonicalJson(a.simulation.snapshot())).toBe(canonicalJson(b.simulation.snapshot()));
+});
+
+describe('yearly focus selector (M3-037B)', () => {
+  const focusRequest = {
+    seed: 'ui-focus',
+    region: 'JP' as const,
+    year: 1978 as const,
+    birthDate: '1978-05-04',
+  };
+
+  function fresh(seed: string): GameSession {
+    const session = GameSession.create({ ...focusRequest, seed });
+    session.settleBirthDay();
+    return session;
+  }
+
+  /** 按年龄取主角的年度重点事实细节。 */
+  function focusByAge(session: GameSession): Map<number, Record<string, unknown>> {
+    const byAge = new Map<number, Record<string, unknown>>();
+    for (const fact of session.facts) {
+      if (fact.type !== 'decision.made' || fact.details?.['decision'] !== 'choice.yearly-focus')
+        continue;
+      byAge.set(Number(fact.at.slice(0, 4)) - 1978, { ...fact.details });
+    }
+    return byAge;
+  }
+
+  function presetsOf(session: GameSession): Record<string, string> {
+    return SchedulerStateSchema.parse(session.serialize().snapshot.schedulerState).presets ?? {};
+  }
+
+  function stepYears(session: GameSession, years: number): void {
+    for (let step = 0; step < years && !session.isEnded;) {
+      if (session.pending) {
+        session.choose(session.pending.recommended.optionId);
+        continue;
+      }
+      session.stepYear();
+      step += 1;
+    }
+  }
+
+  it('starts with the age-0 focus decided by principles and offers next year', () => {
+    const session = fresh('focus-start');
+    const plan = session.focusPlan();
+    expect(plan.current).toMatchObject({ age: 0, decidedBy: 'principles', presetIgnored: null });
+    expect(plan.fromAge).toBe(1);
+    expect(plan.selected).toBeNull();
+    // 1 岁时学习与工作都不可选；其余四项始终可选。
+    expect(plan.eligibleNow).toEqual({
+      balanced: true,
+      study: false,
+      work: false,
+      health: true,
+      family: true,
+      leisure: true,
+    });
+  });
+
+  it('applies a standing focus from the next birthday until it is changed back', () => {
+    const session = fresh('focus-standing');
+    session.setFocus('health');
+    expect(session.focusPlan().selected).toBe('health');
+    stepYears(session, 3);
+    const byAge = focusByAge(session);
+    expect(byAge.get(0)).toMatchObject({ decidedBy: 'principles' });
+    for (const age of [1, 2, 3]) {
+      expect(byAge.get(age)).toMatchObject({ option: 'health', decidedBy: 'preset' });
+    }
+    expect(session.focusPlan()).toMatchObject({
+      current: { age: 3, focus: 'health', decidedBy: 'preset' },
+      fromAge: 4,
+      selected: 'health',
+    });
+    session.setFocus(null);
+    expect(session.focusPlan().selected).toBeNull();
+    stepYears(session, 2);
+    expect(focusByAge(session).get(4)).toMatchObject({ decidedBy: 'principles' });
+    expect(focusByAge(session).get(5)).toMatchObject({ decidedBy: 'principles' });
+  });
+
+  it('falls back to principles while the standing focus is not yet eligible', () => {
+    const session = fresh('focus-study');
+    session.setFocus('study');
+    stepYears(session, 6);
+    const byAge = focusByAge(session);
+    for (const age of [1, 2, 3, 4, 5]) {
+      expect(byAge.get(age)).toMatchObject({ decidedBy: 'principles', presetIgnored: 'study' });
+    }
+    expect(byAge.get(6)).toMatchObject({ option: 'study', decidedBy: 'preset' });
+    expect(byAge.get(6)).not.toHaveProperty('presetIgnored');
+    // 回退的那几年在面板上如实显示。
+    const earlier = fresh('focus-study');
+    earlier.setFocus('study');
+    stepYears(earlier, 1);
+    expect(earlier.focusPlan().current).toMatchObject({
+      age: 1,
+      decidedBy: 'principles',
+      presetIgnored: 'study',
+    });
+  });
+
+  it('writes one preset per remaining year and keeps the choice across a save', () => {
+    const original = fresh('focus-save');
+    original.setFocus('family');
+    stepYears(original, 4);
+    const presets = presetsOf(original);
+    expect(Object.keys(presets)).toHaveLength(FOCUS_PRESET_MAX_AGE - 4);
+    expect(new Set(Object.values(presets))).toEqual(new Set(['family']));
+    const restored = GameSession.restore(
+      parseGameSave(JSON.parse(JSON.stringify(original.serialize()))),
+    );
+    expect(restored.focusPlan()).toEqual(original.focusPlan());
+    original.finish();
+    restored.finish();
+    expect(canonicalJson(restored.facts)).toBe(canonicalJson(original.facts));
+    // 主角去世时内核清除剩余预设。
+    expect(presetsOf(original)).toEqual({});
+    expect(original.serialize().snapshot.schedulerState).not.toHaveProperty('presets');
+    expect(() => {
+      original.setFocus('health');
+    }).toThrow();
+  });
+
+  it('gives byte-identical lives with a standing focus for year-by-year, fast-forward and finish', () => {
+    const seed = 'focus-equivalence';
+    const byYears = fresh(seed);
+    byYears.setFocus('work');
+    stepYears(byYears, 200);
+    const fast = fresh(seed);
+    fast.setFocus('work');
+    while (!fast.isEnded) {
+      if (fast.pending) fast.choose(fast.pending.recommended.optionId);
+      else fast.advanceToNextDecision();
+    }
+    const finished = fresh(seed);
+    finished.setFocus('work');
+    finished.finish();
+    expect(byYears.isEnded).toBe(true);
+    expect(canonicalJson(byYears.facts)).toBe(canonicalJson(fast.facts));
+    expect(canonicalJson(finished.facts)).toBe(canonicalJson(fast.facts));
+    expect(canonicalJson(byYears.simulation.snapshot())).toBe(
+      canonicalJson(fast.simulation.snapshot()),
+    );
+    // 「工作」在成年后确实按设定生效。
+    expect(
+      [...focusByAge(fast).values()].some((details) => details['decidedBy'] === 'preset'),
+    ).toBe(true);
+  });
+
+  it('leaves years that were already settled untouched', () => {
+    const session = fresh('focus-past');
+    stepYears(session, 3);
+    const before = canonicalJson(session.facts);
+    session.setFocus('leisure');
+    expect(canonicalJson(session.facts)).toBe(before);
+    expect(session.focusPlan().fromAge).toBe(4);
+    const presets = presetsOf(session);
+    expect(Object.keys(presets).some((key) => /\|age:[0-3]$/.test(key))).toBe(false);
+  });
 });

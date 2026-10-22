@@ -13,6 +13,7 @@ import { ArchiveCard, Field, FieldGrid, Panel } from '../components/Archive.tsx'
 import { ReflectionCard } from '../components/ReflectionCard.tsx';
 import { planReflection } from '../game/reflections.ts';
 import { DecisionCard } from '../components/DecisionCard.tsx';
+import { FocusPanel } from '../components/FocusPanel.tsx';
 import { Indicators } from '../components/Indicators.tsx';
 import { PixelAvatar } from '../components/PixelPortrait.tsx';
 import { PlacePolityLabel } from '../components/PlacePolityLabel.tsx';
@@ -297,6 +298,15 @@ export function PlayPage({
                   }}
                 />
               )}
+              <FocusPanel
+                plan={session.focusPlan()}
+                disabled={control.state === 'playing'}
+                onChange={(focus) => {
+                  session.setFocus(focus);
+                  onPersist();
+                  rerender();
+                }}
+              />
             </>
           )}
 

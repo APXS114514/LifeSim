@@ -16,20 +16,27 @@ import {
 } from '@lifesim/real-world';
 import {
   SNAPSHOT_SCHEMA_VERSION,
+  SchedulerStateSchema,
   SimulationError,
   addYears,
   ageOn,
   type AdvanceResult,
   type AdvanceStopReason,
+  type Choice,
   type PendingDecision,
   type PausePolicy,
   type Simulation,
 } from '@lifesim/simulation-core';
 import {
+  EVENT,
+  YearlyFocusSchema,
   restoreLifeSimulation,
   summarizeLife,
+  yearlyFocusDecisionKey,
+  yearlyFocusOptions,
   type LifeSummary,
   type RegionModel,
+  type YearlyFocus,
 } from '@lifesim/systems';
 
 import { addReflection, parseReflections, type ReflectionRecord } from './reflections.ts';
@@ -60,6 +67,32 @@ export interface StepResult {
   clock: ISODate;
 }
 
+/**
+ * 年度重点的持续选择最多预设到这个年龄（M3-037B）。真实地区 100 岁的死亡率为 1，这里留出余量；
+ * 主角去世时内核会清除剩余预设，多出的键不会留在结局存档里。
+ */
+export const FOCUS_PRESET_MAX_AGE = 120;
+
+const DECIDED_BY: readonly Choice['decidedBy'][] = ['player', 'preset', 'principles'];
+
+/** 年度重点选择器需要的视图（M3-037B）。 */
+export interface FocusPlan {
+  /** 最近一次已结算的年度重点；出生当天结算之前为 null。 */
+  current: {
+    age: number;
+    focus: YearlyFocus;
+    decidedBy: Choice['decidedBy'];
+    /** 预设在那一年不可选、改由人生原则决定时，被忽略的预设。 */
+    presetIgnored: YearlyFocus | null;
+  } | null;
+  /** 现在改选，从这个年龄的生日起生效（已结算的年份不能追改）。 */
+  fromAge: number;
+  /** 持续生效的选择；null 表示按人生原则。 */
+  selected: YearlyFocus | null;
+  /** 按角色目前的状态，`fromAge` 那年各重点是否可选。只是提示：到时不可选就按人生原则。 */
+  eligibleNow: Readonly<Record<YearlyFocus, boolean>>;
+}
+
 /** 「直接模拟至结局」的目标日期；主角在此之前必然去世。 */
 const FOREVER: ISODate = '2200-01-01';
 const MAX_ROUNDS = 10_000;
@@ -86,6 +119,7 @@ export class GameSession {
   pending: PendingDecision | null;
   #reflections: readonly ReflectionRecord[];
   #pauseOn: PausePolicy = 'major';
+  #focus: YearlyFocus | null;
 
   private constructor(options: GameSessionOptions) {
     this.#reflections = parseReflections(options.reflections);
@@ -97,6 +131,14 @@ export class GameSession {
     this.facts = options.facts;
     this.narrator = options.narrator;
     this.pending = this.#pendingAtClock();
+    // 持续选择就是下一个未结算年份上的预设（快照的 schedulerState.presets，ADR-0008）；
+    // 读档后从快照取回，不另存一份。
+    const scheduler = SchedulerStateSchema.parse(this.simulation.snapshot().schedulerState);
+    const presets = scheduler.presets ?? {};
+    const preset = YearlyFocusSchema.safeParse(
+      presets[yearlyFocusDecisionKey(this.#focusFromAge())],
+    );
+    this.#focus = preset.success ? preset.data : null;
   }
 
   static create(request: RealLifeRequest): GameSession {
@@ -158,6 +200,45 @@ export class GameSession {
   setPausePolicy(policy: PausePolicy): void {
     this.#pauseOn = policy;
     this.pending = this.#pendingAtClock();
+  }
+
+  /** 当前与之后的年度重点（M3-037B）。 */
+  focusPlan(): FocusPlan {
+    const latest = this.#latestFocusFact();
+    const fromAge = this.#focusFromAge(latest);
+    const actor = this.simulation.state.actors.find(
+      (candidate) => candidate.id === this.simulation.activeCharacterId,
+    );
+    if (!actor) throw new Error('Simulation has no active character');
+    const eligibleNow = Object.fromEntries(
+      yearlyFocusOptions(actor, fromAge, this.region).map((option) => [option.id, option.eligible]),
+    ) as Record<YearlyFocus, boolean>;
+    let current: FocusPlan['current'] = null;
+    if (latest) {
+      const decidedBy = DECIDED_BY.find((value) => value === latest.details?.['decidedBy']);
+      if (!decidedBy) throw new Error(`Focus fact ${latest.id} has no valid decidedBy`);
+      const ignored = latest.details?.['presetIgnored'];
+      current = {
+        age: fromAge - 1,
+        focus: YearlyFocusSchema.parse(latest.details?.['option']),
+        decidedBy,
+        presetIgnored: ignored === undefined ? null : YearlyFocusSchema.parse(ignored),
+      };
+    }
+    return { current, fromAge, selected: this.#focus, eligibleNow };
+  }
+
+  /**
+   * 设定年度重点（M3-037B）：从下一个尚未结算的年份起每年生效，直到再改；`null` 改回按人生原则。
+   * 写成每个未来年龄的预设（ADR-0008），随快照保存，所以逐年、快进与直接结局得到相同结果；
+   * 某年不可选时内核按人生原则决定并记录被忽略的预设。不推进时间；调用方随后存档。
+   */
+  setFocus(focus: YearlyFocus | null): void {
+    if (this.isEnded) throw new Error('The life has ended');
+    for (let age = this.#focusFromAge(); age <= FOCUS_PRESET_MAX_AGE; age += 1) {
+      this.simulation.preset(yearlyFocusDecisionKey(age), focus);
+    }
+    this.#focus = focus;
   }
 
   get isEnded(): boolean {
@@ -266,6 +347,25 @@ export class GameSession {
       facts: this.facts,
       reflections: [...this.reflections],
     };
+  }
+
+  /** 最近一条主角年度重点的 `decision.made` 事实；它总在最近一年的事实里，从末尾找很快。 */
+  #latestFocusFact(): SimEventFact | null {
+    for (let index = this.facts.length - 1; index >= 0; index -= 1) {
+      const fact = this.facts[index];
+      if (
+        fact?.type === 'decision.made' &&
+        fact.details?.['decision'] === EVENT.yearlyFocus &&
+        fact.actorIds[0] === this.simulation.activeCharacterId
+      )
+        return fact;
+    }
+    return null;
+  }
+
+  /** 下一个尚未结算的年度重点所在年龄：每个生日结算一次，所以是最近一次的下一岁。 */
+  #focusFromAge(latest = this.#latestFocusFact()): number {
+    return latest ? ageOn(this.birth.birthDate, latest.at) + 1 : 0;
   }
 
   /**

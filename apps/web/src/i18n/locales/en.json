@@ -341,6 +341,42 @@
     "heading": "Intervention policy",
     "major": "Pause at major decisions",
     "all": "Pause at all decisions",
-    "hint": "Change before continuing. This setting determines when you choose; background choices such as yearly focus resolve automatically."
+    "hint": "Change before continuing. This setting determines when you choose. Yearly focus is set in advance under “Yearly focus” below and resolves automatically without pausing."
+  },
+  "focus": {
+    "heading": "Yearly focus",
+    "assumption": "Effects are design assumptions",
+    "current": "This year (age {{age}}): {{focus}} · {{decidedBy}}",
+    "ignored": "Your focus “{{focus}}” was not available this year, so your life principles decided.",
+    "from": "Focus from age {{age}}",
+    "principles": "Follow life principles",
+    "notYet": "Not available in the current situation",
+    "hint": "Applies every year from the next birthday until you change it; in a year where it is not available, your life principles decide. Past years never change.",
+    "pauseToChange": "Pause to change it.",
+    "options": {
+      "balanced": "Balanced",
+      "study": "Study",
+      "work": "Work",
+      "health": "Health",
+      "family": "Family and relationships",
+      "leisure": "Leisure"
+    },
+    "decidedBy": {
+      "player": "player's choice",
+      "preset": "by preset",
+      "principles": "by life principles"
+    },
+    "effects": {
+      "heading": "About the effects",
+      "focus": "Focus",
+      "education": "School entry",
+      "hiring": "Job search",
+      "jobLoss": "Job loss",
+      "onset": "Illness",
+      "stress": "Stress/yr",
+      "ties": "Social ties/yr",
+      "none": "—",
+      "note": "Percentages adjust that year's probability of the event, kept within 0–1; stress and social ties use a 0–100 scale and settle at the end of the year. All of these are design assumptions, not statistical findings; focus never changes the risk of death directly."
+    }
   }
 }
