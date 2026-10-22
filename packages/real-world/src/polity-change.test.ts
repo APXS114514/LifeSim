@@ -1,5 +1,5 @@
 import { canonicalJson, type Simulation } from '@lifesim/simulation-core';
-import { MacroStateSchema, restoreLifeSimulation } from '@lifesim/systems';
+import { MacroStateSchema, SYSTEMS_VERSION, restoreLifeSimulation } from '@lifesim/systems';
 import { describe, expect, it } from 'vitest';
 import { createRealLifeSimulation, createRealNarrator, type RealLifeSession } from './index.ts';
 
@@ -181,6 +181,6 @@ describe('polity-change anchors in a real life', () => {
 
   it('records the systems version used by the new rules', () => {
     const session = ru1978Session('polity-9');
-    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe('0.8.0');
+    expect(session.simulation.snapshot().dataPackVersions['systems']).toBe(SYSTEMS_VERSION);
   });
 });

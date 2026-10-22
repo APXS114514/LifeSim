@@ -2,6 +2,7 @@ import type { CharacterState, ISODate } from '@lifesim/content-schema';
 import {
   addYears,
   ageOn,
+  yearOf,
   type EventContext,
   type EventDefinition,
   type ScheduleRequest,
@@ -116,12 +117,6 @@ function npcContext(ctx: EventContext, role: NpcRole, step: NpcStep): EventConte
  */
 export function npcEvents(region: RegionModel): EventDefinition[] {
   const { rules } = region;
-  const exitAge = {
-    primary: rules.primaryStartAge + rules.primaryYears,
-    secondary: rules.primaryStartAge + rules.primaryYears + rules.secondaryYears,
-    tertiary:
-      rules.primaryStartAge + rules.primaryYears + rules.secondaryYears + rules.tertiaryYears,
-  };
 
   const career = new Map(careerEvents(region).map((definition) => [definition.type, definition]));
   const healthCheck = healthEvents(region).find(
@@ -156,21 +151,34 @@ export function npcEvents(region: RegionModel): EventDefinition[] {
       };
       const previous = causes(employment.lastFactId ?? education.lastFactId);
 
-      // 教育：与主角生日同一套学制与概率，事件与随机流按 NPC 自己的实体 ID 派生。
+      // 教育：与主角同一套学制（按国家 + 年份），事件与随机流按 NPC 自己的实体 ID 派生。
+      const system = region.queries.education.systemAt(yearOf(ctx.at));
+      const exitAge = {
+        primary: system.primaryStartAge + system.primaryYears,
+        secondary: system.primaryStartAge + system.primaryYears + system.secondaryYears,
+        tertiary:
+          system.primaryStartAge +
+          system.primaryYears +
+          system.secondaryYears +
+          system.tertiaryYears,
+      };
+      // 只在正好到入学年龄那年排一次：NPC 由家庭创建，成年 NPC 的学历是已知的，
+      // 不能用 >=（会把「未受教育」的成年父母当成学龄儿童）。
       if (
-        age === rules.primaryStartAge &&
+        age === system.primaryStartAge &&
         education.completed === 'none' &&
-        education.enrolledIn === null
+        education.enrolledIn === null &&
+        education.lastFactId === null
       ) {
         sameDay(EVENT.primaryEntry);
       }
-      if (education.enrolledIn === 'primary' && age === exitAge.primary) {
+      if (education.enrolledIn === 'primary' && age >= exitAge.primary) {
         sameDay(EVENT.primaryExit, causes(education.lastFactId));
       }
-      if (education.enrolledIn === 'secondary' && age === exitAge.secondary) {
+      if (education.enrolledIn === 'secondary' && age >= exitAge.secondary) {
         sameDay(EVENT.secondaryExit, causes(education.lastFactId));
       }
-      if (education.enrolledIn === 'tertiary' && age === exitAge.tertiary) {
+      if (education.enrolledIn === 'tertiary' && age >= exitAge.tertiary) {
         sameDay(EVENT.tertiaryExit, causes(education.lastFactId));
       }
 

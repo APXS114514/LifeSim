@@ -1,6 +1,26 @@
 import { expect, test } from '@playwright/test';
 import { createRealLifeSimulation } from '@lifesim/real-world';
-import { canonicalJson } from '@lifesim/simulation-core';
+import { canonicalJson, type Simulation } from '@lifesim/simulation-core';
+
+/**
+ * 与界面「直接模拟至结局」相同的协议：遇到重大决定时按推荐选项结算。
+ * 界面把这种自动选择记为玩家选择（decidedBy = player），所以 Node 侧也必须这样结算，
+ * 否则两边的 decision.made 事实会不同——这不是规则差异，而是推进协议的差异。
+ */
+function finishInNode(simulation: Simulation): void {
+  for (let round = 0; round < 10_000; round += 1) {
+    const result = simulation.advanceTo({
+      targetDate: '2200-01-01',
+      stopAtMajorDecision: true,
+      maxWorkUnits: 100_000,
+    });
+    if (result.stopReason === 'work-budget-exhausted') continue;
+    const pending = result.pendingDecision;
+    if (result.stopReason !== 'major-decision' || !pending) return;
+    simulation.decide(pending.key, pending.recommended.optionId);
+  }
+  throw new Error('Life did not finish');
+}
 
 /** Compare the browser condition against the synchronous Node entry under the current rules. */
 for (const [region, label, year] of [
@@ -14,11 +34,7 @@ for (const [region, label, year] of [
       region,
       year,
     });
-    simulation.advanceTo({
-      targetDate: '2200-01-01',
-      stopAtMajorDecision: false,
-      maxWorkUnits: 100_000,
-    });
+    finishInNode(simulation);
     await page.addInitScript(() => {
       Object.defineProperty(crypto, 'randomUUID', { value: () => 'lazy-packs-compatibility' });
     });

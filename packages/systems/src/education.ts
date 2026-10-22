@@ -1,24 +1,131 @@
-import { yearOf, type EventDefinition } from '@lifesim/simulation-core';
-import type { RegionModel } from './region.ts';
-import { EVENT, PRIORITY, ageAt, causes, evidenceId } from './shared.ts';
+import {
+  addMinor,
+  scaleMinor,
+  type CharacterState,
+  type CurrencyVersion,
+} from '@lifesim/content-schema';
+import { addYears, yearOf, type EventDefinition } from '@lifesim/simulation-core';
+import { currencyLabel, readMacro, type EducationSystem, type RegionModel } from './region.ts';
+import { EVENT, PRIORITY, account, ageAt, causes, evidenceId } from './shared.ts';
 import { focusProbability } from './yearly-focus.ts';
 
 /**
- * 教育路径（GDD §8.2 的最小版本）：小学入学 → 小学毕业与是否升中学 → 中学毕业后的重大决定
- * （报考大学或直接工作）→ 大学录取与毕业。录取结果不确定：选择报考不等于一定考上。
+ * 教育路径（GDD §8.2；M3-012b）：学制、升学考试与学费由「国家 + 年份」决定。
+ *
+ * 一次升学只抽一次随机：制度给出的**资格考试**基础通过率（`entranceExam.passBase`）
+ * 与个人**表现**（aptitude）合成一个概率，再由 `ctx.random` 抽样；抽中即通过考试并录取，
+ * 未抽中即未通过考试（有考试的年代）或未录取（无考试的年代按制度的选拔路径处理）。
+ * 录取与入学分别记录：录取是结果，入学还要看家庭能否负担当年学费。
+ *
+ * 金额只记**名义**值（`feeShare × 当年生活费`，整数最小单位），不做 CPI 折算（折算归 M3-014 / Q14）。
  */
+
+/** 教育阶段的规范名，供事实 details 与双语模板使用。 */
+export type EducationStage = 'primary' | 'secondary' | 'tertiary';
+
+/** 升学路径：有考试的年代走考试，没有考试的年代走制度规定的选拔（D 级设计假设）。 */
+export type EducationPath = 'exam' | 'selection';
+
+/**
+ * 表现系数（D 级设计假设）：aptitude 0 → 0.6、1 → 1.4，与制度给的基础通过率相乘。
+ * 这是「资格考试 + 表现」两层里的表现层，不额外抽样。
+ */
+export function performanceFactor(aptitude: number): number {
+  return 0.6 + 0.8 * aptitude;
+}
+
+/**
+ * 该阶段是否完整落在义务教育年限内（起点与终点都不超出）。
+ * 只有完整覆盖才按免费处理；部分覆盖（例如义务教育只覆盖到初中）按非义务教育收费。
+ */
+export function stageIsCompulsory(system: EducationSystem, stage: EducationStage): boolean {
+  if (stage === 'primary') return system.primaryYears <= system.compulsoryYears;
+  if (stage === 'secondary') {
+    return system.primaryYears + system.secondaryYears <= system.compulsoryYears;
+  }
+  return false;
+}
+
+/** 该年该阶段的学费（名义，整数最小单位）：义务教育阶段为 0，否则 feeShare × 当年生活费。 */
+export function educationFeeMinor(
+  region: RegionModel,
+  origin: CharacterState['origin'],
+  year: number,
+  stage: EducationStage,
+  currency: CurrencyVersion,
+): number {
+  const system = region.queries.education.systemAt(year);
+  if (stageIsCompulsory(system, stage)) return 0;
+  return scaleMinor(
+    region.annualLivingCostMinor(year, origin.settlement, currency),
+    system.feeShare,
+  );
+}
+
+/**
+ * 家庭能否负担（D 级设计假设）：家境不是「贫寒」时视为家庭可以垫付（扣款仍记在家庭账户，
+ * 允许为负）；家境贫寒且账户余额不足时学生无法入学。M3-014 接入家庭经济后替换这条规则。
+ */
+export function canAffordFee(
+  origin: CharacterState['origin'],
+  balanceMinor: number,
+  feeMinor: number,
+): boolean {
+  if (feeMinor <= 0) return true;
+  if (origin.familyResources !== 'low') return true;
+  return balanceMinor >= feeMinor;
+}
+
+export interface TransitionProbability {
+  /** 一次抽样的通过/录取概率。 */
+  readonly probability: number;
+  readonly path: EducationPath;
+  /** 该年代是否有升学考试（决定是否记录考试事实）。 */
+  readonly exam: boolean;
+}
+
+/**
+ * 把旧的单一 continue/admission 概率拆成两层：制度给的基础门槛（资格考试）× 个人表现，
+ * 仍然只用一个概率、一次抽样。没有考试的年代退回该地区的选拔概率。
+ */
+export function transitionProbability(
+  region: RegionModel,
+  actor: CharacterState,
+  year: number,
+  stage: 'secondary' | 'tertiary',
+): TransitionProbability {
+  const system = region.queries.education.systemAt(year);
+  // 制度里的 `entranceExam` 指升入高等教育的资格考试（高考 / 大学入学考试 / вступительные экзамены）。
+  // 本模型的 secondary 是初中阶段：义务教育内的升学不用它，学生按该地区的延续概率升学。
+  if (stage === 'tertiary' && system.entranceExam.kind === 'exam') {
+    const probability = system.entranceExam.passBase * performanceFactor(actor.traits.aptitude);
+    return { probability: Math.max(0, Math.min(1, probability)), path: 'exam', exam: true };
+  }
+  const probability =
+    stage === 'secondary'
+      ? region.secondaryContinuationP(year, actor.origin)
+      : region.universityAdmissionP(year, actor.traits.aptitude);
+  return { probability, path: 'selection', exam: false };
+}
+
+/** 学费只在主角身上结算：NPC 的家庭收支留给 M3-014/018，不为 NPC 制造债务。 */
+function paysFees(actor: CharacterState): boolean {
+  return actor.tier === 'protagonist';
+}
+
 export function educationEvents(region: RegionModel): EventDefinition[] {
-  const evidence = [evidenceId(region, 'education')];
+  const tableEvidence = evidenceId(region, 'education');
 
   const primaryEntry: EventDefinition = {
     type: EVENT.primaryEntry,
-    version: 1,
+    version: 2,
     priority: PRIORITY.education,
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const year = yearOf(ctx.at);
+      const evidenceIds = [tableEvidence];
       if (
-        ctx.random.chance(
+        !ctx.random.chance(
           focusProbability(
             ctx,
             region.primaryEnrollmentP(year, actor.origin.settlement),
@@ -26,32 +133,74 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
           ),
         )
       ) {
-        actor.education.enrolledIn = 'primary';
-        actor.employment.status = 'student';
-        actor.education.lastFactId = ctx.emit({
-          type: 'education.primary-started',
-          outcomeCode: 'enrolled',
-          actorIds: [actor.id],
-          evidenceIds: evidence,
-        });
-      } else {
         actor.education.lastFactId = ctx.emit({
           type: 'education.not-enrolled',
           outcomeCode: 'not-enrolled',
           actorIds: [actor.id],
-          evidenceIds: evidence,
+          evidenceIds,
         });
+        return;
       }
+      const { currency } = readMacro(ctx.state);
+      const feeMinor = paysFees(actor)
+        ? educationFeeMinor(region, actor.origin, year, 'primary', currency)
+        : 0;
+      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
+        actor.education.lastFactId = ctx.emit({
+          type: 'education.cannot-afford',
+          outcomeCode: 'cannot-afford',
+          actorIds: [actor.id],
+          evidenceIds,
+          details: {
+            stage: 'primary',
+            feeMinor,
+            balanceMinor,
+            currency: currencyLabel(currency),
+          },
+        });
+        return;
+      }
+      const paid =
+        feeMinor > 0
+          ? ctx.emit({
+              type: 'education.tuition-paid',
+              outcomeCode: 'paid',
+              actorIds: [actor.id],
+              evidenceIds,
+              details: {
+                stage: 'primary',
+                feeMinor,
+                balanceMinor: addMinor(balanceMinor, -feeMinor),
+                currency: currencyLabel(currency),
+              },
+            })
+          : null;
+      if (feeMinor > 0) {
+        const owner = account(ctx.state, actor);
+        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
+      }
+      actor.education.enrolledIn = 'primary';
+      actor.employment.status = 'student';
+      actor.education.lastFactId = ctx.emit({
+        type: 'education.primary-started',
+        outcomeCode: 'enrolled',
+        actorIds: [actor.id],
+        causes: causes(paid),
+        evidenceIds,
+        details: { stage: 'primary' },
+      });
     },
   };
 
   const primaryExit: EventDefinition = {
     type: EVENT.primaryExit,
-    version: 1,
+    version: 2,
     priority: PRIORITY.education,
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
       const year = yearOf(ctx.at);
+      const evidenceIds = [tableEvidence];
       actor.education.completed = 'primary';
       actor.education.enrolledIn = null;
       actor.employment.status = 'not-in-labor-force';
@@ -59,37 +208,120 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         type: 'education.primary-completed',
         outcomeCode: 'completed',
         actorIds: [actor.id],
-        evidenceIds: evidence,
+        evidenceIds,
       });
-      if (
-        ctx.random.chance(
-          focusProbability(ctx, region.secondaryContinuationP(year, actor.origin), 'education'),
-        )
-      ) {
-        actor.education.enrolledIn = 'secondary';
-        actor.employment.status = 'student';
-        actor.education.lastFactId = ctx.emit({
-          type: 'education.secondary-started',
-          outcomeCode: 'enrolled',
+      // 义务教育覆盖的中学阶段是强制入学：制度保证学位，不做选拔抽样（义务教育阶段也免学费）。
+      // 合成地区没有义务教育（compulsoryYears = 0），所以合成人生的抽样与旧规则逐位相同。
+      const compulsory = stageIsCompulsory(region.queries.education.systemAt(year), 'secondary');
+      const transition = transitionProbability(region, actor, year, 'secondary');
+      const passed = compulsory
+        ? true
+        : ctx.random.chance(focusProbability(ctx, transition.probability, 'education'));
+      let cause = completed;
+      if (transition.exam) {
+        cause = ctx.emit({
+          type: passed ? 'education.exam-passed' : 'education.exam-failed',
+          outcomeCode: passed ? 'passed' : 'failed',
           actorIds: [actor.id],
           causes: [completed],
-          evidenceIds: evidence,
+          evidenceIds,
+          details: { stage: 'secondary', passRate: transition.probability },
         });
-      } else {
+      }
+      if (!passed) {
+        // 有考试的年代：考试没过就是这次升学的结论（不再另记「未录取」）；
+        // 没有考试的年代：录取结果单独记录。
+        const failed = transition.exam
+          ? cause
+          : ctx.emit({
+              type: 'education.admission-failed',
+              outcomeCode: 'rejected',
+              actorIds: [actor.id],
+              causes: [cause],
+              evidenceIds,
+              details: { stage: 'secondary', path: transition.path },
+            });
         actor.education.lastFactId = ctx.emit({
           type: 'education.left-school',
           outcomeCode: 'left',
           actorIds: [actor.id],
-          causes: [completed],
-          evidenceIds: evidence,
+          causes: [failed],
+          evidenceIds,
         });
+        return;
       }
+      const admitted = ctx.emit({
+        type: 'education.admitted',
+        outcomeCode: 'admitted',
+        actorIds: [actor.id],
+        causes: [cause],
+        evidenceIds,
+        details: { stage: 'secondary', path: transition.path },
+      });
+      const { currency } = readMacro(ctx.state);
+      const feeMinor = paysFees(actor)
+        ? educationFeeMinor(region, actor.origin, year, 'secondary', currency)
+        : 0;
+      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
+        const unaffordable = ctx.emit({
+          type: 'education.cannot-afford',
+          outcomeCode: 'cannot-afford',
+          actorIds: [actor.id],
+          causes: [admitted],
+          evidenceIds,
+          details: {
+            stage: 'secondary',
+            feeMinor,
+            balanceMinor,
+            currency: currencyLabel(currency),
+          },
+        });
+        actor.education.lastFactId = ctx.emit({
+          type: 'education.left-school',
+          outcomeCode: 'left',
+          actorIds: [actor.id],
+          causes: [unaffordable],
+          evidenceIds,
+        });
+        return;
+      }
+      const paid =
+        feeMinor > 0
+          ? ctx.emit({
+              type: 'education.tuition-paid',
+              outcomeCode: 'paid',
+              actorIds: [actor.id],
+              causes: [admitted],
+              evidenceIds,
+              details: {
+                stage: 'secondary',
+                feeMinor,
+                balanceMinor: addMinor(balanceMinor, -feeMinor),
+                currency: currencyLabel(currency),
+              },
+            })
+          : null;
+      if (feeMinor > 0) {
+        const owner = account(ctx.state, actor);
+        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
+      }
+      actor.education.enrolledIn = 'secondary';
+      actor.employment.status = 'student';
+      actor.education.lastFactId = ctx.emit({
+        type: 'education.secondary-started',
+        outcomeCode: 'enrolled',
+        actorIds: [actor.id],
+        causes: causes(paid ?? admitted),
+        evidenceIds,
+        details: { stage: 'secondary' },
+      });
     },
   };
 
   const secondaryExit: EventDefinition = {
     type: EVENT.secondaryExit,
-    version: 1,
+    version: 2,
     priority: PRIORITY.education,
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
@@ -100,24 +332,27 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         type: 'education.secondary-completed',
         outcomeCode: 'completed',
         actorIds: [actor.id],
-        evidenceIds: evidence,
+        evidenceIds: [tableEvidence],
       });
       actor.education.lastFactId = completed;
+      // 中学可能在法定工作年龄之前结束（例如六岁入学、中学三年）：把「升学或工作」的
+      // 重大决定放到能合法工作的那一年，避免出现「15 岁就必须决定工作」的选项。
+      const decisionAge = Math.max(ageAt(actor, ctx), region.rules.minimumWorkingAge);
       ctx.schedule({
         type: EVENT.afterSecondary,
         payload: ctx.occurrence.payload,
-        at: ctx.at,
+        at: addYears(actor.birthDate, decisionAge),
         entityId: actor.id,
-        period: `age:${ageAt(actor, ctx)}`,
+        period: `age:${decisionAge}`,
         causes: [completed],
       });
     },
   };
 
-  /** 重大决定：报考大学还是直接工作（M1 要求的「玩家干预一次重大选择」）。 */
+  /** 重大决定：在制度允许时报考上一级学校，或直接工作（M1 要求的「玩家干预一次重大选择」）。 */
   const afterSecondary: EventDefinition = {
     type: EVENT.afterSecondary,
-    version: 1,
+    version: 2,
     priority: PRIORITY.afterSecondary,
     decision: {
       major: true,
@@ -131,8 +366,10 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
             scores: { knowledge: 0.9, wealth: 0.4, risk: 0.5, stability: -0.3 },
           },
           {
+            // 「决定开始工作」本身不受年龄限制：真正的求职在到达法定工作年龄后才安排
+            // （见 handler 的 searchForWork）。中学毕业早于法定工作年龄的国家不会因此失去选项。
             id: 'start-work',
-            eligible: ageAt(actor, ctx) >= region.rules.minimumWorkingAge,
+            eligible: true,
             scores: { wealth: 0.5, stability: 0.6, family: 0.3, knowledge: -0.1 },
           },
         ];
@@ -143,6 +380,8 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
       const choice = ctx.choice;
       if (!choice) throw new Error('Decision without a choice');
       const searchForWork = (because: string) => {
+        // 未成年不排求职：年度生日事件会在到达法定工作年龄后再安排。
+        if (ageAt(actor, ctx) < region.rules.minimumWorkingAge) return;
         ctx.schedule({
           type: EVENT.jobSearch,
           payload: ctx.occurrence.payload,
@@ -157,41 +396,102 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         return;
       }
       const year = yearOf(ctx.at);
-      if (
-        ctx.random.chance(
-          focusProbability(
-            ctx,
-            region.universityAdmissionP(year, actor.traits.aptitude),
-            'education',
-          ),
-        )
-      ) {
-        actor.education.enrolledIn = 'tertiary';
-        actor.employment.status = 'student';
-        actor.education.lastFactId = ctx.emit({
-          type: 'education.admitted',
-          outcomeCode: 'admitted',
+      const evidenceIds = [tableEvidence];
+      const transition = transitionProbability(region, actor, year, 'tertiary');
+      const passed = ctx.random.chance(focusProbability(ctx, transition.probability, 'education'));
+      let cause = choice.factId;
+      if (transition.exam) {
+        cause = ctx.emit({
+          type: passed ? 'education.exam-passed' : 'education.exam-failed',
+          outcomeCode: passed ? 'passed' : 'failed',
           actorIds: [actor.id],
           causes: [choice.factId],
-          evidenceIds: evidence,
+          evidenceIds,
+          details: { stage: 'tertiary', passRate: transition.probability },
         });
-      } else {
-        const failed = ctx.emit({
-          type: 'education.admission-failed',
-          outcomeCode: 'rejected',
-          actorIds: [actor.id],
-          causes: [choice.factId],
-          evidenceIds: evidence,
-        });
+      }
+      if (!passed) {
+        const failed = transition.exam
+          ? cause
+          : ctx.emit({
+              type: 'education.admission-failed',
+              outcomeCode: 'rejected',
+              actorIds: [actor.id],
+              causes: [cause],
+              evidenceIds,
+              details: { stage: 'tertiary', path: transition.path },
+            });
         actor.education.lastFactId = failed;
         searchForWork(failed);
+        return;
       }
+      const admitted = ctx.emit({
+        type: 'education.admitted',
+        outcomeCode: 'admitted',
+        actorIds: [actor.id],
+        causes: [cause],
+        evidenceIds,
+        details: { stage: 'tertiary', path: transition.path },
+      });
+      const { currency } = readMacro(ctx.state);
+      const feeMinor = paysFees(actor)
+        ? educationFeeMinor(region, actor.origin, year, 'tertiary', currency)
+        : 0;
+      const balanceMinor = account(ctx.state, actor).balanceMinor;
+      if (!canAffordFee(actor.origin, balanceMinor, feeMinor)) {
+        const unaffordable = ctx.emit({
+          type: 'education.cannot-afford',
+          outcomeCode: 'cannot-afford',
+          actorIds: [actor.id],
+          causes: [admitted],
+          evidenceIds,
+          details: {
+            stage: 'tertiary',
+            feeMinor,
+            balanceMinor,
+            currency: currencyLabel(currency),
+          },
+        });
+        actor.education.lastFactId = unaffordable;
+        searchForWork(unaffordable);
+        return;
+      }
+      const paid =
+        feeMinor > 0
+          ? ctx.emit({
+              type: 'education.tuition-paid',
+              outcomeCode: 'paid',
+              actorIds: [actor.id],
+              causes: [admitted],
+              evidenceIds,
+              details: {
+                stage: 'tertiary',
+                feeMinor,
+                balanceMinor: addMinor(balanceMinor, -feeMinor),
+                currency: currencyLabel(currency),
+              },
+            })
+          : null;
+      if (feeMinor > 0) {
+        const owner = account(ctx.state, actor);
+        owner.balanceMinor = addMinor(owner.balanceMinor, -feeMinor);
+      }
+      actor.education.enrolledIn = 'tertiary';
+      actor.employment.status = 'student';
+      actor.education.lastFactId = ctx.emit({
+        type: 'education.enrolled',
+        outcomeCode: 'enrolled',
+        actorIds: [actor.id],
+        causes: causes(paid ?? admitted),
+        evidenceIds,
+        details: { stage: 'tertiary' },
+      });
     },
   };
 
   const tertiaryExit: EventDefinition = {
     type: EVENT.tertiaryExit,
-    version: 1,
+    version: 2,
     priority: PRIORITY.education,
     handle(ctx) {
       const actor = ctx.actor(ctx.occurrence.entityId);
@@ -203,7 +503,7 @@ export function educationEvents(region: RegionModel): EventDefinition[] {
         outcomeCode: 'completed',
         actorIds: [actor.id],
         causes: causes(...ctx.occurrence.causeFactIds),
-        evidenceIds: evidence,
+        evidenceIds: [tableEvidence],
       });
       actor.education.lastFactId = completed;
       ctx.schedule({

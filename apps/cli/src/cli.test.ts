@@ -118,6 +118,26 @@ describe('bilingual narrative of synthetic lives', () => {
       seen.add(fact.templateId);
       for (const locale of SUPPORTED_LOCALES) realNarrator.render(fact, locale);
     }
+    // M3-012b：考试、录取与学费随国家与年代变化，只有真实国家包会出现这些事实。
+    // 固定一组跨年代、跨国家的真实人生，保证新增的教育模板都被覆盖（不是随机抽样）。
+    for (const country of ['CN', 'JP', 'KR', 'RU', 'KP'] as const) {
+      for (const year of [1950, 1965, 1975, 1985, 2000]) {
+        for (const index of [0, 1, 2]) {
+          const session = createRealLifeSimulation({
+            seed: `coverage-era-${country}-${year}-${index}`,
+            region: country,
+            year,
+            birthDate: `${year}-${String(1 + (index % 9)).padStart(2, '0')}-10`,
+          });
+          session.simulation.advanceTo(FOREVER);
+          const eraNarrator = createRealNarrator(session.pack, session.birth.birthDate);
+          for (const fact of session.simulation.facts) {
+            seen.add(fact.templateId);
+            for (const locale of SUPPORTED_LOCALES) eraNarrator.render(fact, locale);
+          }
+        }
+      }
+    }
     expect(templates.filter((templateId) => !seen.has(templateId))).toEqual([]);
     expect([...seen].filter((templateId) => !templates.includes(templateId))).toEqual([]);
   }, 20_000);
