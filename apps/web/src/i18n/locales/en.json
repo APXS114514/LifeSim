@@ -389,7 +389,17 @@
     "heading": "Others born that day",
     "assumption": "Computed on this device",
     "loading": "Calculating…",
+    "catchingUp": "Catching up…",
+    "retry": "Retry",
     "unavailable": "Cannot compute: this needs the country data for all five regions. Load them online and try again.",
+    "offline": {
+      "heading": "Country data needs a connection",
+      "detail": "The comparison calculates four more lives across all five regions, so opening it for the first time downloads all five country packs. The app does not pre-cache every country. You are offline or the download failed; reconnect and choose Retry."
+    },
+    "failed": {
+      "heading": "Calculation failed",
+      "detail": "This comparison could not be calculated, but your life is not affected and you can keep playing. Choose Retry; if it keeps failing, carry on and open it again later."
+    },
     "ageUnit": "years",
     "four": {
       "heading": "Four others born the same second",
@@ -404,6 +414,21 @@
     "survival": {
       "heading": "Survival curve",
       "title": "Share still alive: born {{year}} in {{pack}}, both sexes combined",
+      "axisAge": "Age (years)",
+      "axisShare": "Share alive",
+      "scenarioFrom": "Scenario from age {{age}} (grade D): once birth year + age passes 2100, the curve holds the 2100 column constant.",
+      "scenarioTag": "Scenario",
+      "legendPeriod": "Observed / WPP projected period table (grade B)",
+      "legendScenario": "Scenario (grade D, dashed)",
+      "dataMissing": "Data missing: the life table has no usable value after age {{age}}, so the curve stops at {{age}}.",
+      "dataMissingShort": "Data missing",
+      "srPoint": "Age {{age}}: {{share}}",
+      "tableSummary": "Show data table",
+      "tableAge": "Age",
+      "tableShare": "Share alive",
+      "tableSource": "Source",
+      "sourcePeriod": "Period life table (grade B)",
+      "sourceScenario": "Scenario (grade D)",
       "disclosure": "Evidence grade B: UN WPP 2024 single-age life table (both sexes combined), covering up to 2100. Method: the yearly period life table approximates the birth cohort, so the step from age a to a + 1 uses q(a) from the year birth year + a. Once birth year + a passes 2100 the curve holds the 2100 column constant and is labelled a grade D scenario; ages above 100 are treated as q = 1. This curve comes only from the life table, not from the four simulated lives above."
     },
     "grid": {

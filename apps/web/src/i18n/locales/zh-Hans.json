@@ -389,7 +389,17 @@
     "heading": "同龄对照",
     "assumption": "本机计算",
     "loading": "正在计算…",
+    "catchingUp": "正在追赶…",
+    "retry": "重试",
     "unavailable": "无法计算：需要五个地区的国家数据。联网加载后可重试。",
+    "offline": {
+      "heading": "需要联网下载国家数据",
+      "detail": "同龄对照要把另外四个人按五个地区各算一遍，所以首次打开需要下载全部五份国家数据；本应用不会预先缓存所有国家。当前离线或下载失败，联网后点「重试」即可。"
+    },
+    "failed": {
+      "heading": "计算出错",
+      "detail": "这块对照暂时算不出来，但这一局不受影响，可以照常继续玩。你可以点「重试」；如果反复失败，先继续玩，稍后再打开。"
+    },
     "ageUnit": "岁",
     "four": {
       "heading": "同一秒出生的四个人",
@@ -404,6 +414,21 @@
     "survival": {
       "heading": "生存曲线",
       "title": "存活比例：{{year}} 年出生于{{pack}}，男女合计",
+      "axisAge": "年龄（岁）",
+      "axisShare": "存活比例",
+      "scenarioFrom": "从 {{age}} 岁起为情景（D 级）：出生年 + 年龄超过 2100 年后，固定取 2100 年那一列。",
+      "scenarioTag": "情景",
+      "legendPeriod": "观测期 / WPP projected 时期表（B 级）",
+      "legendScenario": "情景（D 级，虚线）",
+      "dataMissing": "数据缺失：生命表在 {{age}} 岁以后没有可用数据，曲线到 {{age}} 岁为止。",
+      "dataMissingShort": "数据缺失",
+      "srPoint": "{{age}} 岁：{{share}}",
+      "tableSummary": "查看数据表",
+      "tableAge": "年龄",
+      "tableShare": "存活比例",
+      "tableSource": "来源",
+      "sourcePeriod": "时期生命表（B 级）",
+      "sourceScenario": "情景（D 级）",
       "disclosure": "数据等级 B：联合国 WPP 2024 单岁生命表（男女合计），覆盖到 2100 年。方法是用时期生命表逐年近似出生队列：从 a 岁活到 a + 1 岁这一步，取「出生年 + a」那一年的单岁死亡概率 q(a)。出生年 + a 超过 2100 年后固定取 2100 年那一列，标为 D 级情景；100 岁以上按 q = 1 处理。这条曲线只来自生命表，与上面四个人的模拟结果不是一回事。"
     },
     "grid": {

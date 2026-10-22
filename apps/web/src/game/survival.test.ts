@@ -1,6 +1,6 @@
 import { createRealRegion } from '@lifesim/real-world';
 import { describe, expect, it } from 'vitest';
-import { buildSurvivalCurve, type SurvivalLookup } from './survival.ts';
+import { buildSurvivalCurve, survivalChartSegments, type SurvivalLookup } from './survival.ts';
 
 const SERIES_END_YEAR = 2100;
 
@@ -121,6 +121,39 @@ describe('survival curve', () => {
     expect(curve.points).toHaveLength(41);
     expect(curve.points[40]?.age).toBe(40);
     expect(curve.points.some((point) => point.age > 40)).toBe(false);
+  });
+
+  it('splits the observed and scenario segments and anchors the dashed line', () => {
+    const curve = buildSurvivalCurve({
+      birthYear: 2026,
+      packId: 'CN',
+      lookup: realLookup(),
+      seriesEndYear: SERIES_END_YEAR,
+    });
+    const segments = survivalChartSegments(curve);
+
+    expect(segments.observed[segments.observed.length - 1]?.age).toBe(75);
+    expect(segments.scenario[0]).toBe(segments.observed[segments.observed.length - 1]);
+    expect(segments.scenario[0]?.age).toBe(75);
+    expect(segments.scenario[1]?.method).toBe('scenario-hold-last');
+    expect(segments.scenario[segments.scenario.length - 1]?.age).toBe(100);
+    expect(segments.missingPoint).toBeNull();
+  });
+
+  it('marks the last known point instead of silently ending the line', () => {
+    const values: Record<number, number> = {};
+    for (let age = 0; age < 40; age += 1) values[age] = 0.01;
+    const curve = buildSurvivalCurve({
+      birthYear: 1950,
+      packId: 'CN',
+      lookup: stubLookup(values),
+      seriesEndYear: SERIES_END_YEAR,
+    });
+    const segments = survivalChartSegments(curve);
+
+    expect(curve.truncatedAt).toBe(40);
+    expect(segments.missingPoint?.age).toBe(40);
+    expect(segments.scenario).toEqual([]);
   });
 
   it('keeps the worst grade across observed and scenario points', () => {

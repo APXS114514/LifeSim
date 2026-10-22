@@ -39,10 +39,18 @@ async function startLife(page: Page, region: string, year: string): Promise<void
   await expect(page.locator('.fact').first()).toBeVisible();
 }
 
-/** 展开「同龄对照」并等到四个人算出来；面板默认折叠。 */
+/** 展开「同龄对照」并等到四个人算完；面板默认折叠。 */
 async function openCohort(page: Page): Promise<void> {
   await page.getByRole('button', { name: '同龄对照' }).click();
   await expect(page.locator('.cohort-row')).toHaveCount(4);
+  await expect(page.locator('.cohort-panel')).toHaveAttribute('data-status', 'ready');
+}
+
+/** 在页面脚本执行前写入一次性诊断故障；面板展开时读取并消费。 */
+async function injectQaFault(page: Page, fault: Record<string, unknown>): Promise<void> {
+  await page.addInitScript((value: Record<string, unknown>) => {
+    (globalThis as Record<string, unknown>)['__lifesimQaFault'] = value;
+  }, fault);
 }
 
 /** 推进到目标年龄；途中遇到重大决定就选第一个可用项（与 smoke 的推进方式一致）。 */
@@ -148,6 +156,123 @@ test('computes the comparison locally instead of asking a server', async ({ page
   requests.length = 0;
   await openCohort(page);
   expect(requests).toEqual([]);
+});
+
+test('explains the one-time country download and keeps the life playable offline', async ({
+  page,
+  context,
+}) => {
+  await startLife(page, '日本', '1978');
+  await context.setOffline(true);
+
+  await page.getByRole('button', { name: '同龄对照' }).click();
+  const failure = page.locator('.cohort-failure');
+  await expect(failure).toHaveAttribute('data-failure', 'offline');
+  await expect(failure).toContainText('需要联网下载国家数据');
+  await expect(failure).toContainText('不会预先缓存所有国家');
+  await expect(failure.getByRole('button', { name: '重试' })).toBeVisible();
+
+  // 面板算不出来不影响这一局：离线也能继续推进时间线。
+  await page.getByRole('button', { name: '下一年' }).click();
+  await expect(page.locator('.time-age')).toHaveText('1 岁');
+
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(page.locator('.cohort-failure')).toContainText('Country data needs a connection');
+  await expect(
+    page.locator('.cohort-failure').getByRole('button', { name: 'Retry' }),
+  ).toBeVisible();
+
+  await context.setOffline(false);
+  await page.locator('.cohort-failure').getByRole('button', { name: 'Retry' }).click();
+  await expect(page.locator('.cohort-row')).toHaveCount(4);
+  await expect(page.locator('.cohort-panel')).toHaveAttribute('data-status', 'ready');
+});
+
+test('isolates a failed comparison calculation and keeps the life playable', async ({ page }) => {
+  await injectQaFault(page, { kind: 'cohort-calculation' });
+  await startLife(page, '日本', '1978');
+
+  await page.getByRole('button', { name: '同龄对照' }).click();
+  const failure = page.locator('.cohort-failure');
+  await expect(failure).toHaveAttribute('data-failure', 'calculation');
+  await expect(failure).toContainText('计算出错');
+  await expect(failure).toContainText('这一局不受影响');
+
+  await page.getByRole('button', { name: '下一年' }).click();
+  await expect(page.locator('.time-age')).toHaveText('1 岁');
+
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(page.locator('.cohort-failure')).toContainText('Calculation failed');
+  await page.getByRole('button', { name: 'Retry' }).click();
+  await expect(page.locator('.cohort-row')).toHaveCount(4);
+  await expect(page.locator('.cohort-panel')).toHaveAttribute('data-status', 'ready');
+});
+
+test('catches a render failure at the panel boundary without blanking the page', async ({
+  page,
+}) => {
+  await injectQaFault(page, { kind: 'cohort-render' });
+  await startLife(page, '日本', '1978');
+
+  await page.getByRole('button', { name: '同龄对照' }).click();
+  await expect(page.locator('.cohort-failure')).toContainText('计算出错');
+  await expect(page.getByRole('heading', { name: '人生时间线' })).toBeVisible();
+
+  await page.getByRole('button', { name: '下一年' }).click();
+  await expect(page.locator('.time-age')).toHaveText('1 岁');
+
+  await page.getByRole('button', { name: '重试' }).click();
+  await expect(page.locator('.cohort-row')).toHaveCount(4);
+});
+
+test('marks missing life-table data instead of letting the line stop silently', async ({
+  page,
+}) => {
+  await injectQaFault(page, { kind: 'survival-gap', fromAge: 40 });
+  await startLife(page, '日本', '1978');
+  await openCohort(page);
+
+  await expect(page.locator('.survival-missing')).toContainText('数据缺失');
+  await expect(page.locator('.survival-missing-label')).toHaveText('数据缺失');
+  await expect(page.locator('.survival-missing-dot')).toHaveCount(1);
+  await expect(page.locator('.survival-legend')).toContainText('数据缺失');
+  // 曲线只画到最后一个已知点，不画到 100 岁。
+  await expect(page.locator('.survival-line')).toHaveCount(1);
+
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(page.locator('.survival-missing')).toContainText('Data missing');
+});
+
+test('separates the D-grade scenario, labels both axes and exposes a data table', async ({
+  page,
+}) => {
+  await startLife(page, '日本', '2026');
+  await openCohort(page);
+
+  // 2026 + 75 = 2101：从 75 岁起固定取 2100 年那一列，画成虚线。
+  const scenario = page.locator('.survival-line--scenario');
+  await expect(scenario).toHaveCount(1);
+  const dash = await scenario.evaluate((element) => getComputedStyle(element).strokeDasharray);
+  expect(dash).not.toBe('none');
+  await expect(page.locator('.survival-scenario')).toContainText('从 75 岁起为情景');
+  await expect(page.locator('.survival-scenario-tag')).toHaveText('情景');
+  await expect(page.locator('.survival-legend')).toContainText('情景（D 级，虚线）');
+
+  const axisTitles = await page.locator('.survival-axis-title').allTextContents();
+  expect(axisTitles).toEqual(['年龄（岁）', '存活比例']);
+  const description = (await page.locator('#cohort-survival-desc').textContent()) ?? '';
+  expect(description).toContain('75 岁');
+  expect(description).toContain('岁');
+
+  await expect(page.locator('.survival-data summary')).toHaveText('查看数据表');
+  await page.locator('.survival-data summary').click();
+  expect(await page.locator('.survival-data tbody tr').count()).toBeGreaterThan(5);
+  await expect(page.locator('.survival-data tbody')).toContainText('情景（D 级）');
+
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(page.locator('.survival-axis-title').first()).toHaveText('Age (years)');
+  await expect(page.locator('.survival-scenario')).toContainText('Scenario from age 75');
+  await expect(page.locator('.survival-data summary')).toHaveText('Show data table');
 });
 
 test('keeps the life grid inside a 320 px phone width', async ({ page }) => {

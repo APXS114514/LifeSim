@@ -1,7 +1,7 @@
 import type { BirthContext, CountryPack } from '@lifesim/country-packs';
 import type { BirthRegionId, EducationLevel, ISODate } from '@lifesim/content-schema';
 import { createRealLifeSimulation, type RealLifeRequest } from '@lifesim/real-world';
-import { ageOn, type Simulation } from '@lifesim/simulation-core';
+import { addYears, ageOn, type Simulation } from '@lifesim/simulation-core';
 
 /**
  * 同一秒出生的四个人（M4-020）：与玩家同一天出生、按出生年五地出生人数加权抽出的另外四个人，
@@ -64,6 +64,33 @@ export interface CohortMember {
   readonly birth: BirthContext;
   readonly pack: CountryPack;
   readonly simulation: Simulation;
+}
+
+/** 这个成员是否还需要向前推进才能到 targetDate（已去世的人不再需要）。 */
+export function needsCohortAdvance(member: CohortMember, targetDate: ISODate): boolean {
+  return !member.simulation.ended && member.simulation.clock < targetDate;
+}
+
+/** 再走一步（到下一个生日）是否就能到达 targetDate；用于把「下一年」这种小步同步完成。 */
+export function isCohortStepEnough(member: CohortMember, targetDate: ISODate): boolean {
+  if (!needsCohortAdvance(member, targetDate)) return true;
+  const age = Math.max(0, ageOn(member.birth.birthDate, member.simulation.clock));
+  return targetDate <= addYears(member.birth.birthDate, age + 1);
+}
+
+/**
+ * 按年分片：只把成员推进到「下一个生日」或 targetDate（取较早者），用于主线程追赶时逐帧执行。
+ * 返回推进后是否仍未到 targetDate。与 {@link advanceCohortSimulation} 的整段推进结果逐字节相同，
+ * 只是把一次长任务拆成多次短任务；同一日期重复调用只结算当天事件，不会重复追加事实。
+ */
+export function advanceCohortStep(member: CohortMember, targetDate: ISODate): boolean {
+  const simulation = member.simulation;
+  if (simulation.ended || targetDate < simulation.clock) return false;
+  const age = Math.max(0, ageOn(member.birth.birthDate, simulation.clock));
+  const anniversary = addYears(member.birth.birthDate, age + 1);
+  const stepTarget = anniversary < targetDate ? anniversary : targetDate;
+  advanceCohortSimulation(simulation, stepTarget);
+  return needsCohortAdvance(member, targetDate);
 }
 
 /** 面板展示需要的派生字段；纯函数，不重新模拟。 */
