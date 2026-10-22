@@ -409,12 +409,13 @@
     "grid": {
       "heading": "人生方格",
       "life": "生与死",
-      "decision": "重大决定",
+      "decision": "人生决定",
       "education": "教育",
       "career": "工作",
       "health": "健康",
       "family": "家庭",
       "history": "时代",
+      "daily": "日常",
       "finance": "年度收支",
       "other": "其他",
       "none": "无记录"

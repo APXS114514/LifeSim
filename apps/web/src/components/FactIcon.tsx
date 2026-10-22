@@ -46,6 +46,13 @@ const paths: Record<FactCategory, ReactNode> = {
       <path d="M9.5 20v-6h5v6" />
     </>
   ),
+  daily: (
+    <>
+      <path d="M5 10h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-4Z" />
+      <path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16" />
+      <path d="M8 3v3M12 3v3M16 3v3" />
+    </>
+  ),
   decision: (
     <>
       <path d="M6 4v6a3 3 0 0 0 3 3h9" />

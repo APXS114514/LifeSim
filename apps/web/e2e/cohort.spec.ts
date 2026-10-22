@@ -45,6 +45,28 @@ async function openCohort(page: Page): Promise<void> {
   await expect(page.locator('.cohort-row')).toHaveCount(4);
 }
 
+/** 推进到目标年龄；途中遇到重大决定就选第一个可用项（与 smoke 的推进方式一致）。 */
+async function advanceToAge(page: Page, target: number): Promise<void> {
+  for (let guard = 0; guard < 80; guard += 1) {
+    const age = Number(((await page.locator('.time-age').textContent()) ?? '').replace(/\D/g, ''));
+    if (age >= target) return;
+    const option = page.locator('.decision-option:not([disabled])').first();
+    if ((await option.count()) > 0) {
+      await option.click();
+      await expect(page.locator('.decision-card')).toHaveCount(0);
+      continue;
+    }
+    await page.getByRole('button', { name: '下一年' }).click();
+    await expect
+      .poll(async () => {
+        const text = (await page.locator('.time-age').textContent()) ?? '';
+        return Number(text.replace(/\D/g, ''));
+      })
+      .toBeGreaterThan(age);
+  }
+  throw new Error('The life did not reach age ' + String(target));
+}
+
 test('expands into the four others, a survival curve and a life grid', async ({ page }) => {
   await startLife(page, '日本', '1978');
   await expect(page.locator('.cohort-row')).toHaveCount(0);
@@ -137,6 +159,55 @@ test('keeps the life grid inside a 320 px phone width', async ({ page }) => {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test('shows varied life-grid categories and keeps ten cells per row on phones', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await startLife(page, '日本', '1978');
+  await advanceToAge(page, 20);
+  await openCohort(page);
+
+  const categories = await page
+    .locator('.grid-cell')
+    .evaluateAll((cells) => [
+      ...new Set(cells.map((cell) => cell.getAttribute('data-category') ?? '')),
+    ]);
+  expect(categories.filter((category) => category !== 'none').length).toBeGreaterThanOrEqual(4);
+  expect(categories).toContain('daily');
+  expect(categories).toContain('decision');
+
+  const legend = page.locator('.grid-legend');
+  await expect(legend.locator(".grid-legend-item[data-category='decision']")).toHaveText(
+    '人生决定',
+  );
+  await expect(legend.locator(".grid-legend-item[data-category='daily']")).toHaveText('日常');
+
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(legend.locator(".grid-legend-item[data-category='decision']")).toHaveText(
+    'Life decisions',
+  );
+  await expect(legend.locator(".grid-legend-item[data-category='daily']")).toHaveText('Daily life');
+
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 700 });
+    await expect(page.locator('.grid-cell').first()).toBeVisible();
+    const rows = await page.locator('.grid-cell').evaluateAll((cells) => {
+      const counts = new Map<number, number>();
+      for (const cell of cells) {
+        const top = Math.round(cell.getBoundingClientRect().top);
+        counts.set(top, (counts.get(top) ?? 0) + 1);
+      }
+      return [...counts.values()];
+    });
+    expect(rows.length).toBeGreaterThan(1);
+    expect(Math.max(...rows)).toBeLessThanOrEqual(10);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  }
 });
 
 test('keeps the four out of the save file', async ({ page }) => {

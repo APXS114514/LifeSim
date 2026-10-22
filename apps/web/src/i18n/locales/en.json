@@ -409,12 +409,13 @@
     "grid": {
       "heading": "Life in squares",
       "life": "Birth and death",
-      "decision": "Major decisions",
+      "decision": "Life decisions",
       "education": "Education",
       "career": "Work",
       "health": "Health",
       "family": "Family",
       "history": "Era",
+      "daily": "Daily life",
       "finance": "Yearly budget",
       "other": "Other",
       "none": "No record"
