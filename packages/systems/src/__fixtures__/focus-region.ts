@@ -1,12 +1,8 @@
 import type { EvidenceMeta } from '@lifesim/content-schema';
 import type { EducationSystem, RegionModel, RegionRules } from '../region.ts';
 
-/** 夹具的学制常数：`systemAt` 与 `rules` 同源，保证夹具行为与旧常数等价。 */
+/** 夹具的规则常数（学制已从 `RegionRules` 移除，M3-012d）。 */
 const FIXTURE_RULES: RegionRules = {
-  primaryStartAge: 6,
-  primaryYears: 6,
-  secondaryYears: 6,
-  tertiaryYears: 4,
   minimumWorkingAge: 15,
   retirementAge: 60,
   pensionRate: 0.5,
@@ -16,10 +12,10 @@ const FIXTURE_RULES: RegionRules = {
 
 /** 夹具的 D 级学制（虚构）：无义务教育、无升学考试、不收学费。 */
 const FIXTURE_EDUCATION: EducationSystem = {
-  primaryStartAge: FIXTURE_RULES.primaryStartAge,
-  primaryYears: FIXTURE_RULES.primaryYears,
-  secondaryYears: FIXTURE_RULES.secondaryYears,
-  tertiaryYears: FIXTURE_RULES.tertiaryYears,
+  primaryStartAge: 6,
+  primaryYears: 6,
+  secondaryYears: 6,
+  tertiaryYears: 4,
   compulsoryYears: 0,
   entranceExam: { kind: 'none' },
   feeShare: 0,

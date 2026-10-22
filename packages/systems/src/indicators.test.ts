@@ -15,6 +15,7 @@ import {
   RECENT_EVENT_WEIGHT,
   RECENT_EVENT_LIMIT,
 } from './indicators.ts';
+import type { EducationQueries } from './region.ts';
 
 /** 虚构夹具，只校验只读指标，不代表任何地区或人口的统计值。 */
 function fixture(): SimulationSnapshot {
@@ -257,6 +258,72 @@ describe('read-only indicators (M4-016)', () => {
     [7, 100],
   ])('rounds and clamps %s to %s percent', (input, expected) => {
     expect(indicatorPercent(input)).toBe(expected);
+  });
+});
+
+/** 测试夹具（虚构数据）：按给定的义务教育年限返回同一份学制。 */
+function educationQueries(compulsoryYears: number, secondaryYears = 3): EducationQueries {
+  const system = {
+    primaryStartAge: 6,
+    primaryYears: 6,
+    secondaryYears,
+    tertiaryYears: 4,
+    compulsoryYears,
+    entranceExam: { kind: 'none' as const },
+    feeShare: 0,
+    grade: 'D' as const,
+    sourceIds: ['fixture:m3-012d'],
+  };
+  return {
+    secondaryEnrollmentRate: () => null,
+    upperSecondaryCompletionRate: () => null,
+    systemAt: () => system,
+  };
+}
+
+describe('M3-012d：义务教育录取与大学考试失败对幸福的影响', () => {
+  const admitted = (stage: 'secondary' | 'tertiary') =>
+    fact(1, { type: 'education.admitted', details: { stage, path: 'selection' } });
+
+  it('义务教育内的录取不算正面经历', () => {
+    const snapshot = fixture();
+    const baseline = deriveIndicators(snapshot, []).happiness;
+    // 小学 6 + 初中 3 = 9 年义务教育：初中录取是制度保证的学位。
+    expect(
+      deriveIndicators(snapshot, [admitted('secondary')], educationQueries(9)).happiness,
+    ).toBeCloseTo(baseline, 10);
+    // 不提供学制时保持旧口径（计入），避免夹具与历史快照的行为突变。
+    expect(deriveIndicators(snapshot, [admitted('secondary')]).happiness).toBeCloseTo(
+      baseline + RECENT_EVENT_WEIGHT,
+      10,
+    );
+  });
+
+  it('非义务教育阶段的录取仍算正面经历', () => {
+    const snapshot = fixture();
+    const baseline = deriveIndicators(snapshot, []).happiness;
+    // 义务教育只覆盖小学 6 年：初中录取是竞争性结果。
+    expect(
+      deriveIndicators(snapshot, [admitted('secondary')], educationQueries(6)).happiness,
+    ).toBeCloseTo(baseline + RECENT_EVENT_WEIGHT, 10);
+    expect(
+      deriveIndicators(snapshot, [admitted('tertiary')], educationQueries(9)).happiness,
+    ).toBeCloseTo(baseline + RECENT_EVENT_WEIGHT, 10);
+  });
+
+  it('大学入学考试失败算负面经历，其他阶段的考试失败不算', () => {
+    const snapshot = fixture();
+    const baseline = deriveIndicators(snapshot, []).happiness;
+    expect(
+      deriveIndicators(snapshot, [
+        fact(1, { type: 'education.exam-failed', details: { stage: 'tertiary', passRate: 0.4 } }),
+      ]).happiness,
+    ).toBeCloseTo(baseline - RECENT_EVENT_WEIGHT, 10);
+    expect(
+      deriveIndicators(snapshot, [
+        fact(1, { type: 'education.exam-failed', details: { stage: 'secondary' } }),
+      ]).happiness,
+    ).toBeCloseTo(baseline, 10);
   });
 });
 

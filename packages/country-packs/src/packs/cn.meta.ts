@@ -14,7 +14,7 @@ export const CN_METADATA: Omit<CountryPack, 'series'> = {
     schemaVersion: '0.1.0',
     engineRange: '0.1.x',
     validFrom: '1950-01-01',
-    dataVersion: '0.1.0',
+    dataVersion: '0.2.0',
     licenseManifestPath: 'README.md',
     modules: {},
   },

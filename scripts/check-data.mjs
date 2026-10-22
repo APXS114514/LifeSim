@@ -216,6 +216,55 @@ export function checkPackSources(packs, sources, adrNumbers, dataFiles, imported
 }
 
 /**
+ * 检查国家包的教育制度分段（M3-012d）：
+ * - 每个分段必须有说明（`note`）；
+ * - D 级设计假设必须引用 `adr:0007`；
+ * - C 级必须引用至少一个**已登记的非 ADR 来源**；
+ * - 所有引用都要能在 sources.json 或 docs/adr 中找到（ADR 编号按文件核对）。
+ *
+ * @param {readonly import('../packages/country-packs/src/index.ts').CountryPack[]} packs
+ * @param {readonly import('../packages/content-schema/src/index.ts').SourceRecord[]} sources
+ * @param {readonly string[]} adrNumbers docs/adr 下已有的编号，例如 ['0007']
+ * @returns {string[]}
+ */
+export function checkEducation(packs, sources, adrNumbers) {
+  /** @type {string[]} */
+  const problems = [];
+  const sourceById = new Map(sources.map((source) => [source.id, source]));
+  const adrSet = new Set(adrNumbers);
+
+  for (const pack of packs) {
+    const packId = pack.manifest.packId;
+    for (const segment of pack.education) {
+      const where = `${packId} 的教育制度 ${segment.validFrom}–${segment.validTo ?? '∞'}`;
+      if (!segment.note || segment.note.trim() === '') {
+        problems.push(`${where} 缺少说明（note）`);
+      }
+      const nonAdrSources = segment.sourceIds.filter((id) => !id.startsWith('adr:'));
+      if (segment.grade === 'D' && !segment.sourceIds.includes('adr:0007')) {
+        problems.push(`${where} 是 D 级设计假设，必须引用 adr:0007`);
+      }
+      if (segment.grade === 'C' && nonAdrSources.length === 0) {
+        problems.push(`${where} 标为 C 级，但没有引用已登记的非 ADR 来源`);
+      }
+      for (const sourceId of segment.sourceIds) {
+        if (sourceId.startsWith('adr:')) {
+          if (!adrSet.has(sourceId.slice(4))) {
+            problems.push(`${where} 引用了不存在的 ADR：${sourceId}`);
+          }
+          continue;
+        }
+        if (!sourceById.has(sourceId)) {
+          problems.push(`${where} 引用了未登记的来源：${sourceId}`);
+        }
+      }
+    }
+  }
+
+  return problems;
+}
+
+/**
  * 检查姓名表（M3-045）：能否通过 `NameTableSchema`、表 ID 是否与文件位置一致、
  * 每个条目的来源是否已登记且允许再分发（`adr:` 引用按 ADR 编号核对）。
  * @param {readonly import('../packages/content-schema/src/index.ts').SourceRecord[]} sources
@@ -349,16 +398,19 @@ async function main() {
     packs.flatMap((pack) => pack.series.map((series) => series.id)),
   );
   const packProblems = checkPackSources(packs, records, adrNumbers, dataFiles, importedSeriesIds);
+  const educationProblems = checkEducation(packs, records, adrNumbers);
   const nameFiles = listJsonFiles(packNamesRoot);
   const nameProblems = checkNameTables(records, adrNumbers, nameFiles);
-  if (packProblems.length > 0 || nameProblems.length > 0) {
-    for (const problem of [...packProblems, ...nameProblems]) console.error(`- ${problem}`);
+  if (packProblems.length > 0 || educationProblems.length > 0 || nameProblems.length > 0) {
+    for (const problem of [...packProblems, ...educationProblems, ...nameProblems])
+      console.error(`- ${problem}`);
     process.exitCode = 1;
     return;
   }
 
+  const educationSegments = packs.reduce((sum, pack) => sum + pack.education.length, 0);
   console.log(
-    `来源登记检查通过：${records.length} 条来源，${packs.length} 个国家包，${dataFiles.length} 个数据文件，${nameFiles.length} 个姓名表文件，SOURCES.md 已同步。`,
+    `来源登记检查通过：${records.length} 条来源，${packs.length} 个国家包（${educationSegments} 个教育制度分段），${dataFiles.length} 个数据文件，${nameFiles.length} 个姓名表文件，SOURCES.md 已同步。`,
   );
 }
 
