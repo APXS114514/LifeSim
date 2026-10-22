@@ -24,12 +24,27 @@ import { LIFE_EVENT_CATALOG } from './life-events-catalog.ts';
 import { lifeEventDefinitions, type LifeEventPrototype } from './life-events.ts';
 import { npcEvents } from './npc.ts';
 import { yearlyFocusEvents } from './yearly-focus.ts';
-import { MacroStateSchema, type RegionModel } from './region.ts';
+import { MacroStateSchema, type MacroState, type RegionModel } from './region.ts';
 import { EVENT, PROTAGONIST_ID, SYSTEMS_VERSION } from './shared.ts';
 
 /** 跨系统的状态不变量：每个事件提交前都会检查（GDD §7：不能出现未成年人退休等矛盾）。 */
 export function lifeInvariants(region: RegionModel): Invariant[] {
   const { rules } = region;
+  /**
+   * 宏观状态按引用缓存：内核保证提交后的状态不再就地修改，所以同一份 `world` 对象的取值与合法性
+   * 只取决于它自己，解析一次就够（一局人生里宏观状态只在历史锚点处改变）。
+   * 缓存随本模块实例存活，不跨局共享。
+   */
+  const macroCache = new WeakMap<object, MacroState | null>();
+  const readMacroOnce = (world: unknown): MacroState | null => {
+    if (typeof world !== 'object' || world === null) return null;
+    const cached = macroCache.get(world);
+    if (cached !== undefined) return cached;
+    const parsed = MacroStateSchema.safeParse(world);
+    const macro = parsed.success ? parsed.data : null;
+    macroCache.set(world, macro);
+    return macro;
+  };
   return [
     {
       id: 'life.age-appropriate-status',
@@ -57,43 +72,57 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
     {
       id: 'life.currency-version',
       check(state) {
-        const parsed = MacroStateSchema.safeParse(state.world);
-        if (!parsed.success) return state.actors.length > 0 ? ['world macro state is invalid'] : [];
-        return state.householdAccounts
-          .filter((account) => !sameCurrency(account.currency, parsed.data.currency))
-          .map((account) => `${account.id} still holds an outdated currency version`);
+        const macro = readMacroOnce(state.world);
+        if (macro === null) return state.actors.length > 0 ? ['world macro state is invalid'] : [];
+        // 逐条判断、不带 filter/map 的中间数组：本不变量每个事件都跑。
+        const problems: string[] = [];
+        for (const account of state.householdAccounts) {
+          if (!sameCurrency(account.currency, macro.currency)) {
+            problems.push(`${account.id} still holds an outdated currency version`);
+          }
+        }
+        return problems;
       },
     },
     {
       id: 'life.account-link',
       check(state) {
-        const ids = new Set(state.householdAccounts.map((account) => account.id));
-        return state.actors
-          .filter((actor) => actor.finance.accountId !== null && !ids.has(actor.finance.accountId))
-          .map((actor) => `${actor.id} points to a missing account`);
+        const problems: string[] = [];
+        for (const actor of state.actors) {
+          const accountId = actor.finance.accountId;
+          if (accountId === null) continue;
+          let found = false;
+          for (const account of state.householdAccounts) {
+            if (account.id === accountId) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) problems.push(`${actor.id} points to a missing account`);
+        }
+        return problems;
       },
     },
     {
       id: 'life.deceased-no-new-activity',
       check(state, at) {
         const problems: string[] = [];
-        const deceased = new Set(
-          state.actors
-            .filter((actor) => actor.vitalStatus.kind === 'deceased')
-            .map((actor) => actor.id),
-        );
-        if (deceased.size === 0) return problems;
+        let anyoneDeceased = false;
         for (const actor of state.actors) {
           if (actor.vitalStatus.kind !== 'deceased') continue;
+          anyoneDeceased = true;
           if (actor.vitalStatus.deathDate > at) {
             problems.push(`${actor.id} has a death date after ${at}`);
           }
         }
+        if (!anyoneDeceased) return problems;
         // 去世后不再共同居住：死亡事件必须把它参与的关系置为 coResident=false（关系本身不解除）。
+        // 角色只有几个，逐个比对就够，不必为每个事件建一个集合。
         for (const relationship of state.relationships) {
           if (!relationship.coResident) continue;
           for (const actorId of [relationship.fromId, relationship.toId]) {
-            if (deceased.has(actorId)) {
+            for (const actor of state.actors) {
+              if (actor.id !== actorId || actor.vitalStatus.kind !== 'deceased') continue;
               problems.push(`${relationship.id} still lists deceased ${actorId} as co-resident`);
             }
           }
@@ -104,10 +133,20 @@ export function lifeInvariants(region: RegionModel): Invariant[] {
     {
       id: 'life.relationship-actors',
       check(state) {
-        const ids = new Set(state.actors.map((actor) => actor.id));
-        return state.relationships
-          .filter((relationship) => !ids.has(relationship.fromId) || !ids.has(relationship.toId))
-          .map((relationship) => `${relationship.id} references a missing actor`);
+        const problems: string[] = [];
+        for (const relationship of state.relationships) {
+          let fromFound = false;
+          let toFound = false;
+          for (const actor of state.actors) {
+            if (actor.id === relationship.fromId) fromFound = true;
+            if (actor.id === relationship.toId) toFound = true;
+            if (fromFound && toFound) break;
+          }
+          if (!fromFound || !toFound) {
+            problems.push(`${relationship.id} references a missing actor`);
+          }
+        }
+        return problems;
       },
     },
   ];

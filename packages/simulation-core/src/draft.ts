@@ -57,12 +57,18 @@ export class DraftTransaction {
     this.#problem = null;
     const root = this.#nodes.get(this.root);
     if (!root) throw new Error('Draft root is missing');
-    const path: string[] = ['$'];
-    const state = this.#finalizeDraft(root, path, new Map(), new Set()) as SimState;
+    // 多数事件不改状态：此时连路径数组与去重表都不用分配，直接沿用已提交状态。
+    if (!root.modified) return { state: root.base as SimState, problem: null };
+    const state = this.#finalizeDraft(root, ['$'], new Map(), new Set()) as SimState;
     return { state, problem: this.#problem };
   }
 
-  /** 撤销全部代理；之后对草稿的任何读写都会抛 TypeError。 */
+  /**
+   * 撤销全部代理；之后对草稿的任何读写都会抛 TypeError。
+   *
+   * 用 Proxy.revocable 而不是「普通 Proxy + 关闭标志」：撤销会切断「代理 → 陷阱闭包 → 事务」这条引用，
+   * 处理器若留下一个草稿引用，也不会把整棵草稿树连带留住（实测尾部延迟差一倍）。
+   */
   close(): void {
     if (this.#closed) return;
     this.#closed = true;
@@ -78,6 +84,15 @@ export class DraftTransaction {
     this.#nodes.set(proxy, node);
     this.#revokers.push(revoke);
     return proxy;
+  }
+
+  /**
+   * 草稿背后仍是已提交对象时返回它，否则返回 null。没被写过的分支与已提交状态是同一批对象，
+   * 调用方可以在这上面按值定位（例如按 id 找下标），再只通过代理取回真正要改的那一个。
+   */
+  committedBaseOf(value: object): object | null {
+    const node = this.#nodes.get(value);
+    return node !== undefined && !node.modified ? node.base : null;
   }
 
   #prepare(node: DraftNode): Record<string, unknown> {

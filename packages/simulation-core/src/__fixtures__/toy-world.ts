@@ -16,6 +16,8 @@ export type TrapKind =
   | 'past'
   | 'bad-cause'
   | 'invalid-state'
+  | 'invalid-field'
+  | 'extra-key'
   | 'invariant'
   | 'invalid-companion'
   | 'invalid-account'
@@ -353,6 +355,14 @@ export function toyModules(options: ToyWorldOptions = {}): SimulationModule[] {
           return;
         case 'invalid-state':
           actor.education = { completed: 'none', enrolledIn: 'tertiary', lastFactId: null };
+          return;
+        case 'invalid-field':
+          // 单个字段不合法（stress 超出 0–1）：增量校验必须抓住它。
+          actor.wellbeing = { stress: 2 };
+          return;
+        case 'extra-key':
+          // strictObject 不接受 schema 之外的键：增量校验必须抓住键集变化。
+          (actor as unknown as Record<string, unknown>)['nickname'] = 'toy';
           return;
         case 'invariant':
           actor.currentResidenceId = 'nowhere';

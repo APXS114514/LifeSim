@@ -220,6 +220,21 @@ describe('atomic settlement', () => {
     const { failure } = expectFailure('invariant', 'invariant-violation');
     expect(failure.details.join('\n')).toContain('toy.residence-is-a-place');
   });
+
+  it('rejects an invalid value written into a single field (incremental field check)', () => {
+    const { failure } = expectFailure('invalid-field', 'invariant-violation');
+    const details = failure.details.join('\n');
+    // 报错信息来自整份 schema 的慢路径，与以前逐字相同。
+    expect(details).toContain(`actor ${TOY_ACTOR}`);
+    expect(details).toContain('wellbeing');
+  });
+
+  it('rejects an actor that gained a key outside the schema (strict object)', () => {
+    const { failure } = expectFailure('extra-key', 'invariant-violation');
+    const details = failure.details.join('\n');
+    expect(details).toContain(`actor ${TOY_ACTOR}`);
+    expect(details).toContain('Unrecognized key');
+  });
 });
 
 describe('decisions', () => {

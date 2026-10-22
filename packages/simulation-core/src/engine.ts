@@ -4,6 +4,7 @@ import {
   RelationshipsSchema,
   SimEventFactSchema,
   SimulationSnapshotSchema,
+  characterStateViolations,
   type CharacterState,
   type ISODate,
   type SimEventFact,
@@ -102,6 +103,19 @@ interface SimulationInit {
 }
 
 const FACT_ID = /^fact:(\d+)$/;
+
+/**
+ * 角色字段的逐项 schema（同一份 `CharacterStateSchema` 的形状），用于按字段复用校验结果。
+ * 键集固定，启动时算一次。
+ */
+interface FieldSchema {
+  safeParse(value: unknown): { success: boolean };
+}
+const CHARACTER_FIELDS = CharacterStateSchema.shape as unknown as Readonly<
+  Record<string, FieldSchema>
+>;
+const CHARACTER_FIELD_KEYS = Object.keys(CHARACTER_FIELDS);
+const CHARACTER_FIELD_SET = new Set(CHARACTER_FIELD_KEYS);
 
 /** 事实提交后冻结：日志里的事实不可变（GDD §7），调用方拿到的引用也改不动。 */
 function freezeFact(fact: SimEventFact): SimEventFact {
@@ -441,15 +455,30 @@ export class Simulation implements SimulationEngine {
   #evaluateOptions(occurrence: Occurrence, definition: EventDefinition): DecisionOption[] {
     const spec = definition.decision;
     if (!spec) return [];
-    return spec.options(this.#optionsView(occurrence, this.#state));
+    return this.#withOptionsView(occurrence, (view) => spec.options(view));
   }
 
   /**
-   * 给 `DecisionSpec.options()` 的只读视图：状态是一份丢弃式拷贝，抽随机数、追加事实、安排事件都会报错。
+   * 在一份丢弃式的只读视图上调用 `options()`，返回后视图立即失效（ADR-0011 第 6 条）。
+   *
+   * 状态视图不再是一份深拷贝，而是同一个按需复制的事务草稿：读共享已提交状态，
+   * 写入落在这份草稿里（与深拷贝的可见性相同），调用结束就关掉、什么都不提交。
+   * `options()` 原本就只能是纯函数，因此它看得见的仍是一份「改变不了权威状态」的拷贝。
+   */
+  #withOptionsView<T>(occurrence: Occurrence, run: (view: EventContext) => T): T {
+    const transaction = new DraftTransaction(this.#state);
+    try {
+      return run(this.#optionsView(occurrence, transaction.root));
+    } finally {
+      transaction.close();
+    }
+  }
+
+  /**
+   * 给 `DecisionSpec.options()` 的只读视图：抽随机数、追加事实、安排事件都会报错。
    * 选项因此只能取决于当前状态，暂停时给玩家看的选项与随后结算用的选项必然一致。
    */
-  #optionsView(occurrence: Occurrence, state: SimState): EventContext {
-    const copy = cloneJson(state);
+  #optionsView(occurrence: Occurrence, copy: SimState): EventContext {
     const impure = (what: string) => (): never => {
       throw this.#error(
         'impure-decision-options',
@@ -480,11 +509,20 @@ export class Simulation implements SimulationEngine {
     };
   }
 
-  #makeContext(occurrence: Occurrence, definition: EventDefinition, draft: SimState) {
+  #makeContext(
+    occurrence: Occurrence,
+    definition: EventDefinition,
+    draft: SimState,
+    transaction: DraftTransaction,
+  ) {
     const facts: SimEventFact[] = [];
     const scheduled: Occurrence[] = [];
-    const scheduledKeys = new Set<string>();
-    const random = deriveStream(this.seed, occurrence.key);
+    /** 已安排事件的幂等键；只有真的安排了事件才分配（多数事件不安排或只安排一个）。 */
+    let scheduledKeys: Set<string> | null = null;
+    // 随机流按需派生：多数事件不抽样，而派生一次要算 128 位散列并构造 sfc32 生成器。
+    // 派生只取决于（根种子，事件幂等键），与读它的时机无关，所以结果不变。
+    let random: RandomStream | null = null;
+    const rootSeed = this.seed;
     const fail = (code: SimulationErrorCode, message: string) =>
       this.#error(code, message, occurrence);
 
@@ -498,10 +536,24 @@ export class Simulation implements SimulationEngine {
       at: occurrence.at,
       occurrence,
       state: draft,
-      random,
+      get random(): RandomStream {
+        return (random ??= deriveStream(rootSeed, occurrence.key));
+      },
       choice: null,
       actor: (id: string): CharacterState => {
-        const actor = draft.actors.find((candidate) => candidate.id === id);
+        const list = draft.actors as readonly CharacterState[];
+        // 角色列表没被写过时，先在已提交的原始数组上按值找到下标，再只把那一个包成草稿。
+        // 直接 find 会让每个被跳过的候选也生成草稿代理（每局约 800 个多余节点）。
+        const committed = transaction.committedBaseOf(list) as readonly CharacterState[] | null;
+        if (committed !== null) {
+          for (let index = 0; index < committed.length; index++) {
+            const candidate = committed[index];
+            if (candidate !== undefined && candidate.id === id)
+              return list[index] as CharacterState;
+          }
+          throw fail('handler-failed', `Unknown actor ${id}`);
+        }
+        const actor = list.find((candidate) => candidate.id === id);
         if (!actor) throw fail('handler-failed', `Unknown actor ${id}`);
         return actor;
       },
@@ -535,16 +587,18 @@ export class Simulation implements SimulationEngine {
             `Cannot schedule ${request.type} in the past (${request.at})`,
           );
         }
-        const target = this.#definition(request.type, {
-          seed: this.seed,
-          eventKey: occurrence.key,
-          at: occurrence.at,
-        });
+        // 直接查注册表：成功路径上不构造只为报错而存在的上下文对象。
+        // 报错上下文与 #definition 逐字相同（种子、事件键、日期）。
+        const target = this.#registry.get(request.type);
+        if (!target) {
+          throw this.#error('unknown-event', `No definition for ${request.type}`, occurrence);
+        }
         const key = occurrenceKey(request.type, request.entityId, request.period);
         if (this.#processed.has(key) || key === occurrence.key) {
           throw fail('duplicate-event-key', `Event ${key} was already processed (event cycle)`);
         }
-        if (this.#queue.has(key) || scheduledKeys.has(key)) return; // 幂等：已在队列中
+        // 幂等：已在队列中。scheduledKeys 只在真的安排过事件后才存在。
+        if (this.#queue.has(key) || (scheduledKeys !== null && scheduledKeys.has(key))) return;
         if (scheduled.length >= this.#limits.maxSchedulesPerEvent) {
           throw fail(
             'too-many-schedules',
@@ -574,7 +628,7 @@ export class Simulation implements SimulationEngine {
           causeFactIds,
           depth,
         });
-        scheduledKeys.add(key);
+        (scheduledKeys ??= new Set()).add(key);
       },
     };
     return { context, facts, scheduled };
@@ -590,8 +644,8 @@ export class Simulation implements SimulationEngine {
     const actorId = spec.actorId(occurrence);
     const actor = context.actor(actorId);
     // 决定在处理器之前结算，此刻草稿还没有任何写入，与已提交状态相同；
-    // 直接用已提交状态做丢弃式拷贝，避免穿过代理复制整份状态（ADR-0011 第 6 条：拷贝与纯函数检查不变）。
-    const options = spec.options(this.#optionsView(occurrence, this.#state));
+    // 选项在已提交状态上求值（同样是丢弃式视图，见 #withOptionsView）。
+    const options = this.#withOptionsView(occurrence, (view) => spec.options(view));
     const recorded = this.#decisions.get(occurrence.key);
     const preset = this.#presets.get(occurrence.key);
 
@@ -680,6 +734,7 @@ export class Simulation implements SimulationEngine {
         occurrence,
         definition,
         transaction.root,
+        transaction,
       );
       try {
         if (definition.decision)
@@ -733,6 +788,37 @@ export class Simulation implements SimulationEngine {
   }
 
   /**
+   * 校验本事件改动过的角色。
+   *
+   * 已提交角色的每个字段都通过过完整校验，而 schema 校验只取决于值本身；按需复制让「没改过的字段」
+   * 与已提交角色是同一个引用，所以只需按字段重新校验**改过的**那几个，不必整份重解析（M3-035 的延伸）。
+   * 跨字段规则（学历与就业一致、技能不早于出生等）始终对整份新角色重跑。
+   * 一旦有字段不合法、或键集与 schema 不符，就退回整份 CharacterStateSchema 解析：
+   * 报错信息与以前逐字相同，慢路径只在真正出错时走。
+   */
+  #actorProblems(actor: CharacterState, before: CharacterState | undefined): string[] {
+    const full = (): string[] => {
+      const parsed = CharacterStateSchema.safeParse(actor);
+      return parsed.success ? [] : [`actor ${actor.id}: ${parsed.error.message}`];
+    };
+    if (before === undefined || typeof actor !== 'object' || actor === null) return full();
+    const fields = actor as unknown as Record<string, unknown>;
+    const previous = before as unknown as Record<string, unknown>;
+    const keys = Object.keys(fields);
+    if (keys.length !== CHARACTER_FIELD_KEYS.length) return full();
+    let dirty = false;
+    for (const key of keys) {
+      if (!CHARACTER_FIELD_SET.has(key)) return full(); // 处理器加了 schema 里没有的键
+      if (Object.is(fields[key], previous[key])) continue;
+      dirty = true;
+      const field = CHARACTER_FIELDS[key];
+      if (!field || !field.safeParse(fields[key]).success) return full();
+    }
+    if (dirty && characterStateViolations(actor).length > 0) return full();
+    return [];
+  }
+
+  /**
    * 提交前检查：事实结构、角色与账户结构、时间与生死约束、各系统的不变量。
    *
    * 已提交的状态都校验过（创建时为空，恢复时整份快照经过 schema 解析），而 schema 校验只取决于值本身，
@@ -748,24 +834,28 @@ export class Simulation implements SimulationEngine {
       const parsed = SimEventFactSchema.safeParse(fact);
       if (!parsed.success) violations.push(`fact ${fact.id}: ${parsed.error.message}`);
     }
-    const actorsBefore = new Map(this.#state.actors.map((actor) => [actor.id, actor]));
-    for (const actor of draft.actors) {
-      const before = actorsBefore.get(actor.id);
-      if (before === actor) continue;
-      const parsed = CharacterStateSchema.safeParse(actor);
-      if (!parsed.success) violations.push(`actor ${actor.id}: ${parsed.error.message}`);
-      if (before?.vitalStatus.kind === 'deceased' && actor.vitalStatus.kind !== 'deceased') {
-        violations.push(`actor ${actor.id} came back to life`);
+    // 数组引用没变说明本事件根本没碰角色列表（按需复制让「没改过」就是同一个引用）。
+    if (this.#state.actors !== draft.actors) {
+      const actorsBefore = new Map(this.#state.actors.map((entry) => [entry.id, entry]));
+      for (const actor of draft.actors) {
+        const before = actorsBefore.get(actor.id);
+        if (before === actor) continue;
+        for (const problem of this.#actorProblems(actor, before)) violations.push(problem);
+        if (before?.vitalStatus.kind === 'deceased' && actor.vitalStatus.kind !== 'deceased') {
+          violations.push(`actor ${actor.id} came back to life`);
+        }
       }
     }
-    const accountsBefore = new Map(
-      this.#state.householdAccounts.map((account) => [account.id, account]),
-    );
-    for (const account of draft.householdAccounts) {
-      const before = accountsBefore.get(account.id);
-      if (before === account) continue;
-      const parsed = HouseholdAccountSchema.safeParse(account);
-      if (!parsed.success) violations.push(`account ${account.id}: ${parsed.error.message}`);
+    if (this.#state.householdAccounts !== draft.householdAccounts) {
+      const accountsBefore = new Map(
+        this.#state.householdAccounts.map((entry) => [entry.id, entry]),
+      );
+      for (const account of draft.householdAccounts) {
+        const before = accountsBefore.get(account.id);
+        if (before === account) continue;
+        const parsed = HouseholdAccountSchema.safeParse(account);
+        if (!parsed.success) violations.push(`account ${account.id}: ${parsed.error.message}`);
+      }
     }
     if (this.#state.relationships !== draft.relationships) {
       const parsed = RelationshipsSchema.safeParse(draft.relationships);
