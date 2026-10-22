@@ -1,14 +1,21 @@
 import type { CharacterState } from '@lifesim/content-schema';
 import {
   addYears,
-  yearOf,
   type DecisionOption,
   type EventContext,
   type EventDefinition,
 } from '@lifesim/simulation-core';
 import { z } from 'zod';
 import type { RegionModel } from './region.ts';
-import { EVENT, PRIORITY, ageFromPeriod, causes, isIndependent, PROTAGONIST_ID } from './shared.ts';
+import {
+  EVENT,
+  PRIORITY,
+  ageFromPeriod,
+  causes,
+  educationStageAges,
+  isIndependentForSettlement,
+  PROTAGONIST_ID,
+} from './shared.ts';
 
 export const YEARLY_FOCUS_IDS = [
   'balanced',
@@ -97,15 +104,11 @@ export function scheduleAnnualSystems(
 ): void {
   const { rules } = region;
   const { education, employment } = actor;
-  // 入学年龄与各级年限按「国家 + 年份」取（M3-012b）；用 >= 以免制度在某一年改变后
-  // 整届学生错过事件。合成地区的 systemAt 是常数，所以合成人生的排程与旧常数一致。
-  const system = region.queries.education.systemAt(yearOf(ctx.at));
-  const educationAge = {
-    primaryExit: system.primaryStartAge + system.primaryYears,
-    secondaryExit: system.primaryStartAge + system.primaryYears + system.secondaryYears,
-    tertiaryExit:
-      system.primaryStartAge + system.primaryYears + system.secondaryYears + system.tertiaryYears,
-  };
+  // 入学/毕业年龄用出生年与**逐年学制**确定性推导（M3-012c）：每段毕业年龄 = 该段入学
+  // 年龄 + 入学那年学制的年数，所以推迟入学不缩短学制、中途改革不改变已开始学段的长度。
+  // 毕业事件仍由当年的生日排程并携带 { focus }，年度重点才能作用在升学与升学考试上
+  // （M3-041 已批准的行为）。
+  const ages = educationStageAges(region, actor.birthDate);
   const sameDay = (type: string, because: readonly string[] = []) => {
     ctx.schedule({
       type,
@@ -116,19 +119,20 @@ export function scheduleAnnualSystems(
       payload: { focus },
     });
   };
-  if (isIndependent(actor, age, region)) sameDay(EVENT.settle);
+  // 结算覆盖 [age-1, age) 这一年：按被结算的那一年判断是否独立（M3-012c）。
+  if (isIndependentForSettlement(actor, age, region)) sameDay(EVENT.settle);
   if (
-    age >= system.primaryStartAge &&
+    age === ages.primaryEntry &&
     education.completed === 'none' &&
     education.enrolledIn === null &&
     education.lastFactId === null
   )
     sameDay(EVENT.primaryEntry);
-  if (education.enrolledIn === 'primary' && age >= educationAge.primaryExit)
+  if (education.enrolledIn === 'primary' && age === ages.primaryExit)
     sameDay(EVENT.primaryExit, causes(education.lastFactId));
-  if (education.enrolledIn === 'secondary' && age >= educationAge.secondaryExit)
+  if (education.enrolledIn === 'secondary' && age === ages.secondaryExit)
     sameDay(EVENT.secondaryExit, causes(education.lastFactId));
-  if (education.enrolledIn === 'tertiary' && age >= educationAge.tertiaryExit)
+  if (education.enrolledIn === 'tertiary' && age === ages.tertiaryExit)
     sameDay(EVENT.tertiaryExit, causes(education.lastFactId));
   const { status } = employment;
   if (age >= rules.retirementAge) {

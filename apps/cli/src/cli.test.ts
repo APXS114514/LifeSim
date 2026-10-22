@@ -327,8 +327,11 @@ describe('protagonist projection (M3-011)', () => {
     ).toEqual({
       // M3-042 批准：日常花费改变结算余额（与治疗选择），既有事实的类型与因果不变。
       // M3-012 批准：中学选拔与大学入学新增教育事实（admitted / admission-failed / enrolled）。
-      hash: '42ffa9899c6479ea9799478410630c7b07e768f6930db80080554c609a154da9',
-      entries: 23623,
+      // M3-012c（协调者裁决，维护者授权）：年度结算按被结算那一年判断独立；离校后、法定工作
+      // 年龄前那一年不再结算。每局少一条零收入结算，部分结算从 in-debt 翻成 solvent，
+      // 既有结算只改 balanceMinor，income/cost/source 与死亡日期不变。23623 → 23541。
+      hash: '632351853ba5e3a4699cf784b9788778060150c99580e69d4b0c92a23392ec5f',
+      entries: 23541,
     });
     // 1950 年起出生：覆盖 1970 年币制改革之前的人生。这里只取主角本人的事实，
     // 因为 actor 为空的事实里会新增「已故 NPC 存款换算」——本任务要求的新事实。
@@ -341,8 +344,10 @@ describe('protagonist projection (M3-011)', () => {
       }),
     ).toEqual({
       // M3-042 批准：21838 条（−33）= settlement −30、treatment-started −2、illness-onset −1、treatment-declined +1。
-      hash: 'f59d07f9d02899d234da6f337aa78e6b362263c0fcebeb0d9e1a2f0e1c48fbf1',
-      entries: 22155,
+      // M3-012c：同上（协调者裁决，维护者授权）；1970 年前旧债消失，另有 8 条 finance.redenominated
+      // 只改 before/afterMinor。22155 → 22076。
+      hash: '0ae1a4e1492d4c6c0586986de91ae52a986a0fce4821ed86880c73ace3d3f183',
+      entries: 22076,
     });
   }, 120_000);
 });
